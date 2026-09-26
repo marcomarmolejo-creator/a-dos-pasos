@@ -6,9 +6,13 @@ const whatsappShare = "https://wa.me/?text=" + encodeURIComponent("Hola, quiero 
 function HeroDiscovery() {
   return `<section class="hero">
     <div class="hero-orbit hero-orbit--one"></div><div class="hero-orbit hero-orbit--two"></div>
-    <div class="hero-copy reveal"><p class="kicker">A Dos Pasos · El Refugio</p><h1>Descubre lo que tienes <em>cerca de casa.</em></h1><p class="hero-sub">Negocios, lugares, servicios, promociones y nuevas aperturas de El Refugio en un solo lugar.</p><strong class="hero-emotion">Lo bueno también puede estar a unos minutos de ti.</strong><div class="hero-actions"><a class="button button--yellow" href="#explorar">Explorar cerca de mí <span>↘</span></a><a class="button button--outline" href="#para-negocios">Quiero aparecer con mi negocio <span>↗</span></a></div><div class="microbenefits"><span>Local</span><span>Confiable</span><span>Sin comisiones</span><span>Siempre cerca</span></div></div>
-    <div class="hero-product reveal"><div class="phone phone--back"><img src="./assets/mockup-categorias.png" alt="Categorías locales en A Dos Pasos" /></div><div class="phone phone--main"><img src="./assets/mockup-home.png" alt="Inicio móvil de A Dos Pasos" /></div><div class="phone phone--side"><img src="./assets/mockup-ficha.png" alt="Ficha de un negocio local" /></div><span class="floating-chip chip--distance">⌖ A 3 min</span><span class="floating-chip chip--new">Nuevo</span><span class="floating-chip chip--open">● Abierto ahora</span><span class="floating-chip chip--promo">% Promo local</span></div>
+    <div class="hero-copy reveal"><p class="kicker">A Dos Pasos · El Refugio</p><h1>Descubre lo que tienes <em>cerca de casa.</em></h1><p class="hero-sub">Negocios, lugares, servicios, promociones y nuevas aperturas de El Refugio.</p>${DiscoverySearch("hero-search")}<div class="hero-quick" aria-label="Accesos rápidos">${["Comer","Café","Cuidarme","Mi casa","Servicios","Promociones"].map(item=>`<button type="button" data-quick-search="${item}">${item}</button>`).join("")}</div></div>
+    <div class="hero-editorial reveal" aria-label="Descubrimientos destacados"><a class="hero-tile hero-tile--forno" href="${byId("forno-locale").micrositeUrl}" target="_blank" rel="noreferrer"><img src="./assets/forno-locale.png" alt="Forno Locale" /><span>Nuevo</span><strong>Forno Locale</strong><small>Pizzería artesanal · A 5 min</small></a><a class="hero-tile hero-tile--aura" href="${byId("aura-spa").micrositeUrl}" target="_blank" rel="noreferrer"><img src="./assets/aura-ritual.jpg" alt="Aura Spa" /><span>● Abierto ahora</span><strong>Aura Spa</strong></a><a class="hero-tile hero-tile--barber" href="${byId("barberia-clasica").micrositeUrl}" target="_blank" rel="noreferrer"><img src="./assets/barberia-clasica.png" alt="Barbería Clásica" /><span>Beneficio</span><strong>Barbería Clásica</strong></a><a class="hero-tile hero-tile--eleva" href="${byId("eleva-steam").micrositeUrl}" target="_blank" rel="noreferrer"><img src="./assets/eleva-steam.jpg" alt="Eleva Steam" /><span>A domicilio</span><strong>Eleva Steam</strong></a><b class="floating-chip chip--distance">⌖ A 3 min</b></div>
   </section>`;
+}
+
+function DiscoverySearch(id) {
+  return `<form class="search-box search-box--hero" role="search" data-search><label class="sr-only" for="${id}">Busca por negocio, categoría, servicio o intención</label><div><span>⌕</span><input id="${id}" type="search" placeholder="¿Qué estás buscando cerca?" autocomplete="off" /><button type="submit">Explorar</button></div><p class="search-feedback" aria-live="polite"></p></form>`;
 }
 
 function ZoneSelector() {
@@ -42,20 +46,20 @@ function NewInZone() {
 
 function EditorialStories() {
   const modules = [
-    ["3 lugares para comer", "Para una comida sin cruzar la ciudad.", "forno-locale", "01"],
-    ["2 opciones para consentirte", "Una pausa, un corte o un ritual cerca.", "aura-spa", "02"],
-    ["Servicios para tu casa", "Resuelve lo cotidiano con expertos de tu zona.", "eleva-steam", "03"],
-    ["Promociones del fin de semana", "Beneficios que hacen mejor un plan cercano.", "barberia-clasica", "04"]
+    ["3 lugares para comer", "Para una comida sin cruzar la ciudad.", "forno-locale", ["./assets/forno-locale.png","./assets/forno-table.png","./assets/forno-locale.png"]],
+    ["2 opciones para consentirte", "Una pausa, un corte o un ritual cerca.", "aura-spa", ["./assets/aura-spa.jpg","./assets/barberia-interior.png"]],
+    ["Servicios para tu casa", "Expertos que llegan hasta donde estás.", "eleva-steam", ["./assets/eleva-steam.jpg","./assets/eleva-resultado.jpg"]],
+    ["Promociones del fin de semana", "Beneficios que hacen mejor un plan cercano.", "forno-locale", ["./assets/forno-table.png","./assets/aura-ritual.jpg","./assets/barberia-clasica.png"]]
   ];
-  return `<section class="section editorial" id="ideas"><header class="section-heading reveal"><span class="eyebrow">Ideas para hoy</span><h2>Cuando no sabes qué hacer, empieza por aquí</h2></header><div class="editorial-grid">${modules.map(([title,copy,id,n])=>{const b=byId(id);return `<a class="editorial-card reveal" href="${b.micrositeUrl}" target="_blank" rel="noreferrer"><span>${n}</span><div><h3>${title}</h3><p>${copy}</p></div><b>Explorar ↗</b></a>`}).join("")}</div></section>`;
+  return `<section class="section editorial" id="ideas"><header class="section-heading reveal"><span class="eyebrow">Ideas para hoy</span><h2>Cuando no sabes qué hacer, empieza por aquí</h2></header><div class="editorial-grid">${modules.map(([title,copy,id,images])=>{const b=byId(id);return `<a class="editorial-card reveal" href="${b.micrositeUrl}" target="_blank" rel="noreferrer"><div class="editorial-images">${images.map((src,index)=>`<img src="${src}" alt="" loading="lazy" style="--image:${index}" />`).join("")}</div><div class="editorial-copy"><h3>${title}</h3><p>${copy}</p><b>Explorar selección ↗</b></div></a>`}).join("")}</div></section>`;
 }
 
 function NearbyNow() {
-  return `<section class="nearby"><div class="nearby-title"><span class="eyebrow">Cerca de ti ahora</span><h2>Decide en un vistazo</h2></div><div class="nearby-track">${businesses.map((b,index)=>`<a href="${b.micrositeUrl}" target="_blank" rel="noreferrer"><span>${index === 0 ? "Nuevo esta semana" : index === 1 ? "Abierto ahora" : index === 2 ? "A menos de 5 min" : "A domicilio"}</span><strong>${b.name}</strong><small>${b.category}</small><i>↗</i></a>`).join("")}</div></section>`;
+  return `<section class="nearby"><div class="nearby-title"><span class="eyebrow">Cerca de ti ahora</span><h2>Decide en un vistazo</h2></div><div class="nearby-track">${businesses.map((b,index)=>`<a href="${b.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${b.image}" alt="" loading="lazy" /><div><span>${index === 0 ? "Nuevo esta semana" : index === 1 ? "Abierto ahora" : index === 2 ? "A menos de 5 min" : "A domicilio"}</span><strong>${b.name}</strong><small>${b.category} · ${b.distance}</small><b>${b.id === "eleva-steam" ? "Ver servicio" : "Conocer"} ↗</b></div></a>`).join("")}</div></section>`;
 }
 
 function ResidentHowItWorks() {
-  return `<section class="section how"><header class="section-heading reveal"><span class="eyebrow">Así de fácil</span><h2>Descubre. Decide. Ve.</h2></header><div class="steps">${[["01","Explora por intención","Empieza por lo que quieres hacer."],["02","Conoce antes de ir","Mira fotos, servicios y beneficios."],["03","Contacta o llega","WhatsApp y Maps en segundos."]].map(([n,t,p])=>`<article class="reveal"><span>${n}</span><h3>${t}</h3><p>${p}</p></article>`).join("")}</div></section>`;
+  return `<section class="how"><span class="eyebrow">Así de fácil</span><div class="steps">${[["Descubre","Explora según lo que quieres hacer."],["Conoce","Mira cada lugar antes de decidir."],["Contacta","Escribe o llega en unos pasos."]].map(([t,p],index)=>`<article class="reveal"><span>0${index+1}</span><div><h3>${t}</h3><p>${p}</p></div>${index<2?"<i>→</i>":""}</article>`).join("")}</div></section>`;
 }
 
 function BusinessCTA() {
@@ -70,11 +74,15 @@ function SearchExplore() {
   return `<section class="section search-explore"><header class="section-heading reveal"><span class="eyebrow">Explora por negocio</span><h2>¿Ya sabes qué necesitas?</h2></header><form class="search-box" role="search"><label for="search">Busca un lugar, servicio o categoría</label><div><span>⌕</span><input id="search" type="search" placeholder="Ej. pizza, spa, lavado de salas…" /><button type="submit">Buscar</button></div><p class="search-feedback" aria-live="polite"></p></form><div class="filter-chips" aria-label="Filtros de ejemplo">${["Comer","Cuidarme","Mi casa","Servicios","Promociones","Nuevo"].map((item,index)=>`<button type="button" class="${index===0?"active":""}">${item}</button>`).join("")}</div></section>`;
 }
 
-function Footer() {
-  return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div><small>Zonas</small>${zones.map(zone=>`<span>${zone}</span>`).join("")}</div><div><small>Explora</small><a href="#explorar">Descubrir</a><a href="#para-negocios">Para negocios</a><a href="${whatsappShare}" target="_blank" rel="noreferrer">WhatsApp</a><a href="#inicio">Instagram</a><a href="#inicio">Privacidad</a></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
+function BusinessAccess() {
+  return `<aside class="business-access" id="para-negocios"><span>¿Tienes un negocio?</span><a href="/negocios">Aparece en A Dos Pasos <b>→</b></a></aside>`;
 }
 
-document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessCTA(),MicrositeShowcase(),SearchExplore(),Footer()].join("");
+function Footer() {
+  return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div><small>Zonas</small>${zones.map(zone=>`<span>${zone}</span>`).join("")}</div><div><small>Explora</small><a href="#explorar">Descubrir</a><a href="#destacados">Lugares</a><a href="#ideas">Ideas para hoy</a><a href="#para-negocios">Para negocios</a><a href="#inicio">Privacidad</a></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
+}
+
+document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessAccess(),Footer()].join("");
 
 const header=document.querySelector(".site-header"); const menuButton=document.querySelector(".menu-button");
 menuButton.addEventListener("click",()=>{const open=header.classList.toggle("menu-open");menuButton.setAttribute("aria-expanded",String(open))});
@@ -83,8 +91,8 @@ header.querySelectorAll("nav a").forEach(link=>link.addEventListener("click",()=
 const zoneToggle=document.querySelector("[data-zone-toggle]"); const zoneOptions=document.querySelector(".zone-options");
 zoneToggle.addEventListener("click",()=>{zoneOptions.hidden=!zoneOptions.hidden;zoneToggle.classList.toggle("active",!zoneOptions.hidden)});
 
-document.querySelectorAll(".filter-chips button").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".filter-chips button").forEach(item=>item.classList.remove("active"));button.classList.add("active")}));
-document.querySelector(".search-box").addEventListener("submit",event=>{event.preventDefault();const query=event.currentTarget.querySelector("input").value.trim();document.querySelector(".search-feedback").textContent=query?`La búsqueda de “${query}” estará disponible en la siguiente etapa.`:"Escribe un negocio, servicio o categoría para buscar."});
+document.querySelectorAll("[data-search]").forEach(form=>form.addEventListener("submit",event=>{event.preventDefault();const query=form.querySelector("input").value.trim();form.querySelector(".search-feedback").textContent=query?`Explorando “${query}” en El Refugio · pronto podrás filtrar todos los resultados.`:"Escribe un negocio, categoría, servicio o intención."}));
+document.querySelectorAll("[data-quick-search]").forEach(button=>button.addEventListener("click",()=>{const form=document.querySelector("[data-search]");form.querySelector("input").value=button.dataset.quickSearch;form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}))}));
 
 const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("is-visible");observer.unobserve(entry.target)}}),{threshold:.12});
 document.querySelectorAll(".reveal").forEach(element=>observer.observe(element));
