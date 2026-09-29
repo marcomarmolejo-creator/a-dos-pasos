@@ -221,3 +221,65 @@
   .hero-category-track button{flex-basis:9.25rem}
   .business-card{flex-basis:84vw}
 }
+
+/* Desktop discovery carousels V2 */
+.carousel-controls{display:none}
+@media(min-width:769px){
+  .carousel-controls{display:flex;justify-content:flex-end;gap:.55rem;margin:-1.8rem 0 1rem}
+  .carousel-controls button{width:2.9rem;height:2.9rem;display:grid;place-items:center;color:var(--blue);background:#fff;border:1px solid var(--line);border-radius:50%;box-shadow:0 8px 22px rgba(3,20,47,.08);font-size:1.05rem;font-weight:900;cursor:pointer;transition:color .2s,background .2s,transform .2s,opacity .2s}
+  .carousel-controls button:hover:not(:disabled),.carousel-controls button:focus-visible:not(:disabled){color:#fff;background:var(--blue);transform:translateY(-2px)}
+  .carousel-controls button:disabled{opacity:.3;cursor:default;box-shadow:none}
+  .preview-section>.section-more,.nearby .section-more{min-height:2.75rem;display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:1rem;padding:.7rem 0;color:var(--blue);background:transparent;border:0;border-top:1px solid var(--line);font-size:.82rem;font-weight:900;text-align:left;cursor:pointer}
+  .nearby .section-more{color:var(--cyan);border-top-color:rgba(255,255,255,.13)}
+  .section-more span{font-size:1rem}
+  .nearby .carousel-controls button{color:var(--cyan);background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16);box-shadow:none}
+  .nearby .carousel-controls button:hover:not(:disabled),.nearby .carousel-controls button:focus-visible:not(:disabled){color:var(--navy-950);background:var(--cyan)}
+  .business-carousel,.benefits-carousel,.new-carousel,.ideas-carousel,.now-carousel{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
+  .business-carousel::-webkit-scrollbar,.benefits-carousel::-webkit-scrollbar,.new-carousel::-webkit-scrollbar,.ideas-carousel::-webkit-scrollbar,.now-carousel::-webkit-scrollbar{display:none}
+  .business-carousel.is-dragging,.benefits-carousel.is-dragging,.new-carousel.is-dragging,.ideas-carousel.is-dragging,.now-carousel.is-dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
+  .business-carousel>.reveal,.benefits-carousel>.reveal,.new-carousel>.reveal,.ideas-carousel>.reveal{opacity:1;transform:none}
+
+  .intentions-grid{row-gap:.7rem;grid-auto-rows:1fr}
+  .intention-card{height:100%}
+
+  .business-carousel{gap:1.5rem;grid-template-columns:none;grid-template-rows:none}
+  .business-carousel .business-card{flex:0 0 clamp(20rem,30vw,28.75rem);grid-row:auto;grid-template-columns:1fr;grid-template-rows:17rem 1fr;min-height:26rem;scroll-snap-align:start}
+  .business-carousel .business-card .business-image{min-height:17rem}
+  .business-carousel .business-card .business-copy{min-height:9rem;flex-direction:row;align-items:flex-end;justify-content:space-between;padding:1.3rem}
+
+  .benefits-carousel{gap:1.5rem;grid-template-columns:none}
+  .benefits-carousel .benefit-card{isolation:isolate;flex:0 0 clamp(19.5rem,26vw,23rem);min-height:22.5rem;padding:1.45rem;scroll-snap-align:start;background:var(--navy-900);border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 42px rgba(3,20,47,.16)}
+  .benefits-carousel .benefit-card:nth-child(even){background:var(--blue)}
+  .benefits-carousel .benefit-card:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,rgba(3,20,47,.16),rgba(3,20,47,.9) 55%,rgba(3,20,47,.99))}
+  .benefits-carousel .benefit-card:nth-child(even):after{background:linear-gradient(180deg,rgba(8,116,232,.12),rgba(5,74,154,.88) 55%,rgba(3,47,105,.99))}
+  .benefits-carousel .benefit-media{position:absolute;z-index:-2;inset:0;display:block}
+  .benefits-carousel .benefit-media img{width:100%;height:100%;object-fit:cover}
+  .benefits-carousel .benefit-brandmark{min-height:3rem;display:flex;align-items:center;gap:.7rem;max-width:100%}
+  .benefits-carousel .benefit-brandmark span{width:2.8rem;height:2.8rem;display:grid;place-items:center;flex:0 0 auto;color:var(--navy-950);background:#fff;border:2px solid rgba(255,255,255,.5);border-radius:.8rem;font-size:.78rem;font-weight:950;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+  .benefits-carousel .benefit-brandmark strong{color:#fff;font-size:.9rem}
+  .benefits-carousel .benefit-top{align-items:center;margin-top:.8rem}
+  .benefits-carousel .benefit-label-desktop{display:none}.benefits-carousel .benefit-label-mobile{display:inline;color:var(--yellow)}
+  .benefits-carousel .benefit-card>small{margin-top:.9rem;color:rgba(255,255,255,.72);font-size:.68rem;font-weight:850;text-transform:uppercase;letter-spacing:.08em}
+  .benefits-carousel .benefit-card h3{max-width:19rem;margin:.35rem 0 .45rem;font-size:1.6rem;line-height:1.02}
+  .benefits-carousel .benefit-description-desktop{display:none}.benefits-carousel .benefit-description-mobile{display:block;max-width:19rem;color:rgba(255,255,255,.78);font-size:.8rem;line-height:1.4}
+  .benefits-carousel .benefit-meta{display:block;margin-top:.55rem;color:rgba(255,255,255,.62);font-size:.66rem;font-style:normal}
+  .benefits-carousel .benefit-card>a{min-height:2.75rem;display:inline-flex;align-items:center;margin-top:auto;padding:.65rem .95rem;color:var(--navy-950);background:var(--yellow);border-radius:999px;font-size:.74rem;box-shadow:0 8px 18px rgba(0,0,0,.16)}
+  .benefits-carousel .benefit-card>i{right:.7rem;bottom:-.55rem;color:rgba(255,255,255,.09);font-size:5.4rem}
+
+  .new-carousel{gap:1.5rem;grid-template-columns:none;grid-template-rows:none}
+  .new-carousel>a{flex:0 0 clamp(28.75rem,42vw,38.75rem);height:28rem;grid-row:auto;scroll-snap-align:start}
+  .new-carousel .magazine-main,.new-carousel .magazine-side{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;padding:2rem}
+  .new-carousel .magazine-side>div{width:100%}
+  .new-carousel .magazine-side h3{max-width:31rem;font-size:2rem}
+
+  .ideas-carousel{gap:1.5rem;grid-template-columns:none}
+  .ideas-carousel .editorial-card{flex:0 0 clamp(26.25rem,42vw,36.25rem);grid-template-columns:1.1fr .9fr;min-height:22rem;scroll-snap-align:start}
+
+  .nearby{grid-template-columns:16rem minmax(0,1fr);gap:2rem}
+  .nearby .carousel-controls{margin:0 0 .8rem}
+  .now-carousel{display:flex;gap:1.25rem;padding-bottom:.8rem}
+  .now-carousel>a{flex:0 0 clamp(13.125rem,17vw,14.375rem);min-height:18rem;scroll-snap-align:start}
+
+  .how{padding-top:2.95rem;padding-bottom:2.95rem}
+  .how .steps article{padding-top:.65rem;padding-bottom:.65rem}
+}
