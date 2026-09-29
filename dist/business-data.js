@@ -33,10 +33,10 @@ export const intentions = [
 ];
 
 export const benefits = [
-  { business: "Forno Locale", title: "Bebida de cortesía", validity: "Beneficio de bienvenida", businessId: "forno-locale" },
-  { business: "Aura Spa", title: "15 min de aromaterapia sin costo", validity: "Al reservar tratamiento", businessId: "aura-spa" },
-  { business: "Eleva Steam", title: "Evaluación por WhatsApp", validity: "Envía una fotografía", businessId: "eleva-steam" },
-  { business: "Barbería Clásica", title: "Beneficio para primera visita", validity: "Pregunta al agendar", businessId: "barberia-clasica" }
+  { business: "Forno Locale", title: "Bebida de cortesía", validity: "Beneficio de bienvenida", mobileDescription: "En tu primera visita o promoción definida.", meta: "Consulta vigencia", businessId: "forno-locale" },
+  { business: "Aura Spa", title: "15 min de aromaterapia sin costo", validity: "Al reservar tratamiento", mobileDescription: "Incluidos al reservar un tratamiento seleccionado.", meta: "Sujeto a disponibilidad", businessId: "aura-spa" },
+  { business: "Eleva Steam", title: "Evaluación por WhatsApp", validity: "Envía una fotografía", mobileDescription: "Envía una foto y recibe una evaluación inicial.", meta: "Atención por WhatsApp", businessId: "eleva-steam" },
+  { business: "Barbería Clásica", title: "Beneficio para primera visita", validity: "Pregunta al agendar", mobileDescription: "Pregunta por el beneficio disponible al agendar.", meta: "Primera visita", businessId: "barberia-clasica" }
 ];
 
 export const promotions = [
