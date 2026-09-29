@@ -4,7 +4,7 @@ const byId = (id) => businesses.find((business) => business.id === id);
 const whatsappShare = "https://wa.me/?text=" + encodeURIComponent("Hola, quiero conocer cómo puede aparecer mi negocio en A Dos Pasos · El Refugio.");
 
 function HeroDiscovery() {
-  const sectionLinks = [["Qué hacer","#que-hacer"],["Cerca de ti","#cerca-de-ti"],["Beneficios","#beneficios"],["Nuevo en la zona","#nuevo"],["Ideas para hoy","#ideas"],["Cerca de ti ahora","#ahora"]];
+  const sectionLinks = [["Qué hacer","#que-hacer"],["Cerca de ti","#cerca-de-ti"],["Beneficios","#beneficios"],["Nuevo","#nuevo"],["Ideas para hoy","#ideas"],["Ahora","#ahora"]];
   const categoryLinks = [["◒","Comer"],["◡","Café"],["✦","Cuidarme"],["⌂","Mi casa"],["⌁","Servicios"],["%","Promociones"],["+","Nuevos"]];
   return `<section class="hero" id="descubrir">
     <div class="hero-orbit hero-orbit--one"></div><div class="hero-orbit hero-orbit--two"></div>
@@ -81,7 +81,7 @@ function BusinessAccess() {
 }
 
 function Footer() {
-  return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div><small>Zonas</small>${zones.map(zone=>`<span>${zone}</span>`).join("")}</div><div><small>Explora</small><a href="#que-hacer">Descubrir</a><a href="#cerca-de-ti">Lugares</a><a href="#ideas">Ideas para hoy</a><a href="#para-negocios">Para negocios</a><a href="#inicio">Privacidad</a></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
+  return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map(zone=>`<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="#que-hacer">Descubrir</a><a href="#cerca-de-ti">Lugares</a><a href="#ideas">Ideas para hoy</a><a href="#para-negocios">Para negocios</a><a href="#inicio">Privacidad</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
 }
 
 document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessAccess(),Footer()].join("");
@@ -97,8 +97,9 @@ zoneToggle.addEventListener("click",()=>{zoneOptions.hidden=!zoneOptions.hidden;
 document.querySelectorAll("[data-search]").forEach(form=>form.addEventListener("submit",event=>{event.preventDefault();const query=form.querySelector("input").value.trim();form.querySelector(".search-feedback").textContent=query?`Explorando “${query}” en El Refugio · pronto podrás filtrar todos los resultados.`:"Escribe un negocio, categoría, servicio o intención."}));
 document.querySelectorAll("[data-quick-search]").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll("[data-quick-search]").forEach(item=>item.classList.remove("is-active"));button.classList.add("is-active");const form=document.querySelector("[data-search]");form.querySelector("input").value=button.dataset.quickSearch;form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}))}));
 document.querySelectorAll(".mobile-section-nav a").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll(".mobile-section-nav a").forEach(item=>item.classList.remove("is-active"));link.classList.add("is-active")}));
-document.querySelectorAll("[data-expand-section]").forEach(button=>{button.dataset.label=button.childNodes[0].nodeValue.trim();button.addEventListener("click",()=>{const section=button.closest(".preview-section");const expanded=section.classList.toggle("is-expanded");button.setAttribute("aria-expanded",String(expanded));button.childNodes[0].nodeValue=(expanded?"Mostrar menos":button.dataset.label)+" "})});
+document.querySelectorAll("[data-expand-section]").forEach(button=>{button.dataset.label=button.childNodes[0].nodeValue.trim();button.addEventListener("click",()=>{const section=button.closest(".preview-section");if(matchMedia("(max-width: 768px)").matches){const rail=section.querySelector(".business-grid,.benefits-track,.magazine-grid,.editorial-grid");rail?.scrollBy({left:rail.clientWidth*.82,behavior:"smooth"});return}const expanded=section.classList.toggle("is-expanded");button.setAttribute("aria-expanded",String(expanded));button.childNodes[0].nodeValue=(expanded?"Mostrar menos":button.dataset.label)+" "})});
 document.querySelector("[data-scroll-more]")?.addEventListener("click",()=>{const track=document.querySelector(".nearby-track");track.scrollBy({left:track.clientWidth*.8,behavior:"smooth"})});
+document.querySelectorAll(".footer-toggle").forEach(button=>button.addEventListener("click",()=>{const group=button.closest(".footer-group");const open=group.classList.toggle("is-open");button.setAttribute("aria-expanded",String(open));button.querySelector("span").textContent=open?"−":"+"}));
 document.querySelector(".menu-close")?.addEventListener("click",closeMenu);
 document.addEventListener("keydown",event=>{if(event.key==="Escape"&&header.classList.contains("menu-open"))closeMenu()});
 
