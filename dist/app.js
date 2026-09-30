@@ -89,11 +89,15 @@ function BusinessAccess() {
   return `<aside class="business-access" id="para-negocios"><span>¿Tienes un negocio?</span><a href="/para-negocios/">Aparece en A Dos Pasos <b>→</b></a></aside>`;
 }
 
+function ResidentAccess() {
+  return `<aside class="resident-access"><div><span>Para residentes</span><strong>Descubre más de El Refugio.</strong></div><a href="/unete/">Únete gratis <b>→</b></a></aside>`;
+}
+
 function Footer() {
   return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map(zone=>`<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="#que-hacer">Descubrir</a><a href="#cerca-de-ti">Lugares</a><a href="#ideas">Ideas para hoy</a><a href="/para-negocios/">Para negocios</a><a href="#inicio">Privacidad</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
 }
 
-document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),CategoryResults(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessAccess(),Footer()].join("");
+document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),CategoryResults(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),ResidentAccess(),BusinessAccess(),Footer()].join("");
 
 const header=document.querySelector(".site-header"); const menuButton=document.querySelector(".menu-button");
 const closeMenu=()=>{header.classList.remove("menu-open");document.body.classList.remove("menu-is-open");menuButton.setAttribute("aria-expanded","false")};

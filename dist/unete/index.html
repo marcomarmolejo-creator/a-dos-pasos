@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#051b3d" />
+    <meta name="description" content="Únete gratis a A Dos Pasos y recibe una selección útil de lugares, beneficios y novedades de El Refugio." />
+    <title>Únete · A Dos Pasos</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%23051b3d'/%3E%3Cpath d='M16 19c0-6 5-11 11-11s11 5 11 11c0 9-11 19-11 19S16 28 16 19Z' fill='%231bbdff'/%3E%3Ccircle cx='27' cy='19' r='4' fill='white'/%3E%3Cpath d='M33 45c8-1 13-5 16-11' fill='none' stroke='%23ffb229' stroke-width='4' stroke-linecap='round' stroke-dasharray='4 6'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/unete.css" />
+  </head>
+  <body class="resident-page">
+    <a class="skip-link" href="#resident-form">Saltar al formulario</a>
+    <header class="site-header resident-header" id="inicio">
+      <a class="brand" href="/" aria-label="A Dos Pasos, volver a inicio"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /></a>
+      <nav aria-label="Navegación principal"><button class="menu-close" type="button" aria-label="Cerrar menú">Cerrar <span>×</span></button><a href="/#descubrir">Descubrir</a><a href="/directorio.html?categoria=comer">Directorio</a><a href="/#beneficios">Beneficios</a><a href="/para-negocios/">Para negocios</a></nav>
+      <a class="header-cta" href="#resident-form">Unirme gratis</a>
+      <button class="menu-button" type="button" aria-label="Abrir menú" aria-expanded="false">Menú</button>
+    </header>
+
+    <main class="resident-main">
+      <section class="resident-layout">
+        <div class="resident-story">
+          <div class="resident-hero">
+            <span class="eyebrow">Para residentes</span>
+            <h1>Descubre más de lo que tienes cerca.</h1>
+            <p class="resident-lead">Únete gratis a A Dos Pasos y recibe una selección de lugares, promociones, beneficios y novedades de El Refugio.</p>
+            <p class="resident-support">Sin grupos saturados. Sin mensajes todos los días. Solo cosas que vale la pena conocer cerca de casa.</p>
+            <div class="resident-actions"><a class="resident-button resident-button--primary" href="#resident-form">Unirme gratis</a><a class="resident-button resident-button--secondary" href="/">Seguir explorando</a></div>
+          </div>
+
+          <section class="resident-value" aria-labelledby="resident-value-title">
+            <span class="eyebrow">¿Qué recibes?</span>
+            <h2 id="resident-value-title">Una selección editorial local para ayudarte a descubrir mejor tu zona.</h2>
+            <ul>
+              <li><span>01</span><strong>Lugares nuevos</strong></li>
+              <li><span>02</span><strong>Promociones seleccionadas</strong></li>
+              <li><span>03</span><strong>Beneficios locales</strong></li>
+              <li><span>04</span><strong>Ideas para hoy</strong></li>
+              <li><span>05</span><strong>Servicios útiles</strong></li>
+              <li><span>06</span><strong>Recomendaciones de la zona</strong></li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="resident-form-column">
+          <form id="resident-form" class="resident-form">
+            <header class="resident-form-heading"><span>Alta gratuita</span><h2>Únete a A Dos Pasos</h2><p>WhatsApp será el canal principal para el piloto de El Refugio.</p><small>Puedes dejar tu email si también quieres recibir futuros resúmenes.</small></header>
+
+            <section class="resident-fields" aria-labelledby="resident-details-title">
+              <h3 id="resident-details-title">Tus datos</h3>
+              <label>Nombre *<input name="name" type="text" required maxlength="80" autocomplete="name" placeholder="¿Cómo te llamas?" /></label>
+              <label>WhatsApp *<input name="whatsapp" type="tel" required autocomplete="tel" placeholder="442 000 0000" /></label>
+              <label>Email <span>Opcional</span><input name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" /></label>
+              <label>Zona *<select name="zone" required><option>El Refugio</option><option>Zibatá</option><option>Zakia</option><option>La Pradera</option><option>Juriquilla</option><option>El Campanario</option></select></label>
+              <label>Colonia / privada <span>Opcional</span><input name="neighborhood" type="text" maxlength="100" placeholder="Sin dirección exacta" /></label>
+              <label>Comentarios <span>Opcional</span><textarea name="comments" rows="3" maxlength="240" placeholder="Algo que te gustaría encontrar cerca"></textarea></label>
+            </section>
+
+            <fieldset class="resident-interests">
+              <legend>¿Qué te interesa recibir?</legend>
+              <p>Elige una o varias opciones.</p>
+              <div class="interest-chips">
+                <label><input type="checkbox" name="interests" value="Todo" /><span>Todo</span></label>
+                <label><input type="checkbox" name="interests" value="Comer" /><span>Comer</span></label>
+                <label><input type="checkbox" name="interests" value="Café" /><span>Café</span></label>
+                <label><input type="checkbox" name="interests" value="Cuidarme" /><span>Cuidarme</span></label>
+                <label><input type="checkbox" name="interests" value="Mi casa" /><span>Mi casa</span></label>
+                <label><input type="checkbox" name="interests" value="Mascotas" /><span>Mascotas</span></label>
+                <label><input type="checkbox" name="interests" value="Servicios" /><span>Servicios</span></label>
+                <label><input type="checkbox" name="interests" value="Promociones" /><span>Promociones</span></label>
+                <label><input type="checkbox" name="interests" value="Nuevos lugares" /><span>Nuevos lugares</span></label>
+                <label><input type="checkbox" name="interests" value="Ideas para hoy" /><span>Ideas para hoy</span></label>
+              </div>
+              <p class="interest-error" data-interest-error role="alert" hidden>Selecciona al menos una opción.</p>
+            </fieldset>
+
+            <section class="resident-frequency" aria-label="Frecuencia de mensajes"><span>Frecuencia estimada durante el piloto</span><strong>1–2 mensajes por semana</strong><p>Te escribiremos solo cuando tengamos algo que realmente valga la pena compartir.</p></section>
+
+            <section class="resident-privacy" id="aviso-privacidad" aria-labelledby="privacy-title"><span>Tu información es tuya</span><h3 id="privacy-title">Contacto cuidado por A Dos Pasos</h3><p>A Dos Pasos no vende ni comparte tu información de contacto con los negocios publicados en la plataforma.</p><p>El canal se administra directamente desde A Dos Pasos.</p><label><input name="consent" type="checkbox" required /><span>Acepto recibir comunicaciones de A Dos Pasos por los medios que proporcioné.</span></label><a href="#aviso-privacidad">Ver aviso de privacidad</a></section>
+
+            <button class="resident-submit" type="submit">Unirme a A Dos Pasos</button>
+            <p class="resident-optout">Puedes dejar de recibir mensajes cuando quieras.</p>
+            <p class="resident-prototype-note">Prototipo sin backend: el alta se simula y tus datos no se almacenan permanentemente.</p>
+          </form>
+
+          <section class="resident-success" data-success hidden tabindex="-1">
+            <span>Alta preparada</span>
+            <h2>¡Ya estás dentro!</h2>
+            <p>Gracias por unirte a A Dos Pasos.</p>
+            <p>Muy pronto recibirás una selección de lugares, beneficios y novedades de El Refugio.</p>
+            <small>Esta demostración no envió ni almacenó tus datos permanentemente.</small>
+            <a href="/">Volver a explorar</a>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer resident-footer"><div class="footer-brand"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><small>Explora</small><div class="footer-group-content"><a href="/">Inicio</a><a href="/directorio.html?categoria=comer">Directorio</a><a href="/para-negocios/">Para negocios</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>
+    <script type="module" src="/unete.js"></script>
+  </body>
+</html>
