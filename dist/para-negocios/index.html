@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#051b3d" />
+    <meta name="description" content="Solicita una ficha gratuita para tu negocio en A Dos Pasos · El Refugio." />
+    <title>Para negocios · A Dos Pasos</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%23051b3d'/%3E%3Cpath d='M16 19c0-6 5-11 11-11s11 5 11 11c0 9-11 19-11 19S16 28 16 19Z' fill='%231bbdff'/%3E%3Ccircle cx='27' cy='19' r='4' fill='white'/%3E%3Cpath d='M33 45c8-1 13-5 16-11' fill='none' stroke='%23ffb229' stroke-width='4' stroke-linecap='round' stroke-dasharray='4 6'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/directory.css" />
+    <link rel="stylesheet" href="/para-negocios.css" />
+  </head>
+  <body class="business-page">
+    <a class="skip-link" href="#alta-negocio">Saltar al formulario</a>
+    <header class="site-header business-header" id="inicio">
+      <a class="brand" href="/" aria-label="A Dos Pasos, volver a inicio"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /></a>
+      <nav aria-label="Navegación principal"><button class="menu-close" type="button" aria-label="Cerrar menú">Cerrar <span>×</span></button><a href="/#descubrir">Descubrir</a><a href="/#que-hacer">Qué hacer</a><a href="/directorio.html?categoria=servicios">Directorio</a><a href="/#beneficios">Beneficios</a></nav>
+      <a class="header-cta" href="#alta-negocio">Crear mi ficha</a>
+      <button class="menu-button" type="button" aria-label="Abrir menú" aria-expanded="false">Menú</button>
+    </header>
+
+    <main>
+      <section class="business-hero">
+        <div>
+          <span class="eyebrow">Para negocios</span>
+          <h1>Haz que tus vecinos sepan que estás aquí.</h1>
+          <p class="business-hero-lead">Crea tu presencia gratuita en A Dos Pasos y ayuda a las personas de tu zona a descubrir tu negocio.</p>
+          <p class="business-hero-support"><strong>La ficha básica es gratuita.</strong> Solo necesitamos información clara, una buena imagen y datos actualizados.</p>
+          <a class="business-primary-link" href="#alta-negocio">Crear mi ficha gratuita</a>
+        </div>
+        <aside aria-label="Resumen del proceso">
+          <span>01</span><p>Completa los datos</p>
+          <span>02</span><p>Revisa tu vista previa</p>
+          <span>03</span><p>Envía para revisión</p>
+          <small>No se publica automáticamente.</small>
+        </aside>
+      </section>
+
+      <section class="free-includes" aria-labelledby="free-includes-title">
+        <div class="free-includes-heading">
+          <span class="eyebrow">Tu presencia gratuita incluye</span>
+          <h2 id="free-includes-title">Lo esencial para que puedan encontrarte y contactarte.</h2>
+        </div>
+        <ul>
+          <li>Nombre comercial</li><li>Logo</li><li>1 imagen principal</li><li>Categoría</li><li>Descripción corta</li><li>Dirección</li><li>Google Maps</li><li>WhatsApp</li><li>Horarios</li><li>Redes sociales</li><li>CTA Contactar</li><li>CTA Cómo llegar</li>
+        </ul>
+        <div class="free-includes-notes">
+          <p>La ficha gratuita no incluye micrositio, video, galería, promoción destacada ni aparición garantizada en portada.</p>
+          <p>A Dos Pasos puede seleccionar editorialmente negocios relevantes para aparecer en secciones especiales, independientemente de que sean gratuitos o de pago.</p>
+        </div>
+      </section>
+
+      <section class="business-workspace" id="alta-negocio">
+        <header class="workspace-heading">
+          <span class="eyebrow">Alta gratuita</span>
+          <h2>Cuéntanos sobre tu negocio</h2>
+          <p>Los campos marcados con * son obligatorios. La solicitud quedará pendiente de revisión editorial.</p>
+        </header>
+
+        <div class="business-layout">
+          <div class="business-form-column">
+            <form id="business-form">
+              <fieldset class="form-section">
+                <legend><span>01</span> Tu negocio</legend>
+                <div class="field-grid field-grid--two">
+                  <label>Nombre comercial *<input name="businessName" type="text" required maxlength="80" autocomplete="organization" placeholder="Ej. Café Patio" /></label>
+                  <label>Categoría *<select name="category" required><option value="">Selecciona una categoría</option><option>Comer</option><option>Café</option><option>Cuidarme</option><option>Mi casa</option><option>Servicios</option><option>Mascotas</option><option>Salud</option><option>Comprar</option><option>Aprender</option><option>Otros</option></select></label>
+                </div>
+                <label>Descripción breve *<textarea name="description" required maxlength="180" rows="4" placeholder="Describe qué haces y por qué deberían conocerte."></textarea><span class="field-help"><span>Máximo recomendado: 180 caracteres.</span><output data-character-count>0 / 180</output></span></label>
+              </fieldset>
+
+              <fieldset class="form-section">
+                <legend><span>02</span> Ubicación</legend>
+                <div class="field-grid field-grid--two">
+                  <label>Zona *<select name="zone" required><option>El Refugio</option><option>Zibatá</option><option>Zakia</option><option>La Pradera</option><option>Juriquilla</option><option>El Campanario</option></select></label>
+                  <label>Horario *<input name="hours" type="text" required maxlength="120" placeholder="Ej. Lun–Sáb · 9:00–19:00" /></label>
+                </div>
+                <label>Dirección *<input name="address" type="text" required maxlength="180" autocomplete="street-address" placeholder="Calle, número y referencia" /></label>
+                <label>Google Maps URL *<input name="mapsUrl" type="url" required inputmode="url" placeholder="https://maps.google.com/…" /></label>
+                <fieldset class="inline-choice"><legend>¿Atiende a domicilio? *</legend><label><input name="delivery" type="radio" value="yes" required /> Sí</label><label><input name="delivery" type="radio" value="no" required checked /> No</label></fieldset>
+              </fieldset>
+
+              <fieldset class="form-section">
+                <legend><span>03</span> Contacto del negocio</legend>
+                <div class="field-grid field-grid--two">
+                  <label>WhatsApp *<input name="whatsapp" type="tel" required autocomplete="tel" placeholder="442 000 0000" /></label>
+                  <label>Teléfono<input name="phone" type="tel" autocomplete="tel" placeholder="Opcional" /></label>
+                  <label>Instagram<input name="instagram" type="url" inputmode="url" placeholder="https://instagram.com/…" /></label>
+                  <label>Facebook<input name="facebook" type="url" inputmode="url" placeholder="https://facebook.com/…" /></label>
+                </div>
+                <label>Sitio web<input name="website" type="url" inputmode="url" placeholder="https://tu-negocio.com" /></label>
+              </fieldset>
+
+              <fieldset class="form-section">
+                <legend><span>04</span> Imágenes</legend>
+                <div class="upload-grid">
+                  <label class="upload-card" data-upload-card="logo">
+                    <input name="logo" type="file" accept="image/jpeg,image/png,image/webp" required />
+                    <span class="upload-preview"><b>Logo del negocio *</b><small>JPG · PNG · WEBP</small><em>Seleccionar archivo</em></span>
+                  </label>
+                  <label class="upload-card" data-upload-card="mainImage">
+                    <input name="mainImage" type="file" accept="image/jpeg,image/png,image/webp" required />
+                    <span class="upload-preview"><b>Imagen principal *</b><small>JPG · PNG · WEBP</small><em>Seleccionar archivo</em></span>
+                  </label>
+                </div>
+                <div class="image-guidance"><p>Sube una fotografía que muestre claramente tu negocio, producto, servicio o experiencia.</p><strong>No recomendamos usar únicamente el logo como imagen principal.</strong><ul><li>Buena iluminación</li><li>Imagen clara</li><li>Sin exceso de texto</li><li>Resolución suficiente</li></ul></div>
+                <p class="form-error" data-image-error role="alert" hidden></p>
+              </fieldset>
+
+              <fieldset class="form-section form-section--private">
+                <legend><span>05</span> Contacto responsable</legend>
+                <p class="privacy-note"><b>Esta información no se mostrará públicamente.</b> Usaremos estos datos únicamente para verificar o actualizar la información de tu negocio.</p>
+                <div class="field-grid field-grid--two">
+                  <label>Nombre del responsable *<input name="contactName" type="text" required autocomplete="name" /></label>
+                  <label>WhatsApp / teléfono *<input name="contactPhone" type="tel" required autocomplete="tel" /></label>
+                </div>
+                <label>Email opcional<input name="contactEmail" type="email" autocomplete="email" placeholder="nombre@correo.com" /></label>
+              </fieldset>
+
+              <fieldset class="form-section">
+                <legend><span>06</span> Promoción actual <small>Opcional</small></legend>
+                <fieldset class="inline-choice"><legend>¿Tienes alguna promoción o beneficio actualmente?</legend><label><input name="hasPromotion" type="radio" value="yes" /> Sí</label><label><input name="hasPromotion" type="radio" value="no" checked /> No</label></fieldset>
+                <div class="promotion-fields" data-promotion-fields hidden>
+                  <label>Título de promoción<input name="promotionTitle" type="text" maxlength="90" /></label>
+                  <label>Descripción<textarea name="promotionDescription" rows="3" maxlength="220"></textarea></label>
+                  <label>Vigencia<input name="promotionExpiration" type="text" maxlength="100" placeholder="Ej. Hasta el 30 de noviembre" /></label>
+                </div>
+                <p class="promotion-notice">La ficha gratuita puede registrar esta información, pero los espacios destacados como Beneficios Locales o Promoción Activa se contratan por separado.</p>
+              </fieldset>
+
+              <fieldset class="form-section" id="reglas">
+                <legend><span>07</span> Reglas y consentimiento</legend>
+                <div class="consent-list">
+                  <label><input name="confirmAccuracy" type="checkbox" required /> <span>He revisado la información y confirmo que es correcta.</span></label>
+                  <label><input name="authorizePublication" type="checkbox" required /> <span>Autorizo a A Dos Pasos a publicar los datos comerciales, logo e imágenes proporcionadas dentro de la plataforma.</span></label>
+                  <label><input name="acceptReview" type="checkbox" required /> <span>Entiendo que la solicitud está sujeta a revisión editorial antes de publicarse.</span></label>
+                </div>
+                <a class="rules-link" href="#reglas-comerciales">Ver reglas comerciales</a>
+                <div class="commercial-rules" id="reglas-comerciales"><p>La información debe corresponder a un negocio real y mantenerse actualizada. A Dos Pasos puede solicitar ajustes de contenido o imágenes para conservar la claridad y calidad editorial de la plataforma. El envío de esta solicitud no garantiza publicación, portada ni espacios promocionales.</p></div>
+              </fieldset>
+
+              <button class="submit-business" type="submit">Enviar mi negocio para revisión</button>
+              <p class="submission-disclaimer">Prototipo sin backend: el envío se simula en este dispositivo y no almacena información permanentemente.</p>
+            </form>
+
+            <section class="submission-success" data-success hidden tabindex="-1">
+              <span>Solicitud preparada</span>
+              <h2>¡Gracias!</h2>
+              <p>Recibimos la información de tu negocio.</p>
+              <p>Revisaremos los datos e imágenes antes de publicar tu ficha en A Dos Pasos.</p>
+              <p>Si necesitamos algún ajuste, nos pondremos en contacto contigo.</p>
+              <small>Esta demostración no envió ni almacenó los datos permanentemente. El estado preparado es <b>pendiente de revisión</b>.</small>
+              <button type="button" data-edit-submission>Volver al formulario</button>
+            </section>
+          </div>
+
+          <aside class="business-preview" aria-labelledby="preview-title">
+            <div class="preview-heading"><span>Vista previa</span><h2 id="preview-title">Así podría verse tu negocio</h2><p>Esta es una vista previa. La presentación final puede ajustarse para mantener la calidad visual de A Dos Pasos.</p></div>
+            <article class="free-business-card directory-card preview-business-card">
+              <div class="directory-card-media preview-main-media"><div class="preview-image-placeholder">Tu imagen principal</div><img data-preview-main alt="" hidden /><span data-preview-zone>El Refugio</span></div>
+              <div class="directory-card-body">
+                <div class="directory-card-brand"><div class="directory-logo preview-logo"><span data-preview-initials>TN</span><img data-preview-logo alt="" hidden /></div><div><p data-preview-category>Tu categoría</p><h2 data-preview-name>Tu negocio</h2></div></div>
+                <p class="directory-description" data-preview-description>Una descripción breve ayudará a tus vecinos a entender lo que haces.</p>
+                <dl class="directory-details"><div><dt>Zona</dt><dd data-preview-zone-detail>El Refugio</dd></div><div><dt>Dirección</dt><dd data-preview-address>Tu dirección</dd></div><div><dt>Horario</dt><dd data-preview-hours>Tu horario</dd></div></dl>
+                <div class="directory-card-actions"><button type="button" class="dir-button dir-button--primary">Contactar</button><button type="button" class="dir-button dir-button--secondary">Cómo llegar</button></div>
+              </div>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer business-footer"><div class="footer-brand"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Haz que te encuentren cerca de casa.</h2><p>Una plataforma local para conectar negocios y vecinos.</p></div><div class="footer-group"><small>Explora</small><div class="footer-group-content"><a href="/">Inicio</a><a href="/directorio.html?categoria=comer">Directorio</a><a href="#alta-negocio">Crear mi ficha</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>
+    <script type="module" src="/para-negocios.js"></script>
+  </body>
+</html>
