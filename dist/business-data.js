@@ -40,7 +40,7 @@ export const benefits = [
 ];
 
 export const promotions = [
-  { business: "Forno Locale", title: "Martes de pizza", description: "Pregunta por la promoción activa de la semana.", start_date: "2026-09-01", end_date: "2026-12-15", businessId: "forno-locale" }
+  { business: "Forno Locale", title: "Martes de pizza", description: "Pregunta por la promoción activa de la semana y descubre qué incluye.", start_date: "2026-09-01", end_date: "2026-12-15", businessId: "forno-locale" }
 ];
 
 export const zones = ["El Refugio", "Zibatá", "Zakia", "La Pradera", "Juriquilla", "El Campanario"];
