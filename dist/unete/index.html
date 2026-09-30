@@ -53,9 +53,14 @@
               <label>Nombre *<input name="name" type="text" required maxlength="80" autocomplete="name" placeholder="¿Cómo te llamas?" /></label>
               <label>WhatsApp *<input name="whatsapp" type="tel" required autocomplete="tel" placeholder="442 000 0000" /></label>
               <label>Email <span>Opcional</span><input name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" /></label>
-              <label>Zona *<select name="zone" required><option>El Refugio</option><option>Zibatá</option><option>Zakia</option><option>La Pradera</option><option>Juriquilla</option><option>El Campanario</option></select></label>
-              <label>Colonia / privada <span>Opcional</span><input name="neighborhood" type="text" maxlength="100" placeholder="Sin dirección exacta" /></label>
-              <label>Comentarios <span>Opcional</span><textarea name="comments" rows="3" maxlength="240" placeholder="Algo que te gustaría encontrar cerca"></textarea></label>
+              <label class="resident-zone-field">Zona *<span class="resident-fixed-zone" aria-label="Zona seleccionada: El Refugio">El Refugio</span><select class="resident-zone-select" name="zone" required><option>El Refugio</option><option>Zibatá</option><option>Zakia</option><option>La Pradera</option><option>Juriquilla</option><option>El Campanario</option></select></label>
+              <details class="resident-optional-details">
+                <summary>Quiero contarte algo más <span>Opcional</span></summary>
+                <div class="resident-optional-content">
+                  <label>Colonia / privada <span>Opcional</span><input name="neighborhood" type="text" maxlength="100" placeholder="Sin dirección exacta" /></label>
+                  <label>Comentarios <span>Opcional</span><textarea name="comments" rows="3" maxlength="240" placeholder="Algo que te gustaría encontrar cerca"></textarea></label>
+                </div>
+              </details>
             </section>
 
             <fieldset class="resident-interests">

@@ -2,6 +2,16 @@ const form = document.querySelector("#resident-form");
 const interestInputs = [...form.querySelectorAll('input[name="interests"]')];
 const interestError = document.querySelector("[data-interest-error]");
 const success = document.querySelector("[data-success]");
+const optionalDetails = document.querySelector(".resident-optional-details");
+const desktopResidentLayout = window.matchMedia("(min-width: 901px)");
+
+function syncOptionalFields(event = desktopResidentLayout) {
+  if (!optionalDetails) return;
+  optionalDetails.open = !event.matches;
+}
+
+syncOptionalFields();
+desktopResidentLayout.addEventListener("change", syncOptionalFields);
 
 /*
   PRINCIPIO INTERNO
