@@ -68,10 +68,11 @@ const micrositeDirectoryBusinesses = businesses.map((business) => ({
   badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, business.hasPromotion ? "Beneficio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
   micrositeUrl: business.micrositeUrl,
   isDemo: false,
-  isOpen: business.isOpen,
+  openNow: business.id === "eleva-steam" ? false : business.isOpen,
+  delivery: business.id === "eleva-steam",
   isNew: business.isNew,
-  hasBenefit: business.hasPromotion,
-  isDelivery: business.id === "eleva-steam"
+  hasBenefit: ["forno-locale", "aura-spa", "barberia-clasica", "eleva-steam"].includes(business.id),
+  hasMicrosite: true
 }));
 
 const freeDemoBusinesses = [
@@ -79,13 +80,13 @@ const freeDemoBusinesses = [
     id: "cafe-patio-demo", name: "Café Patio", category: "Café", categories: ["cafe"], zone: "El Refugio",
     description: "Café de especialidad y desayunos para una pausa cerca de casa.", image: "/assets/cafe-patio-demo.svg", logo: null,
     listingType: "free", hours: "8:00–20:00", whatsapp: null, maps: null, badges: ["A 5 min"], micrositeUrl: null,
-    isDemo: true, isOpen: true, isNew: false, hasBenefit: false, isDelivery: false
+    isDemo: true, openNow: true, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
   },
   {
     id: "vet-cerca-demo", name: "Vet Cerca", category: "Mascotas", categories: ["mascotas", "servicios"], zone: "El Refugio",
     description: "Atención veterinaria y servicios básicos para mascotas de la zona.", image: "/assets/vet-cerca-demo.png", logo: null,
     listingType: "free", hours: "Horario por confirmar", whatsapp: null, maps: null, badges: [], micrositeUrl: null,
-    isDemo: true, isOpen: false, isNew: false, hasBenefit: false, isDelivery: false
+    isDemo: true, openNow: false, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
   }
 ];
 

@@ -7,7 +7,13 @@ const requestedQuery = params.get("buscar")?.trim() || "";
 const state = {
   activeCategory: directoryCategories[requestedCategory] ? requestedCategory : "todo",
   query: requestedQuery,
-  filters: new Set()
+  activeFilters: {
+    openNow: false,
+    delivery: false,
+    isNew: false,
+    hasBenefit: false,
+    hasMicrosite: false
+  }
 };
 
 const escapeHtml = (value = "") => String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
@@ -35,19 +41,14 @@ function DirectoryFooter() {
 
 function DirectoryShell() {
   const categoryButtons = Object.entries(directoryCategories).map(([key, config]) => `<button type="button" data-category="${key}">${config.label}</button>`).join("");
-  const filters = [["open","Abierto ahora"],["delivery","A domicilio"],["new","Nuevo"],["benefit","Con beneficio"],["microsite","Con micrositio"]];
+  const filters = [["openNow","Abierto ahora"],["delivery","A domicilio"],["isNew","Nuevo"],["hasBenefit","Con beneficio"],["hasMicrosite","Con micrositio"]];
   return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1>Encuentra algo cerca de ti.</h1><p>Negocios, lugares y servicios locales para descubrir sin perderte entre resultados repetidos.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><span>Resultados en El Refugio</span><strong data-directory-count></strong><small data-directory-active></small><button type="button" data-change-category>Ver categorías</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categorías</span><div class="directory-category-chips" id="category-chips">${categoryButtons}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtros rápidos</span><div class="directory-option-chips">${filters.map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div><div class="directory-active-filters" data-active-filters hidden><span data-active-filter-count></span><button type="button" data-clear-filters>Limpiar</button><button type="button" data-view-all>Ver todos</button></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Todavía no encontramos algo aquí.</h2><p>Estamos preparando nuevas recomendaciones para esta categoría.</p><div class="directory-empty-actions"><button type="button" data-explore-category>Explorar otra categoría</button><button type="button" class="directory-empty-clear" data-empty-clear hidden>Limpiar filtros</button></div></div></section><aside class="directory-business-cta"><div><span>¿Tienes un negocio en la zona?</span><a href="/para-negocios/">Aparece gratis en A Dos Pasos →</a></div></aside>${DirectoryFooter()}`;
 }
 
 document.querySelector("#directory-root").innerHTML = DirectoryShell();
 
 function matchesFilters(business) {
-  if (state.filters.has("open") && !business.isOpen) return false;
-  if (state.filters.has("delivery") && !business.isDelivery) return false;
-  if (state.filters.has("new") && !business.isNew) return false;
-  if (state.filters.has("benefit") && !business.hasBenefit) return false;
-  if (state.filters.has("microsite") && business.listingType !== "microsite") return false;
-  return true;
+  return Object.entries(state.activeFilters).every(([property, active]) => !active || business[property] === true);
 }
 
 export function filterBusinesses() {
@@ -84,11 +85,11 @@ function updateUrl() {
 
 function renderDirectory({ scroll = false } = {}) {
   const matches = filterBusinesses();
-  const filterCount = state.filters.size;
+  const filterCount = Object.values(state.activeFilters).filter(Boolean).length;
   document.querySelector("[data-directory-count]").textContent = resultCount(matches);
   document.querySelector("[data-directory-active]").textContent = state.query ? "Búsqueda en todo el directorio" : `Categoría: ${directoryCategories[state.activeCategory].label}`;
   document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.activeCategory));
-  document.querySelectorAll("[data-filter]").forEach((button) => { const active = state.filters.has(button.dataset.filter); button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
+  document.querySelectorAll("[data-filter]").forEach((button) => { const active = state.activeFilters[button.dataset.filter]; button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
   document.querySelector("[data-active-filters]").hidden = filterCount === 0;
   document.querySelector("[data-active-filter-count]").textContent = `${filterCount} ${filterCount === 1 ? "filtro activo" : "filtros activos"}`;
   document.querySelector("[data-directory-grid]").innerHTML = matches.map((business) => business.listingType === "free" ? FreeBusinessCard(business) : MicrositeBusinessCard(business)).join("");
@@ -99,14 +100,15 @@ function renderDirectory({ scroll = false } = {}) {
 }
 
 document.querySelectorAll("[data-category]").forEach((button) => button.addEventListener("click", () => { state.activeCategory = button.dataset.category; state.query = ""; document.querySelector("#directory-search-input").value = ""; renderDirectory({ scroll: true }); }));
-document.querySelectorAll("[data-filter]").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.filter; state.filters.has(key) ? state.filters.delete(key) : state.filters.add(key); renderDirectory({ scroll: true }); }));
+const toggleQuickFilter = (button) => { const key = button.dataset.filter; state.activeFilters[key] = !state.activeFilters[key]; renderDirectory({ scroll: true }); };
+document.querySelectorAll("[data-filter]").forEach((button) => button.addEventListener("click", () => toggleQuickFilter(button)));
 document.querySelector("[data-directory-search]").addEventListener("submit", (event) => { event.preventDefault(); const query = event.currentTarget.querySelector("input").value.trim(); const aliasCategory = findDirectoryAliasCategory(query); const isCategoryName = aliasCategory && normalizeDirectorySearch(directoryCategories[aliasCategory].label) === normalizeDirectorySearch(query); state.activeCategory = isCategoryName ? aliasCategory : "todo"; state.query = isCategoryName ? "" : query; renderDirectory({ scroll: true }); });
 document.querySelector("[data-change-category]").addEventListener("click", () => { document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); document.querySelector("[data-category]")?.focus({ preventScroll: true }); });
-const clearQuickFilters = () => { state.filters.clear(); renderDirectory(); };
+const clearQuickFilters = () => { Object.keys(state.activeFilters).forEach((key) => { state.activeFilters[key] = false; }); renderDirectory(); };
 document.querySelector("[data-clear-filters]").addEventListener("click", clearQuickFilters);
 document.querySelector("[data-empty-clear]").addEventListener("click", clearQuickFilters);
-document.querySelector("[data-view-all]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); });
-document.querySelector("[data-explore-category]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
+document.querySelector("[data-view-all]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; Object.keys(state.activeFilters).forEach((key) => { state.activeFilters[key] = false; }); document.querySelector("#directory-search-input").value = ""; renderDirectory(); });
+document.querySelector("[data-explore-category]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; Object.keys(state.activeFilters).forEach((key) => { state.activeFilters[key] = false; }); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
 
 const toast = document.querySelector(".directory-toast");
 let toastTimer;
