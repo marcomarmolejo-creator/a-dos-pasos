@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#051b3d" />
+    <meta name="description" content="Directorio local de negocios, lugares y servicios de A Dos Pasos · El Refugio." />
+    <title>Directorio local · A Dos Pasos</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%23051b3d'/%3E%3Cpath d='M16 19c0-6 5-11 11-11s11 5 11 11c0 9-11 19-11 19S16 28 16 19Z' fill='%231bbdff'/%3E%3Ccircle cx='27' cy='19' r='4' fill='white'/%3E%3Cpath d='M33 45c8-1 13-5 16-11' fill='none' stroke='%23ffb229' stroke-width='4' stroke-linecap='round' stroke-dasharray='4 6'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/directory.css" />
+  </head>
+  <body class="directory-page">
+    <a class="skip-link" href="#directory-results">Saltar a resultados</a>
+    <header class="site-header directory-header" id="inicio">
+      <a class="brand" href="/" aria-label="A Dos Pasos, volver a inicio"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /></a>
+      <nav aria-label="Navegación principal"><button class="menu-close" type="button" aria-label="Cerrar menú">Cerrar <span>×</span></button><a href="/#descubrir">Descubrir</a><a href="/directorio/" aria-current="page">Directorio</a><a href="/#beneficios">Beneficios</a><a href="/#nuevo">Nuevo en la zona</a><a href="/para-negocios/">Para negocios</a></nav>
+      <a class="header-cta" href="#category-chips">Explorar categorías</a>
+      <button class="menu-button" type="button" aria-label="Abrir menú" aria-expanded="false">Menú</button>
+    </header>
+    <main id="directory-root"></main>
+    <div class="directory-toast" role="status" aria-live="polite" hidden></div>
+    <script type="module" src="/directory.js"></script>
+  </body>
+</html>

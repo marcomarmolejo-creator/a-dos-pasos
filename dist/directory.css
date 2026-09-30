@@ -18,9 +18,9 @@
 .directory-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
-  gap: 4rem;
-  align-items: end;
-  padding: clamp(4rem, 8vw, 7.5rem) max(5vw, 1.25rem) clamp(3.5rem, 6vw, 5.5rem);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  padding: clamp(3rem, 5vw, 4.75rem) max(5vw, 1.25rem) clamp(2.75rem, 4vw, 4rem);
   color: #fff;
   background:
     radial-gradient(circle at 86% 24%, rgba(39, 187, 244, .24), transparent 25rem),
@@ -33,7 +33,7 @@
   max-width: 15ch;
   margin: .7rem 0 1rem;
   color: #fff;
-  font-size: clamp(3rem, 6vw, 6.5rem);
+  font-size: clamp(3rem, 5vw, 4.9rem);
   line-height: .95;
   letter-spacing: -.065em;
 }
@@ -103,7 +103,7 @@
 .directory-filter-group { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); align-items: center; gap: 1rem; }
 .directory-filter-group > span { color: #53647b; font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .directory-category-chips,
-.directory-option-chips { display: flex; gap: .55rem; min-width: 0; }
+.directory-option-chips { display: flex; flex-wrap: wrap; gap: .55rem; min-width: 0; }
 .directory-category-chips button,
 .directory-option-chips button {
   min-height: 2.75rem;
@@ -131,12 +131,11 @@
   background: #fff;
   box-shadow: 0 .8rem 2.2rem rgba(13, 41, 75, .08);
 }
-.directory-card-media { position: relative; display: block; height: 15rem; overflow: hidden; background: #d9e3eb; }
+.directory-card-media { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #d9e3eb; }
 .directory-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
 .directory-card:hover .directory-card-media img { transform: scale(1.025); }
-.directory-card-media > span,
-.directory-card-media > b {
-  position: absolute;
+.directory-card-badges { position: absolute; top: .8rem; left: .8rem; right: .8rem; display: flex; flex-wrap: wrap; gap: .4rem; }
+.directory-card-badges span {
   padding: .45rem .65rem;
   border-radius: 999px;
   color: #071b3b;
@@ -144,8 +143,7 @@
   font-size: .7rem;
   font-weight: 850;
 }
-.directory-card-media > span { left: .8rem; bottom: .8rem; }
-.directory-card-media > b { top: .8rem; right: .8rem; color: #fff; background: #147bd1; }
+.microsite-business-card .directory-card-badges span:first-child { color: #fff; background: #147bd1; }
 .directory-card-body { display: flex; flex: 1; flex-direction: column; padding: 1.35rem; }
 .directory-card h2 { margin: 0; color: #071b3b; font-size: 1.5rem; line-height: 1.05; letter-spacing: -.03em; }
 .directory-card-category,
@@ -188,12 +186,18 @@
 .dir-button--primary { color: #fff; background: #147bd1; }
 .dir-button--secondary { color: #147bd1; background: #fff; }
 .microsite-business-card .directory-card-body > .dir-button { margin-top: auto; }
+.directory-experience { width: 100%; }
 .directory-depth { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.2rem; }
 .directory-depth span { padding: .35rem .5rem; border-radius: .4rem; color: #33516f; background: #edf4f9; font-size: .68rem; font-weight: 800; }
 
 .directory-empty { max-width: 38rem; margin: 2rem auto; padding: 4rem 2rem; border: 1px solid #d7e2eb; border-radius: 1.25rem; text-align: center; background: #fff; }
 .directory-empty > span { color: #147bd1; font-size: 2.3rem; }
-.directory-empty h2 { margin: .8rem auto 1.4rem; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+.directory-empty h2 { margin: .8rem auto .6rem; font-size: clamp(1.5rem, 3vw, 2.25rem); }
+.directory-empty p { margin: 0 auto 1.4rem; color: #516176; }
+.directory-business-cta { padding: 0 max(5vw,1.25rem) clamp(4rem,7vw,6rem); background: #f2f6fa; }
+.directory-business-cta > div { width: min(100%,80rem); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin: 0 auto; padding: 1.35rem 1.5rem; border: 1px solid #d7e2eb; border-radius: 1rem; background: #fff; }
+.directory-business-cta span { color: #516176; font-weight: 750; }
+.directory-business-cta a { min-height: 2.75rem; display: inline-flex; align-items: center; color: #147bd1; font-weight: 900; }
 .directory-toast { position: fixed; z-index: 100; right: 1rem; bottom: 1rem; max-width: 25rem; padding: 1rem 1.2rem; border-radius: .85rem; color: #fff; background: #071b3b; box-shadow: 0 1rem 2.5rem rgba(0,0,0,.25); }
 .directory-toast[hidden] { display: none; }
 
@@ -216,6 +220,7 @@
   .directory-filter-group > span { padding-inline: 1.1rem; }
   .directory-category-chips,
   .directory-option-chips {
+    flex-wrap: nowrap;
     overflow-x: auto;
     padding: 0 1.1rem .45rem;
     scroll-padding-inline: 1.1rem;
@@ -229,6 +234,8 @@
   .directory-card-media { height: min(58vw, 15.5rem); }
   .directory-card-body { padding: 1.2rem; }
   .directory-toast { left: 1rem; right: 1rem; max-width: none; }
+  .directory-business-cta { padding: 0 1.1rem 4rem; }
+  .directory-business-cta > div { align-items: flex-start; flex-direction: column; gap: .35rem; padding: 1.2rem; }
 }
 
 @media (min-width: 769px) and (max-width: 1080px) {

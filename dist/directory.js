@@ -1,36 +1,42 @@
-import { directoryBusinesses, directoryCategories, normalizeDirectorySearch, resolveDirectoryCategory } from "./directory-data.js";
+import { directoryBusinesses, directoryCategories, normalizeDirectorySearch } from "./directory-data.js";
 import { zones } from "./business-data.js";
 
 const params = new URLSearchParams(window.location.search);
 const requestedCategory = params.get("categoria");
 const requestedQuery = params.get("buscar")?.trim() || "";
 const state = {
-  category: directoryCategories[requestedCategory] ? requestedCategory : (requestedQuery ? null : "comer"),
+  category: directoryCategories[requestedCategory] ? requestedCategory : "todo",
   query: requestedQuery,
   filters: new Set()
 };
 
 const escapeHtml = (value = "") => String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
 const initials = (name) => name.split(" ").map((word) => word[0]).join("").slice(0, 2).toUpperCase();
+const badgeMarkup = (business) => business.badges.slice(0, 2).map((badge) => `<span>${escapeHtml(badge)}</span>`).join("");
+
+function BusinessBrand(business) {
+  const logo = business.logo ? `<img src="${business.logo}" alt="Logo de ${escapeHtml(business.name)}" />` : `<span aria-hidden="true">${initials(business.name)}</span>`;
+  return `<div class="directory-card-brand"><div class="directory-logo">${logo}</div><div><p>${escapeHtml(business.category)} · ${escapeHtml(business.zone)}</p><h2>${escapeHtml(business.name)}</h2></div></div>`;
+}
 
 function FreeBusinessCard(business) {
-  const logo = business.logo ? `<img src="${business.logo}" alt="Logo de ${escapeHtml(business.name)}" />` : `<span aria-hidden="true">${initials(business.name)}</span>`;
-  const contact = business.whatsappUrl ? `<a class="dir-button dir-button--primary" href="${business.whatsappUrl}" target="_blank" rel="noreferrer">Contactar</a>` : `<button type="button" class="dir-button dir-button--primary" data-demo-action="contactar" data-business="${escapeHtml(business.name)}">Contactar</button>`;
-  const directions = business.mapsUrl ? `<a class="dir-button dir-button--secondary" href="${business.mapsUrl}" target="_blank" rel="noreferrer">Cómo llegar</a>` : `<button type="button" class="dir-button dir-button--secondary" data-demo-action="maps" data-business="${escapeHtml(business.name)}">Cómo llegar</button>`;
-  const optionalContact = [business.phone ? `<a href="tel:${business.phone}">Teléfono</a>` : "", business.instagramUrl ? `<a href="${business.instagramUrl}" target="_blank" rel="noreferrer">Instagram</a>` : "", business.facebookUrl ? `<a href="${business.facebookUrl}" target="_blank" rel="noreferrer">Facebook</a>` : ""].filter(Boolean).join("");
-  return `<article class="free-business-card directory-card" data-listing-type="free" data-demo="${business.demo ? "true" : "false"}"><div class="directory-card-media"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><span>${escapeHtml(business.distance)}</span></div><div class="directory-card-body"><div class="directory-card-brand"><div class="directory-logo">${logo}</div><div><p>${escapeHtml(business.category)}</p><h2>${escapeHtml(business.name)}</h2></div></div><p class="directory-description">${escapeHtml(business.description)}</p><dl class="directory-details"><div><dt>Zona</dt><dd>${escapeHtml(business.zone)}</dd></div><div><dt>Dirección</dt><dd>${escapeHtml(business.address)}</dd></div><div><dt>Horario</dt><dd>${escapeHtml(business.schedule)}</dd></div></dl>${optionalContact ? `<div class="directory-contact-links">${optionalContact}</div>` : ""}<div class="directory-card-actions">${contact}${directions}</div></div></article>`;
+  const contact = business.whatsapp ? `<a class="dir-button dir-button--primary" href="${business.whatsapp}" target="_blank" rel="noreferrer">Contactar</a>` : `<button type="button" class="dir-button dir-button--primary" data-demo-action="contactar" data-business="${escapeHtml(business.name)}">Contactar</button>`;
+  const directions = business.maps ? `<a class="dir-button dir-button--secondary" href="${business.maps}" target="_blank" rel="noreferrer">Cómo llegar</a>` : `<button type="button" class="dir-button dir-button--secondary" data-demo-action="maps" data-business="${escapeHtml(business.name)}">Cómo llegar</button>`;
+  return `<article class="free-business-card directory-card" data-listing-type="free" data-demo="${business.isDemo}"><div class="directory-card-media"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><div class="directory-card-badges">${badgeMarkup(business)}</div></div><div class="directory-card-body">${BusinessBrand(business)}<p class="directory-description">${escapeHtml(business.description)}</p><dl class="directory-details"><div><dt>Zona</dt><dd>${escapeHtml(business.zone)}</dd></div><div><dt>Horario</dt><dd>${escapeHtml(business.hours)}</dd></div></dl><div class="directory-card-actions">${contact}${directions}</div></div></article>`;
 }
 
 function MicrositeBusinessCard(business) {
-  return `<article class="microsite-business-card directory-card" data-listing-type="microsite"><a class="directory-card-media" href="${business.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><span>${escapeHtml(business.distance)}</span><b>${escapeHtml(business.depthSignal)}</b></a><div class="directory-card-body"><p class="directory-card-category">${escapeHtml(business.directoryCategory)} · ${escapeHtml(business.zone)}</p><h2>${escapeHtml(business.name)}</h2><p class="directory-description">${escapeHtml(business.description)}</p><div class="directory-depth"><span>Galería</span><span>Servicios</span><span>Beneficios</span></div><a class="dir-button dir-button--primary" href="${business.micrositeUrl}" target="_blank" rel="noreferrer">Conocer negocio →</a></div></article>`;
+  return `<article class="microsite-business-card directory-card" data-listing-type="microsite"><a class="directory-card-media" href="${business.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><div class="directory-card-badges">${badgeMarkup(business)}</div></a><div class="directory-card-body">${BusinessBrand(business)}<p class="directory-description">${escapeHtml(business.description)}</p><dl class="directory-details"><div><dt>Zona</dt><dd>${escapeHtml(business.zone)}</dd></div><div><dt>Horario</dt><dd>${escapeHtml(business.hours)}</dd></div></dl><div class="directory-depth" aria-label="Contenido disponible"><span>Fotos</span><span>Servicios</span><span>Beneficios</span></div><a class="dir-button dir-button--primary directory-experience" href="${business.micrositeUrl}" target="_blank" rel="noreferrer">Conocer negocio →</a></div></article>`;
 }
 
 function DirectoryFooter() {
-  return `<footer class="footer directory-footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map((zone) => `<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="./index.html#que-hacer">Descubrir</a><a href="./index.html#cerca-de-ti">Lugares</a><a href="./index.html#ideas">Ideas para hoy</a><a href="/para-negocios/">Para negocios</a><a href="./index.html#inicio">Privacidad</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
+  return `<footer class="footer directory-footer"><div class="footer-brand"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map((zone) => `<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="/#descubrir">Descubrir</a><a href="/directorio/">Directorio</a><a href="/#ideas">Ideas para hoy</a><a href="/para-negocios/">Para negocios</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
 }
 
 function DirectoryShell() {
-  return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1 data-directory-title></h1><p>Una selección local para encontrar opciones que vale la pena conocer.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><strong data-directory-count></strong><span data-directory-active></span><button type="button" data-change-category>Cambiar categoría</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categoría</span><div class="directory-category-chips" id="category-chips">${Object.entries(directoryCategories).map(([key, config]) => `<button type="button" data-category="${key}">${config.label}</button>`).join("")}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtrar por</span><div class="directory-option-chips">${[["open","Abierto ahora"],["delivery","A domicilio"],["new","Nuevo"],["benefit","Con beneficio"]].map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Estamos preparando más recomendaciones para esta categoría.</h2><button type="button" data-explore-category>Explorar otra categoría</button></div></section>${DirectoryFooter()}`;
+  const categoryButtons = Object.entries(directoryCategories).map(([key, config]) => `<button type="button" data-category="${key}">${config.label}</button>`).join("");
+  const filters = [["open","Abierto ahora"],["delivery","A domicilio"],["new","Nuevo"],["benefit","Con beneficio"],["microsite","Con micrositio"]];
+  return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1>Encuentra algo cerca de ti.</h1><p>Negocios, lugares y servicios locales para descubrir sin perderte entre resultados repetidos.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><span>Resultados en El Refugio</span><strong data-directory-count></strong><small data-directory-active></small><button type="button" data-change-category>Ver categorías</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categorías</span><div class="directory-category-chips" id="category-chips">${categoryButtons}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtros rápidos</span><div class="directory-option-chips">${filters.map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Todavía no encontramos algo aquí.</h2><p>Estamos preparando nuevas recomendaciones para esta categoría.</p><button type="button" data-explore-category>Explorar otra categoría</button></div></section><aside class="directory-business-cta"><div><span>¿Tienes un negocio en la zona?</span><a href="/para-negocios/">Aparece gratis en A Dos Pasos →</a></div></aside>${DirectoryFooter()}`;
 }
 
 document.querySelector("#directory-root").innerHTML = DirectoryShell();
@@ -39,55 +45,58 @@ function matchesFilters(business) {
   if (state.filters.has("open") && !business.isOpen) return false;
   if (state.filters.has("delivery") && !business.isDelivery) return false;
   if (state.filters.has("new") && !business.isNew) return false;
-  if (state.filters.has("benefit") && !business.hasPromotion) return false;
+  if (state.filters.has("benefit") && !business.hasBenefit) return false;
+  if (state.filters.has("microsite") && business.listingType !== "microsite") return false;
   return true;
 }
 
-export function filterBusinesses(category = state.category) {
+export function filterBusinesses() {
   const normalizedQuery = normalizeDirectorySearch(state.query);
   const matches = directoryBusinesses.filter((business) => {
-    const categoryMatch = !category || business.categories.includes(category);
-    const haystack = normalizeDirectorySearch([business.name, business.category, business.description, business.zone].join(" "));
-    const queryMatch = !normalizedQuery || haystack.includes(normalizedQuery);
-    return categoryMatch && queryMatch && matchesFilters(business);
+    const categoryMatch = state.category === "todo" || business.categories.includes(state.category);
+    const haystack = normalizeDirectorySearch([business.name, business.category, business.description].join(" "));
+    return categoryMatch && (!normalizedQuery || haystack.includes(normalizedQuery)) && matchesFilters(business);
   });
-  if (category === "servicios") {
+  if (state.category === "servicios") {
     const order = ["eleva-steam", "barberia-clasica", "vet-cerca-demo"];
     matches.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   }
   return matches;
 }
 
+function resultCount(matches) {
+  const amount = matches.length;
+  if (state.query) return `${amount} ${amount === 1 ? "resultado" : "resultados"} para “${state.query}”`;
+  if (state.category === "comer") return `${amount} ${amount === 1 ? "lugar" : "lugares"} para comer`;
+  if (state.category === "servicios") return `${amount} ${amount === 1 ? "servicio" : "servicios"} cerca de ti`;
+  if (state.category === "todo") return `${amount} ${amount === 1 ? "lugar encontrado" : "lugares encontrados"}`;
+  return `${amount} ${amount === 1 ? "lugar" : "lugares"} en ${directoryCategories[state.category].label}`;
+}
+
 function updateUrl() {
   const next = new URL(window.location.href);
-  if (state.category) next.searchParams.set("categoria", state.category); else next.searchParams.delete("categoria");
+  if (state.category !== "todo") next.searchParams.set("categoria", state.category); else next.searchParams.delete("categoria");
   if (state.query) next.searchParams.set("buscar", state.query); else next.searchParams.delete("buscar");
   history.replaceState({}, "", next);
 }
 
 function renderDirectory({ scroll = false } = {}) {
   const matches = filterBusinesses();
-  const config = state.category ? directoryCategories[state.category] : null;
-  const title = config?.title || (state.query ? `Resultados para “${state.query}”` : "Explora lo que tienes cerca");
-  document.querySelector("[data-directory-title]").textContent = title;
-  document.title = `${title} · A Dos Pasos`;
-  document.querySelector("[data-directory-count]").textContent = `${matches.length} ${matches.length === 1 ? "lugar encontrado" : "lugares encontrados"}`;
-  document.querySelector("[data-directory-active]").textContent = config ? `Categoría activa: ${config.label}` : "Búsqueda personalizada";
+  document.querySelector("[data-directory-count]").textContent = resultCount(matches);
+  document.querySelector("[data-directory-active]").textContent = state.query ? "Búsqueda por nombre, categoría y descripción" : `Categoría: ${directoryCategories[state.category].label}`;
   document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.category));
   document.querySelectorAll("[data-filter]").forEach((button) => { const active = state.filters.has(button.dataset.filter); button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
-  const grid = document.querySelector("[data-directory-grid]");
-  grid.innerHTML = matches.map((business) => business.listingType === "free" ? FreeBusinessCard(business) : MicrositeBusinessCard(business)).join("");
-  const empty = document.querySelector("[data-directory-empty]");
-  empty.hidden = matches.length > 0;
+  document.querySelector("[data-directory-grid]").innerHTML = matches.map((business) => business.listingType === "free" ? FreeBusinessCard(business) : MicrositeBusinessCard(business)).join("");
+  document.querySelector("[data-directory-empty]").hidden = matches.length > 0;
   updateUrl();
   if (scroll) document.querySelector("#directory-results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 document.querySelectorAll("[data-category]").forEach((button) => button.addEventListener("click", () => { state.category = button.dataset.category; state.query = ""; document.querySelector("#directory-search-input").value = ""; renderDirectory({ scroll: true }); }));
 document.querySelectorAll("[data-filter]").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.filter; state.filters.has(key) ? state.filters.delete(key) : state.filters.add(key); renderDirectory({ scroll: true }); }));
-document.querySelector("[data-directory-search]").addEventListener("submit", (event) => { event.preventDefault(); state.query = event.currentTarget.querySelector("input").value.trim(); const resolved = resolveDirectoryCategory(state.query); if (resolved) { state.category = resolved; state.query = ""; event.currentTarget.querySelector("input").value = directoryCategories[resolved].label; } else { state.category = null; } renderDirectory({ scroll: true }); });
+document.querySelector("[data-directory-search]").addEventListener("submit", (event) => { event.preventDefault(); state.query = event.currentTarget.querySelector("input").value.trim(); state.category = "todo"; renderDirectory({ scroll: true }); });
 document.querySelector("[data-change-category]").addEventListener("click", () => { document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); document.querySelector("[data-category]")?.focus({ preventScroll: true }); });
-document.querySelector("[data-explore-category]").addEventListener("click", () => { state.category = "comer"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
+document.querySelector("[data-explore-category]").addEventListener("click", () => { state.category = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
 
 const toast = document.querySelector(".directory-toast");
 let toastTimer;

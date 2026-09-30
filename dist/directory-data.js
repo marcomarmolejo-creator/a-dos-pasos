@@ -1,21 +1,26 @@
 import { businesses } from "./business-data.js";
 
 export const directoryCategories = {
-  comer: { label: "Comer", title: "Comer cerca de ti" },
-  cafe: { label: "Café", title: "Café cerca de ti" },
-  cuidarme: { label: "Cuidarme", title: "Cuidarme cerca de ti" },
-  "mi-casa": { label: "Mi casa", title: "Mi casa cerca de ti" },
-  servicios: { label: "Servicios", title: "Servicios cerca de ti" },
-  promociones: { label: "Promociones", title: "Promociones cerca de ti" },
-  nuevos: { label: "Nuevos", title: "Nuevo en la zona" }
+  todo: { label: "Todo" },
+  comer: { label: "Comer" },
+  cafe: { label: "Café" },
+  cuidarme: { label: "Cuidarme" },
+  "mi-casa": { label: "Mi casa" },
+  servicios: { label: "Servicios" },
+  mascotas: { label: "Mascotas" },
+  salud: { label: "Salud" },
+  promociones: { label: "Promociones" },
+  nuevos: { label: "Nuevos" }
 };
 
 const terms = {
   comer: ["comer", "comida", "pizza", "pizzeria", "forno"],
   cafe: ["cafe", "cafeteria"],
   cuidarme: ["cuidarme", "spa", "bienestar", "aura", "barberia", "barbero", "corte"],
-  "mi-casa": ["mi casa", "casa", "hogar", "lavado", "sala", "colchon", "tapete", "eleva"],
+  "mi-casa": ["mi casa", "casa", "hogar", "limpieza", "lavado", "sala", "colchon", "tapete", "eleva"],
   servicios: ["servicio", "servicios", "veterinaria", "mascotas"],
+  mascotas: ["mascota", "mascotas", "veterinaria", "veterinario"],
+  salud: ["salud", "medico", "clinica"],
   promociones: ["promocion", "promociones", "beneficio", "beneficios"],
   nuevos: ["nuevo", "nuevos", "apertura", "novedad"]
 };
@@ -29,86 +34,53 @@ export function resolveDirectoryCategory(query) {
 
 export const directoryUrlFor = (category, query = "") => {
   const params = new URLSearchParams();
-  if (category && directoryCategories[category]) params.set("categoria", category);
+  if (category && directoryCategories[category] && category !== "todo") params.set("categoria", category);
   if (query) params.set("buscar", query);
-  return `./directorio.html?${params.toString()}`;
+  const suffix = params.toString();
+  return `/directorio/${suffix ? `?${suffix}` : ""}`;
+};
+
+const categoryOverrides = {
+  "forno-locale": ["comer", "promociones", "nuevos"],
+  "aura-spa": ["cuidarme", "promociones"],
+  "barberia-clasica": ["cuidarme", "servicios"],
+  "eleva-steam": ["mi-casa", "servicios"]
 };
 
 const micrositeDirectoryBusinesses = businesses.map((business) => ({
-  ...business,
+  id: business.id,
+  name: business.name,
+  category: business.category,
+  categories: categoryOverrides[business.id],
+  zone: business.zone,
+  description: business.id === "eleva-steam" ? "Limpieza y lavado profundo para salas, colchones y tapetes a domicilio." : business.description,
+  image: business.image.replace("./", "/"),
+  logo: null,
   listingType: "microsite",
-  directoryCategory: business.tag,
-  address: business.zone === "Querétaro" ? "Servicio a domicilio en tu zona" : "Consulta ubicación en su micrositio",
-  schedule: business.isOpen ? "Disponibilidad visible en su micrositio" : "Consulta disponibilidad",
-  isDelivery: business.id === "eleva-steam",
-  depthSignal: "Experiencia completa"
+  hours: business.isOpen ? "Disponibilidad en su micrositio" : "Consulta disponibilidad",
+  whatsapp: business.whatsappUrl,
+  maps: business.mapsUrl,
+  badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, business.hasPromotion ? "Beneficio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
+  micrositeUrl: business.micrositeUrl,
+  isDemo: false,
+  isOpen: business.isOpen,
+  isNew: business.isNew,
+  hasBenefit: business.hasPromotion,
+  isDelivery: business.id === "eleva-steam"
 }));
 
-/*
-  REGLAS INTERNAS DE PRODUCTO
-
-  FICHA GRATUITA incluye: nombre, logo, una imagen principal, categoría,
-  descripción, zona, dirección, horarios, WhatsApp, Maps y redes.
-  No incluye: micrositio, video, galería, promoción incluida, diseño
-  promocional ni portada garantizada.
-
-  MICROSITIO puede incluir: galería, video, historia, servicios, precios,
-  promociones, beneficios y contenido editorial.
-
-  La portada editorial es selección de A Dos Pasos. Una ficha gratuita puede
-  ser seleccionada editorialmente. La portada patrocinada es un espacio
-  comercial contratado; no existe una regla que excluya fichas gratuitas.
-*/
 const freeDemoBusinesses = [
   {
-    id: "cafe-patio-demo",
-    name: "Café Patio",
-    category: "Café",
-    directoryCategory: "Café",
-    categories: ["cafe"],
-    listingType: "free",
-    image: "./assets/forno-table.png",
-    logo: null,
-    description: "Café de especialidad y desayunos para una pausa cerca de casa.",
-    zone: "El Refugio",
-    address: "Dirección disponible al contactar",
-    schedule: "Horario por confirmar",
-    distance: "En El Refugio",
-    whatsappUrl: null,
-    phone: null,
-    mapsUrl: null,
-    instagramUrl: null,
-    facebookUrl: null,
-    isOpen: false,
-    isNew: false,
-    hasPromotion: false,
-    isDelivery: false,
-    demo: true
+    id: "cafe-patio-demo", name: "Café Patio", category: "Café", categories: ["cafe"], zone: "El Refugio",
+    description: "Café de especialidad y desayunos para una pausa cerca de casa.", image: "/assets/cafe-patio-demo.svg", logo: null,
+    listingType: "free", hours: "8:00–20:00", whatsapp: null, maps: null, badges: ["A 5 min"], micrositeUrl: null,
+    isDemo: true, isOpen: true, isNew: false, hasBenefit: false, isDelivery: false
   },
   {
-    id: "vet-cerca-demo",
-    name: "Vet Cerca",
-    category: "Mascotas / Servicios",
-    directoryCategory: "Servicios",
-    categories: ["servicios"],
-    listingType: "free",
-    image: "./assets/vet-cerca-demo.png",
-    logo: null,
-    description: "Atención veterinaria y servicios básicos para mascotas de la zona.",
-    zone: "El Refugio",
-    address: "Dirección disponible al contactar",
-    schedule: "Horario por confirmar",
-    distance: "En El Refugio",
-    whatsappUrl: null,
-    phone: null,
-    mapsUrl: null,
-    instagramUrl: null,
-    facebookUrl: null,
-    isOpen: false,
-    isNew: false,
-    hasPromotion: false,
-    isDelivery: false,
-    demo: true
+    id: "vet-cerca-demo", name: "Vet Cerca", category: "Mascotas", categories: ["mascotas", "servicios"], zone: "El Refugio",
+    description: "Atención veterinaria y servicios básicos para mascotas de la zona.", image: "/assets/vet-cerca-demo.png", logo: null,
+    listingType: "free", hours: "Horario por confirmar", whatsapp: null, maps: null, badges: [], micrositeUrl: null,
+    isDemo: true, isOpen: false, isNew: false, hasBenefit: false, isDelivery: false
   }
 ];
 
