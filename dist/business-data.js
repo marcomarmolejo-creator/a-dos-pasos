@@ -1,21 +1,21 @@
 export const businesses = [
   {
-    id: "forno-locale", name: "Forno Locale", slug: "forno-locale", category: "Pizzería artesanal", zone: "El Refugio", image: "./assets/forno-locale.png", logo: null,
+    id: "forno-locale", name: "Forno Locale", slug: "forno-locale", category: "Pizzería artesanal", categories: ["comer", "promociones", "nuevos"], zone: "El Refugio", image: "./assets/forno-locale.png", logo: null,
     description: "Pizza artesanal, horno encendido y una mesa cerca de casa.", distance: "A 4 min", isOpen: true, isNew: true, isFeatured: true, hasPromotion: true,
     micrositeUrl: "https://forno-locale-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524421234567", mapsUrl: "https://maps.google.com/?q=El+Refugio+Queretaro", tag: "Comer", status: "Nuevo"
   },
   {
-    id: "aura-spa", name: "Aura Spa", slug: "aura-spa", category: "Bienestar", zone: "El Refugio", image: "./assets/aura-spa.jpg", logo: null,
+    id: "aura-spa", name: "Aura Spa", slug: "aura-spa", category: "Bienestar", categories: ["cuidarme", "promociones", "nuevos"], zone: "El Refugio", image: "./assets/aura-spa.jpg", logo: null,
     description: "Masajes, rituales y una pausa para volver a tu centro.", distance: "A 6 min", isOpen: true, isNew: false, isFeatured: true, hasPromotion: true,
     micrositeUrl: "https://aura-spa-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524421234567", mapsUrl: "https://maps.google.com/?q=El+Refugio+Queretaro", tag: "Cuidarme", status: "Abierto ahora"
   },
   {
-    id: "barberia-clasica", name: "Barbería Clásica", slug: "barberia-clasica", category: "Barbería", zone: "El Refugio", image: "./assets/barberia-clasica.png", logo: null,
+    id: "barberia-clasica", name: "Barbería Clásica", slug: "barberia-clasica", category: "Barbería", categories: ["cuidarme", "servicios", "promociones"], zone: "El Refugio", image: "./assets/barberia-clasica.png", logo: null,
     description: "Corte, barba y atención cercana con oficio.", distance: "A 3 min", isOpen: true, isNew: false, isFeatured: true, hasPromotion: false,
     micrositeUrl: "https://barberia-clasica-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524421234567", mapsUrl: "https://maps.google.com/?q=El+Refugio+Queretaro", tag: "Servicio", status: "Destacado"
   },
   {
-    id: "eleva-steam", name: "Eleva Steam", slug: "eleva-steam", category: "Lavado profesional a domicilio", zone: "Querétaro", image: "./assets/eleva-steam.jpg", logo: null,
+    id: "eleva-steam", name: "Eleva Steam", slug: "eleva-steam", category: "Lavado profesional a domicilio", categories: ["mi-casa", "servicios", "promociones", "nuevos"], zone: "Querétaro", image: "./assets/eleva-steam.jpg", logo: null,
     description: "Lavado profundo para salas, colchones y tapetes.", distance: "Va a tu casa", isOpen: true, isNew: false, isFeatured: true, hasPromotion: false,
     micrositeUrl: "https://eleva-steam-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524422742734", mapsUrl: "https://maps.google.com/?q=Queretaro", tag: "Mi casa", status: "A domicilio"
   }

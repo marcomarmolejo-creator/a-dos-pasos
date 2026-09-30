@@ -21,12 +21,16 @@ function ZoneSelector() {
   return `<section class="zone-bar"><div><i></i><span>Estás explorando:</span><strong>El Refugio</strong></div><button type="button" data-zone-toggle>Cambiar zona <span>⌄</span></button><div class="zone-options" hidden>${zones.map((zone,index)=>`<button type="button" ${index ? "disabled" : ""}>${zone}${index ? " · próximamente" : " · activa"}</button>`).join("")}</div></section>`;
 }
 
+function CategoryResults() {
+  return `<section class="section category-results" id="resultados" aria-live="polite" hidden><header class="section-heading"><span class="eyebrow">Resultados</span><h2 data-results-title></h2><p data-results-copy></p></header><div class="filter-results-grid" data-results-grid></div><p class="filter-empty" data-results-empty hidden></p></section>`;
+}
+
 function IntentionGrid() {
   return `<section class="section intentions" id="explorar"><header class="section-heading reveal"><span class="eyebrow">¿Qué quieres hacer?</span><h2>Encuentra rápido lo que buscas cerca de casa</h2><p>Menos directorio. Más respuestas para tu día.</p></header><div class="intentions-grid">${intentions.map((item,index)=>`<a class="intention-card reveal" href="#cerca-de-ti" style="--delay:${index * 45}ms"><div class="intention-image"><img src="${item.image}" alt="" loading="lazy" /></div><div class="intention-copy"><i>${item.icon}</i><div><h3>${item.title}</h3><p>${item.subtitle}</p></div><span>↗</span></div></a>`).join("")}</div></section>`;
 }
 
-function BusinessCard(business, index) {
-  return `<article class="business-card business-card--${index + 1} reveal"><a class="business-image" href="${business.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${business.image}" alt="${business.name}" loading="lazy" /><span class="business-status">${business.status}</span><span class="business-distance">${business.distance}</span></a><div class="business-copy"><div><small>${business.tag} · ${business.zone}</small><h3>${business.name}</h3><p>${business.category}</p></div><a href="${business.micrositeUrl}" target="_blank" rel="noreferrer">${business.id === "eleva-steam" ? "Ver servicio" : "Ver lugar"} <span>↗</span></a></div></article>`;
+function BusinessCard(business, index, reveal = true) {
+  return `<article class="business-card business-card--${index + 1}${reveal ? " reveal" : ""}"><a class="business-image" href="${business.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${business.image}" alt="${business.name}" loading="lazy" /><span class="business-status">${business.status}</span><span class="business-distance">${business.distance}</span></a><div class="business-copy"><div><small>${business.tag} · ${business.zone}</small><h3>${business.name}</h3><p>${business.category}</p></div><a href="${business.micrositeUrl}" target="_blank" rel="noreferrer">${business.id === "eleva-steam" ? "Ver servicio" : "Ver lugar"} <span>↗</span></a></div></article>`;
 }
 
 function CarouselControls(id, label) {
@@ -88,7 +92,7 @@ function Footer() {
   return `<footer class="footer"><div class="footer-brand"><img src="./assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map(zone=>`<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="#que-hacer">Descubrir</a><a href="#cerca-de-ti">Lugares</a><a href="#ideas">Ideas para hoy</a><a href="#para-negocios">Para negocios</a><a href="#inicio">Privacidad</a></div></div><div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
 }
 
-document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessAccess(),Footer()].join("");
+document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),CategoryResults(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),BusinessAccess(),Footer()].join("");
 
 const header=document.querySelector(".site-header"); const menuButton=document.querySelector(".menu-button");
 const closeMenu=()=>{header.classList.remove("menu-open");document.body.classList.remove("menu-is-open");menuButton.setAttribute("aria-expanded","false")};
@@ -98,8 +102,46 @@ header.querySelectorAll("nav a").forEach(link=>link.addEventListener("click",clo
 const zoneToggle=document.querySelector("[data-zone-toggle]"); const zoneOptions=document.querySelector(".zone-options");
 zoneToggle.addEventListener("click",()=>{zoneOptions.hidden=!zoneOptions.hidden;zoneToggle.classList.toggle("active",!zoneOptions.hidden)});
 
-document.querySelectorAll("[data-search]").forEach(form=>form.addEventListener("submit",event=>{event.preventDefault();const query=form.querySelector("input").value.trim();form.querySelector(".search-feedback").textContent=query?`Explorando “${query}” en El Refugio · pronto podrás filtrar todos los resultados.`:"Escribe un negocio, categoría, servicio o intención."}));
-document.querySelectorAll("[data-quick-search]").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll("[data-quick-search]").forEach(item=>item.classList.remove("is-active"));button.classList.add("is-active");const form=document.querySelector("[data-search]");form.querySelector("input").value=button.dataset.quickSearch;form.dispatchEvent(new Event("submit",{bubbles:true,cancelable:true}))}));
+const categoryConfig={
+  comer:{label:"Comer",title:"Comer cerca de ti"},
+  cafe:{label:"Café",title:"Café cerca de ti",empty:"Muy pronto encontrarás nuevas opciones para tomar café cerca de ti."},
+  cuidarme:{label:"Cuidarme",title:"Cuidarme cerca de ti"},
+  "mi-casa":{label:"Mi casa",title:"Mi casa cerca de ti",order:["eleva-steam"]},
+  servicios:{label:"Servicios",title:"Servicios cerca de ti",order:["eleva-steam","barberia-clasica"]},
+  promociones:{label:"Promociones",title:"Promociones cerca de ti"},
+  nuevos:{label:"Nuevos",title:"Nuevo en la zona"}
+};
+const normalizeSearch=value=>value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+const resolveCategory=query=>{
+  const normalized=normalizeSearch(query);
+  const terms={comer:["comer","comida","pizza","pizzeria","forno"],cafe:["cafe","cafeteria"],cuidarme:["cuidarme","spa","bienestar","aura","barberia","barbero","corte"],"mi-casa":["mi casa","casa","hogar","lavado","sala","colchon","tapete","eleva"],servicios:["servicio","servicios"],promociones:["promocion","promociones","beneficio","beneficios"],nuevos:["nuevo","nuevos","apertura","novedad"]};
+  return Object.entries(terms).find(([,words])=>words.some(word=>normalized.includes(word)))?.[0]||null;
+};
+
+function filterBusinesses(category) {
+  const config=categoryConfig[category];if(!config)return [];
+  let matches=businesses.filter(business=>business.categories.includes(category));
+  if(config.order)matches=[...matches].sort((a,b)=>config.order.indexOf(a.id)-config.order.indexOf(b.id));
+  const section=document.querySelector(".category-results");
+  section.querySelector("[data-results-title]").textContent=config.title;
+  section.querySelector("[data-results-copy]").textContent=matches.length?"Opciones disponibles en A Dos Pasos · El Refugio":"";
+  section.querySelector("[data-results-grid]").innerHTML=matches.map((business,index)=>BusinessCard(business,index,false)).join("");
+  const empty=section.querySelector("[data-results-empty]");empty.textContent=config.empty||"Estamos preparando más recomendaciones para esta categoría.";empty.hidden=matches.length>0;
+  document.querySelectorAll("[data-quick-search]").forEach(button=>button.classList.toggle("is-active",resolveCategory(button.dataset.quickSearch)===category));
+  section.hidden=false;section.scrollIntoView({behavior:"smooth",block:"start"});
+  return matches;
+}
+
+document.querySelectorAll("[data-search]").forEach(form=>form.addEventListener("submit",event=>{
+  event.preventDefault();const query=form.querySelector("input").value.trim();const feedback=form.querySelector(".search-feedback");
+  if(!query){feedback.textContent="Escribe un negocio, categoría, servicio o intención.";return}
+  const category=resolveCategory(query);feedback.textContent="";
+  if(category){filterBusinesses(category);return}
+  document.querySelectorAll("[data-quick-search]").forEach(item=>item.classList.remove("is-active"));
+  const section=document.querySelector(".category-results");section.querySelector("[data-results-title]").textContent=`Resultados para “${query}”`;section.querySelector("[data-results-copy]").textContent="";section.querySelector("[data-results-grid]").innerHTML="";
+  const empty=section.querySelector("[data-results-empty]");empty.textContent="Estamos preparando más resultados para tu búsqueda.";empty.hidden=false;section.hidden=false;section.scrollIntoView({behavior:"smooth",block:"start"});
+}));
+document.querySelectorAll("[data-quick-search]").forEach(button=>button.addEventListener("click",()=>{const form=document.querySelector("[data-search]");form.querySelector("input").value=button.dataset.quickSearch;form.querySelector(".search-feedback").textContent="";filterBusinesses(resolveCategory(button.dataset.quickSearch))}));
 document.querySelectorAll(".mobile-section-nav a").forEach(link=>link.addEventListener("click",()=>{document.querySelectorAll(".mobile-section-nav a").forEach(item=>item.classList.remove("is-active"));link.classList.add("is-active")}));
 const desktopCarouselMedia=matchMedia("(min-width: 769px)");
 const carouselApis=new Map();

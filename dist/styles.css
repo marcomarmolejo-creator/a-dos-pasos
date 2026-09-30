@@ -30,7 +30,7 @@
 .search-box--hero .search-feedback{color:rgba(255,255,255,.66);margin-bottom:0}
 .hero-quick{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
 .hero-quick button{padding:.52rem .78rem;color:rgba(255,255,255,.76);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:.7rem;font-weight:800;cursor:pointer;transition:.2s ease}
-.hero-quick button:hover{color:var(--navy-950);background:var(--yellow);border-color:var(--yellow)}
+.hero-quick button:hover,.hero-quick button.is-active{color:var(--navy-950);background:var(--yellow);border-color:var(--yellow)}
 .hero-editorial{position:relative;min-height:39rem}
 .hero-tile{position:absolute;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border:1px solid rgba(255,255,255,.18);border-radius:1.25rem;box-shadow:0 26px 70px rgba(0,0,0,.32);transition:transform .25s ease}
 .hero-tile:hover{z-index:6;transform:translateY(-5px) rotate(0deg)}
@@ -282,4 +282,21 @@
 
   .how{padding-top:2.95rem;padding-bottom:2.95rem}
   .how .steps article{padding-top:.65rem;padding-bottom:.65rem}
+}
+
+/* Functional category results: hidden until a category or search is submitted. */
+.category-results[hidden]{display:none}
+.category-results{scroll-margin-top:1rem;background:var(--ice);border-bottom:1px solid var(--line)}
+.category-results .section-heading{margin-bottom:2rem}
+.filter-results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr));gap:1rem}
+.filter-results-grid .business-card{grid-row:auto;grid-template-columns:1fr;grid-template-rows:15rem 1fr;min-height:24rem}
+.filter-results-grid .business-card .business-image{min-height:15rem}
+.filter-results-grid .business-card .business-copy{min-height:9rem;flex-direction:row;align-items:flex-end;justify-content:space-between;padding:1.3rem}
+.filter-empty{margin:0;padding:1.3rem;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:var(--radius);font-weight:750}
+@media(max-width:768px){
+  .category-results{padding-top:3.25rem;padding-bottom:3.25rem}
+  .filter-results-grid{grid-template-columns:1fr}
+  .filter-results-grid .business-card{width:100%;grid-template-rows:13.5rem auto;min-height:0!important}
+  .filter-results-grid .business-card .business-image{min-height:13.5rem!important}
+  .filter-results-grid .business-card .business-copy{min-height:7.2rem;padding:1rem}
 }
