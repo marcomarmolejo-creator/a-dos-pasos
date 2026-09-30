@@ -1,11 +1,11 @@
-import { directoryBusinesses, directoryCategories, normalizeDirectorySearch } from "./directory-data.js";
+import { directoryBusinesses, directoryCategories, findDirectoryAliasCategory, normalizeDirectorySearch } from "./directory-data.js";
 import { zones } from "./business-data.js";
 
 const params = new URLSearchParams(window.location.search);
 const requestedCategory = params.get("categoria");
 const requestedQuery = params.get("buscar")?.trim() || "";
 const state = {
-  category: directoryCategories[requestedCategory] ? requestedCategory : "todo",
+  activeCategory: directoryCategories[requestedCategory] ? requestedCategory : "todo",
   query: requestedQuery,
   filters: new Set()
 };
@@ -36,7 +36,7 @@ function DirectoryFooter() {
 function DirectoryShell() {
   const categoryButtons = Object.entries(directoryCategories).map(([key, config]) => `<button type="button" data-category="${key}">${config.label}</button>`).join("");
   const filters = [["open","Abierto ahora"],["delivery","A domicilio"],["new","Nuevo"],["benefit","Con beneficio"],["microsite","Con micrositio"]];
-  return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1>Encuentra algo cerca de ti.</h1><p>Negocios, lugares y servicios locales para descubrir sin perderte entre resultados repetidos.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><span>Resultados en El Refugio</span><strong data-directory-count></strong><small data-directory-active></small><button type="button" data-change-category>Ver categorías</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categorías</span><div class="directory-category-chips" id="category-chips">${categoryButtons}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtros rápidos</span><div class="directory-option-chips">${filters.map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Todavía no encontramos algo aquí.</h2><p>Estamos preparando nuevas recomendaciones para esta categoría.</p><button type="button" data-explore-category>Explorar otra categoría</button></div></section><aside class="directory-business-cta"><div><span>¿Tienes un negocio en la zona?</span><a href="/para-negocios/">Aparece gratis en A Dos Pasos →</a></div></aside>${DirectoryFooter()}`;
+  return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1>Encuentra algo cerca de ti.</h1><p>Negocios, lugares y servicios locales para descubrir sin perderte entre resultados repetidos.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><span>Resultados en El Refugio</span><strong data-directory-count></strong><small data-directory-active></small><button type="button" data-change-category>Ver categorías</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categorías</span><div class="directory-category-chips" id="category-chips">${categoryButtons}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtros rápidos</span><div class="directory-option-chips">${filters.map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div><div class="directory-active-filters" data-active-filters hidden><span data-active-filter-count></span><button type="button" data-clear-filters>Limpiar</button><button type="button" data-view-all>Ver todos</button></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Todavía no encontramos algo aquí.</h2><p>Estamos preparando nuevas recomendaciones para esta categoría.</p><div class="directory-empty-actions"><button type="button" data-explore-category>Explorar otra categoría</button><button type="button" class="directory-empty-clear" data-empty-clear hidden>Limpiar filtros</button></div></div></section><aside class="directory-business-cta"><div><span>¿Tienes un negocio en la zona?</span><a href="/para-negocios/">Aparece gratis en A Dos Pasos →</a></div></aside>${DirectoryFooter()}`;
 }
 
 document.querySelector("#directory-root").innerHTML = DirectoryShell();
@@ -52,12 +52,14 @@ function matchesFilters(business) {
 
 export function filterBusinesses() {
   const normalizedQuery = normalizeDirectorySearch(state.query);
+  const directMatches = normalizedQuery ? directoryBusinesses.filter((business) => normalizeDirectorySearch([business.name, business.category, business.description].join(" ")).includes(normalizedQuery)) : [];
+  const aliasCategory = normalizedQuery && !directMatches.length ? findDirectoryAliasCategory(normalizedQuery) : null;
   const matches = directoryBusinesses.filter((business) => {
-    const categoryMatch = state.category === "todo" || business.categories.includes(state.category);
-    const haystack = normalizeDirectorySearch([business.name, business.category, business.description].join(" "));
-    return categoryMatch && (!normalizedQuery || haystack.includes(normalizedQuery)) && matchesFilters(business);
+    const categoryMatch = state.activeCategory === "todo" || business.categories.includes(state.activeCategory);
+    const queryMatch = !normalizedQuery || (directMatches.length ? directMatches.includes(business) : aliasCategory ? business.categories.includes(aliasCategory) : false);
+    return categoryMatch && queryMatch && matchesFilters(business);
   });
-  if (state.category === "servicios") {
+  if (state.activeCategory === "servicios") {
     const order = ["eleva-steam", "barberia-clasica", "vet-cerca-demo"];
     matches.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   }
@@ -67,36 +69,44 @@ export function filterBusinesses() {
 function resultCount(matches) {
   const amount = matches.length;
   if (state.query) return `${amount} ${amount === 1 ? "resultado" : "resultados"} para “${state.query}”`;
-  if (state.category === "comer") return `${amount} ${amount === 1 ? "lugar" : "lugares"} para comer`;
-  if (state.category === "servicios") return `${amount} ${amount === 1 ? "servicio" : "servicios"} cerca de ti`;
-  if (state.category === "todo") return `${amount} ${amount === 1 ? "lugar encontrado" : "lugares encontrados"}`;
-  return `${amount} ${amount === 1 ? "lugar" : "lugares"} en ${directoryCategories[state.category].label}`;
+  if (state.activeCategory === "comer") return `${amount} ${amount === 1 ? "lugar" : "lugares"} para comer`;
+  if (state.activeCategory === "servicios") return `${amount} ${amount === 1 ? "servicio" : "servicios"} cerca de ti`;
+  if (state.activeCategory === "todo") return `${amount} ${amount === 1 ? "lugar encontrado" : "lugares encontrados"}`;
+  return `${amount} ${amount === 1 ? "lugar" : "lugares"} en ${directoryCategories[state.activeCategory].label}`;
 }
 
 function updateUrl() {
   const next = new URL(window.location.href);
-  if (state.category !== "todo") next.searchParams.set("categoria", state.category); else next.searchParams.delete("categoria");
+  if (state.activeCategory !== "todo") next.searchParams.set("categoria", state.activeCategory); else next.searchParams.delete("categoria");
   if (state.query) next.searchParams.set("buscar", state.query); else next.searchParams.delete("buscar");
   history.replaceState({}, "", next);
 }
 
 function renderDirectory({ scroll = false } = {}) {
   const matches = filterBusinesses();
+  const filterCount = state.filters.size;
   document.querySelector("[data-directory-count]").textContent = resultCount(matches);
-  document.querySelector("[data-directory-active]").textContent = state.query ? "Búsqueda por nombre, categoría y descripción" : `Categoría: ${directoryCategories[state.category].label}`;
-  document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.category));
+  document.querySelector("[data-directory-active]").textContent = state.query ? "Búsqueda en todo el directorio" : `Categoría: ${directoryCategories[state.activeCategory].label}`;
+  document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("is-active", button.dataset.category === state.activeCategory));
   document.querySelectorAll("[data-filter]").forEach((button) => { const active = state.filters.has(button.dataset.filter); button.classList.toggle("is-active", active); button.setAttribute("aria-pressed", String(active)); });
+  document.querySelector("[data-active-filters]").hidden = filterCount === 0;
+  document.querySelector("[data-active-filter-count]").textContent = `${filterCount} ${filterCount === 1 ? "filtro activo" : "filtros activos"}`;
   document.querySelector("[data-directory-grid]").innerHTML = matches.map((business) => business.listingType === "free" ? FreeBusinessCard(business) : MicrositeBusinessCard(business)).join("");
   document.querySelector("[data-directory-empty]").hidden = matches.length > 0;
+  document.querySelector("[data-empty-clear]").hidden = filterCount === 0;
   updateUrl();
   if (scroll) document.querySelector("#directory-results").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-document.querySelectorAll("[data-category]").forEach((button) => button.addEventListener("click", () => { state.category = button.dataset.category; state.query = ""; document.querySelector("#directory-search-input").value = ""; renderDirectory({ scroll: true }); }));
+document.querySelectorAll("[data-category]").forEach((button) => button.addEventListener("click", () => { state.activeCategory = button.dataset.category; state.query = ""; document.querySelector("#directory-search-input").value = ""; renderDirectory({ scroll: true }); }));
 document.querySelectorAll("[data-filter]").forEach((button) => button.addEventListener("click", () => { const key = button.dataset.filter; state.filters.has(key) ? state.filters.delete(key) : state.filters.add(key); renderDirectory({ scroll: true }); }));
-document.querySelector("[data-directory-search]").addEventListener("submit", (event) => { event.preventDefault(); state.query = event.currentTarget.querySelector("input").value.trim(); state.category = "todo"; renderDirectory({ scroll: true }); });
+document.querySelector("[data-directory-search]").addEventListener("submit", (event) => { event.preventDefault(); const query = event.currentTarget.querySelector("input").value.trim(); const aliasCategory = findDirectoryAliasCategory(query); const isCategoryName = aliasCategory && normalizeDirectorySearch(directoryCategories[aliasCategory].label) === normalizeDirectorySearch(query); state.activeCategory = isCategoryName ? aliasCategory : "todo"; state.query = isCategoryName ? "" : query; renderDirectory({ scroll: true }); });
 document.querySelector("[data-change-category]").addEventListener("click", () => { document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); document.querySelector("[data-category]")?.focus({ preventScroll: true }); });
-document.querySelector("[data-explore-category]").addEventListener("click", () => { state.category = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
+const clearQuickFilters = () => { state.filters.clear(); renderDirectory(); };
+document.querySelector("[data-clear-filters]").addEventListener("click", clearQuickFilters);
+document.querySelector("[data-empty-clear]").addEventListener("click", clearQuickFilters);
+document.querySelector("[data-view-all]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); });
+document.querySelector("[data-explore-category]").addEventListener("click", () => { state.activeCategory = "todo"; state.query = ""; state.filters.clear(); document.querySelector("#directory-search-input").value = ""; renderDirectory(); document.querySelector("#category-chips").scrollIntoView({ behavior: "smooth", block: "center" }); });
 
 const toast = document.querySelector(".directory-toast");
 let toastTimer;

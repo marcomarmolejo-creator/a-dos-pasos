@@ -118,6 +118,10 @@
 }
 .directory-category-chips button.is-active,
 .directory-option-chips button.is-active { border-color: #147bd1; color: #fff; background: #147bd1; }
+.directory-active-filters { display: flex; align-items: center; gap: .55rem; padding-left: 8.5rem; color: #53647b; font-size: .78rem; font-weight: 800; }
+.directory-active-filters[hidden] { display: none; }
+.directory-active-filters button { min-height: 2.75rem; padding: .55rem .75rem; border: 0; color: #147bd1; background: transparent; font: 850 .78rem/1 inherit; cursor: pointer; }
+.directory-active-filters button + button { color: #53647b; }
 
 .directory-results { min-height: 30rem; padding-block: 3rem clamp(5rem, 8vw, 8rem); scroll-margin-top: 1rem; }
 .directory-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
@@ -194,6 +198,8 @@
 .directory-empty > span { color: #147bd1; font-size: 2.3rem; }
 .directory-empty h2 { margin: .8rem auto .6rem; font-size: clamp(1.5rem, 3vw, 2.25rem); }
 .directory-empty p { margin: 0 auto 1.4rem; color: #516176; }
+.directory-empty-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; }
+.directory-empty-clear { color: #147bd1 !important; border: 1px solid #147bd1 !important; background: #fff !important; }
 .directory-business-cta { padding: 0 max(5vw,1.25rem) clamp(4rem,7vw,6rem); background: #f2f6fa; }
 .directory-business-cta > div { width: min(100%,80rem); display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin: 0 auto; padding: 1.35rem 1.5rem; border: 1px solid #d7e2eb; border-radius: 1rem; background: #fff; }
 .directory-business-cta span { color: #516176; font-weight: 750; }
@@ -231,6 +237,10 @@
   .directory-option-chips::-webkit-scrollbar { display: none; }
   .directory-results { min-height: 20rem; padding: 2rem 1.1rem 5rem; }
   .directory-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .directory-active-filters { padding: 0 1.1rem; }
+  .directory-empty { margin: 1rem auto; padding: 2rem 1.2rem; }
+  .directory-empty h2 { font-size: 1.45rem; line-height: 1.08; }
+  .directory-empty p { margin-bottom: 1rem; font-size: .92rem; }
   .directory-card-media { height: min(58vw, 15.5rem); }
   .directory-card-body { padding: 1.2rem; }
   .directory-toast { left: 1rem; right: 1rem; max-width: none; }

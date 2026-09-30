@@ -13,13 +13,13 @@ export const directoryCategories = {
   nuevos: { label: "Nuevos" }
 };
 
-const terms = {
-  comer: ["comer", "comida", "pizza", "pizzeria", "forno"],
+export const directoryAliases = {
+  comer: ["comer", "comida", "restaurante", "pizza", "pizzeria"],
   cafe: ["cafe", "cafeteria"],
-  cuidarme: ["cuidarme", "spa", "bienestar", "aura", "barberia", "barbero", "corte"],
-  "mi-casa": ["mi casa", "casa", "hogar", "limpieza", "lavado", "sala", "colchon", "tapete", "eleva"],
-  servicios: ["servicio", "servicios", "veterinaria", "mascotas"],
-  mascotas: ["mascota", "mascotas", "veterinaria", "veterinario"],
+  cuidarme: ["cuidarme", "spa", "bienestar", "masaje", "belleza"],
+  "mi-casa": ["mi casa", "hogar", "casa", "limpieza", "lavado"],
+  servicios: ["servicios", "servicio", "barberia", "barbero", "corte"],
+  mascotas: ["mascotas", "mascota", "veterinaria", "veterinario", "perro", "gato"],
   salud: ["salud", "medico", "clinica"],
   promociones: ["promocion", "promociones", "beneficio", "beneficios"],
   nuevos: ["nuevo", "nuevos", "apertura", "novedad"]
@@ -29,7 +29,12 @@ export const normalizeDirectorySearch = (value = "") => value.normalize("NFD").r
 
 export function resolveDirectoryCategory(query) {
   const normalized = normalizeDirectorySearch(query);
-  return Object.entries(terms).find(([, words]) => words.some((word) => normalized.includes(word)))?.[0] || null;
+  return Object.entries(directoryAliases).find(([, words]) => words.some((word) => normalized.includes(word)))?.[0] || null;
+}
+
+export function findDirectoryAliasCategory(query) {
+  const normalized = normalizeDirectorySearch(query);
+  return Object.entries(directoryAliases).find(([, words]) => words.includes(normalized))?.[0] || null;
 }
 
 export const directoryUrlFor = (category, query = "") => {
