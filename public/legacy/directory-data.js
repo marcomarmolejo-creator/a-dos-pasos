@@ -1,0 +1,93 @@
+import { businesses } from "./business-data.js";
+
+export const directoryCategories = {
+  todo: { label: "Todo" },
+  comer: { label: "Comer" },
+  cafe: { label: "Café" },
+  cuidarme: { label: "Cuidarme" },
+  "mi-casa": { label: "Mi casa" },
+  servicios: { label: "Servicios" },
+  mascotas: { label: "Mascotas" },
+  salud: { label: "Salud" },
+  promociones: { label: "Promociones" },
+  nuevos: { label: "Nuevos" }
+};
+
+export const directoryAliases = {
+  comer: ["comer", "comida", "restaurante", "pizza", "pizzeria"],
+  cafe: ["cafe", "cafeteria"],
+  cuidarme: ["cuidarme", "spa", "bienestar", "masaje", "belleza"],
+  "mi-casa": ["mi casa", "hogar", "casa", "limpieza", "lavado"],
+  servicios: ["servicios", "servicio", "barberia", "barbero", "corte"],
+  mascotas: ["mascotas", "mascota", "veterinaria", "veterinario", "perro", "gato"],
+  salud: ["salud", "medico", "clinica"],
+  promociones: ["promocion", "promociones", "beneficio", "beneficios"],
+  nuevos: ["nuevo", "nuevos", "apertura", "novedad"]
+};
+
+export const normalizeDirectorySearch = (value = "") => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+
+export function resolveDirectoryCategory(query) {
+  const normalized = normalizeDirectorySearch(query);
+  return Object.entries(directoryAliases).find(([, words]) => words.some((word) => normalized.includes(word)))?.[0] || null;
+}
+
+export function findDirectoryAliasCategory(query) {
+  const normalized = normalizeDirectorySearch(query);
+  return Object.entries(directoryAliases).find(([, words]) => words.includes(normalized))?.[0] || null;
+}
+
+export const directoryUrlFor = (category, query = "") => {
+  const params = new URLSearchParams();
+  if (category && directoryCategories[category] && category !== "todo") params.set("categoria", category);
+  if (query) params.set("buscar", query);
+  const suffix = params.toString();
+  return `/directorio/${suffix ? `?${suffix}` : ""}`;
+};
+
+const categoryOverrides = {
+  "forno-locale": ["comer", "promociones", "nuevos"],
+  "aura-spa": ["cuidarme", "promociones"],
+  "barberia-clasica": ["cuidarme", "servicios"],
+  "eleva-steam": ["mi-casa", "servicios"]
+};
+
+const micrositeDirectoryBusinesses = businesses.map((business) => ({
+  id: business.id,
+  name: business.name,
+  category: business.category,
+  categories: categoryOverrides[business.id],
+  zone: business.zone,
+  description: business.id === "eleva-steam" ? "Limpieza y lavado profundo para salas, colchones y tapetes a domicilio." : business.description,
+  image: business.image.replace("./", "/"),
+  logo: null,
+  listingType: "microsite",
+  hours: business.isOpen ? "Disponibilidad en su micrositio" : "Consulta disponibilidad",
+  whatsapp: business.whatsappUrl,
+  maps: business.mapsUrl,
+  badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, business.hasPromotion ? "Beneficio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
+  micrositeUrl: business.micrositeUrl,
+  isDemo: false,
+  openNow: business.id === "eleva-steam" ? false : business.isOpen,
+  delivery: business.id === "eleva-steam",
+  isNew: business.isNew,
+  hasBenefit: ["forno-locale", "aura-spa", "barberia-clasica", "eleva-steam"].includes(business.id),
+  hasMicrosite: true
+}));
+
+const freeDemoBusinesses = [
+  {
+    id: "cafe-patio-demo", name: "Café Patio", category: "Café", categories: ["cafe"], zone: "El Refugio",
+    description: "Café de especialidad y desayunos para una pausa cerca de casa.", image: "/assets/cafe-patio-demo.svg", logo: null,
+    listingType: "free", hours: "8:00–20:00", whatsapp: null, maps: null, badges: ["A 5 min"], micrositeUrl: null,
+    isDemo: true, openNow: true, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
+  },
+  {
+    id: "vet-cerca-demo", name: "Vet Cerca", category: "Mascotas", categories: ["mascotas", "servicios"], zone: "El Refugio",
+    description: "Atención veterinaria y servicios básicos para mascotas de la zona.", image: "/assets/vet-cerca-demo.png", logo: null,
+    listingType: "free", hours: "Horario por confirmar", whatsapp: null, maps: null, badges: [], micrositeUrl: null,
+    isDemo: true, openNow: false, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
+  }
+];
+
+export const directoryBusinesses = [...micrositeDirectoryBusinesses, ...freeDemoBusinesses];
