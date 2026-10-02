@@ -30,3 +30,14 @@ body { margin: 0; }
 @media(max-width:720px){.business-hero{min-height:760px}.business-hero__nav{padding:1.2rem}.business-hero__nav a:first-child{font-size:0}.business-hero__nav a:first-child::after{content:"A DOS PASOS";font-size:.75rem}.business-hero__copy h1{font-size:clamp(3.8rem,20vw,6rem)}.business-service-grid,.business-gallery{grid-template-columns:1fr}.business-gallery img,.business-gallery img+img{height:115vw;max-height:620px}.business-location,.business-footer-dynamic{align-items:flex-start;flex-direction:column}}
 .alta-only{overflow-x:hidden}.alta-only .business-hero,.alta-only .free-includes{display:none}.alta-only .business-workspace{padding-top:clamp(7rem,10vw,10rem)}.resident-alta-only .resident-story{display:none}.resident-alta-only .resident-layout{grid-template-columns:minmax(0,820px);justify-content:center;padding-top:clamp(7rem,10vw,10rem)}.resident-layout--proposal{grid-template-columns:minmax(0,960px);justify-content:center}.resident-layout--proposal .resident-story{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,6vw,6rem)}
 @media(max-width:800px){.resident-layout--proposal .resident-story{grid-template-columns:1fr}}
+
+.footer>.general-contact{grid-column:1/-1;display:grid;grid-template-columns:minmax(16rem,1fr) auto;align-items:center;gap:clamp(1.25rem,4vw,4rem);padding:1.5rem 0;border-top:1px solid rgba(255,255,255,.11);border-bottom:1px solid rgba(255,255,255,.11)}
+.general-contact>div:first-child{display:flex;flex-direction:column;gap:.45rem}
+.general-contact>div:first-child>span{color:var(--cyan,#1bbdff);font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.general-contact>div:first-child>strong{max-width:35rem;color:#fff;font-size:1rem;line-height:1.45}
+.general-contact__links{display:flex;align-items:stretch;justify-content:flex-end;gap:.75rem;min-width:0}
+.general-contact__links>a{min-height:3.2rem;display:flex;flex-direction:column;justify-content:center;padding:.55rem .85rem;color:#fff!important;border:1px solid rgba(255,255,255,.14);border-radius:.85rem;font-size:.82rem!important;font-weight:750;text-decoration:none;overflow-wrap:anywhere}
+.general-contact__links>a:hover{background:rgba(255,255,255,.08)}
+.general-contact__links small{display:block;margin:0 0 .2rem;color:var(--cyan,#1bbdff);font-size:.63rem;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+@media(max-width:900px){.footer>.general-contact{grid-template-columns:1fr}.general-contact__links{justify-content:flex-start;flex-wrap:wrap}.general-contact__links>a{flex:1 1 13rem}}
+@media(max-width:520px){.footer>.general-contact{grid-column:auto;padding:1.2rem 0}.general-contact>div:first-child>strong{font-size:.92rem}.general-contact__links{display:grid;grid-template-columns:1fr;width:100%}.general-contact__links>a{width:100%;min-height:3rem}.general-contact__links small{font-size:.62rem}}
