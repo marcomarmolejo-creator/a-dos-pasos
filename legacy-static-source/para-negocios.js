@@ -3,6 +3,8 @@ const description = form.elements.description;
 const promotionFields = document.querySelector("[data-promotion-fields]");
 const imageError = document.querySelector("[data-image-error]");
 const objectUrls = new Map();
+const maxImageBytes = 5 * 1024 * 1024;
+const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 /*
   PRINCIPIO INTERNO DE PRODUCTO
@@ -41,18 +43,31 @@ function updatePreview() {
   document.querySelector("[data-character-count]").textContent = `${description.value.length} / 180`;
 }
 
+function imageValidationMessage(file) {
+  if (file.size > maxImageBytes) return "La imagen supera el tamaño máximo permitido de 5 MB.";
+  if (!allowedImageTypes.has(file.type)) return "Formato no compatible. Usa JPG, PNG o WebP.";
+  return "";
+}
+
+function validateImageInputs() {
+  let firstError = "";
+  [form.elements.logo, form.elements.mainImage].forEach((input) => {
+    const file = input.files?.[0];
+    const message = file ? imageValidationMessage(file) : "";
+    input.setCustomValidity(message);
+    if (!firstError && message) firstError = message;
+  });
+  imageError.textContent = firstError;
+  imageError.hidden = !firstError;
+  return !firstError;
+}
+
 function previewFile(input) {
   const file = input.files?.[0];
   if (!file) return;
-  const allowed = ["image/jpeg", "image/png", "image/webp"];
-  if (!allowed.includes(file.type)) {
-    input.setCustomValidity("Selecciona una imagen JPG, PNG o WEBP.");
-    imageError.textContent = "Las imágenes deben estar en formato JPG, PNG o WEBP.";
-    imageError.hidden = false;
-    return;
-  }
-  input.setCustomValidity("");
-  imageError.hidden = true;
+  const message = imageValidationMessage(file);
+  validateImageInputs();
+  if (message) return;
   if (objectUrls.has(input.name)) URL.revokeObjectURL(objectUrls.get(input.name));
   const url = URL.createObjectURL(file);
   objectUrls.set(input.name, url);

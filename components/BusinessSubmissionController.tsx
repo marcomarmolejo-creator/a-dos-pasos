@@ -5,6 +5,14 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 const BUCKET = "business-submissions";
 const SUBMIT_LABEL = "Enviar mi negocio para revisión";
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+function imageValidationMessage(file: File) {
+  if (file.size > MAX_IMAGE_BYTES) return "La imagen supera el tamaño máximo permitido de 5 MB.";
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) return "Formato no compatible. Usa JPG, PNG o WebP.";
+  return "";
+}
 
 function slugify(value: string) {
   return value
@@ -33,8 +41,9 @@ export function BusinessSubmissionController() {
     const form = document.querySelector<HTMLFormElement>("#business-form");
     const success = document.querySelector<HTMLElement>("[data-success]");
     const errorBox = document.querySelector<HTMLElement>("[data-submit-error]");
+    const imageError = document.querySelector<HTMLElement>("[data-image-error]");
     const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
-    if (!form || !success || !errorBox || !submitButton) return;
+    if (!form || !success || !errorBox || !imageError || !submitButton) return;
 
     let submitting = false;
 
@@ -59,6 +68,31 @@ export function BusinessSubmissionController() {
         form.reportValidity();
         return;
       }
+
+      const logoInput = form.elements.namedItem("logo") as HTMLInputElement;
+      const mainImageInput = form.elements.namedItem("mainImage") as HTMLInputElement;
+      const files = [
+        { file: logo, input: logoInput },
+        { file: mainImage, input: mainImageInput }
+      ];
+      let firstFileError = "";
+      let firstInvalidInput: HTMLInputElement | null = null;
+      for (const { file, input } of files) {
+        const message = imageValidationMessage(file);
+        input.setCustomValidity(message);
+        if (!firstFileError && message) {
+          firstFileError = message;
+          firstInvalidInput = input;
+        }
+      }
+      if (firstFileError) {
+        imageError.textContent = firstFileError;
+        imageError.hidden = false;
+        if (firstInvalidInput) firstInvalidInput.focus();
+        form.reportValidity();
+        return;
+      }
+      imageError.hidden = true;
 
       submitting = true;
       setError(false);
