@@ -63,13 +63,24 @@ const PUBLIC_FIELDS = [
 let client: SupabaseClient | null = null;
 let publishedBusinessesPromise: Promise<PublishedBusiness[]> | null = null;
 
+function fetchWithoutPublishableBearer(publishableKey: string): typeof fetch {
+  return (input, init) => {
+    const headers = new Headers(init?.headers);
+    if (headers.get("Authorization") === `Bearer ${publishableKey}`) {
+      headers.delete("Authorization");
+    }
+    return fetch(input, { ...init, headers });
+  };
+}
+
 function getPublicClient() {
   if (client) return client;
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anonKey) return null;
-  client = createClient(url, anonKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !publishableKey) return null;
+  client = createClient(url, publishableKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: { fetch: fetchWithoutPublishableBearer(publishableKey) }
   });
   return client;
 }
