@@ -8,6 +8,21 @@ const SUBMIT_LABEL = "Enviar mi negocio para revisión";
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
+function safeErrorDetails(error: unknown) {
+  if (!error || typeof error !== "object") return { message: "Unknown error" };
+  const value = error as { message?: unknown; code?: unknown; status?: unknown; statusCode?: unknown };
+  const message = typeof value.message === "string"
+    ? value.message
+      .replace(/sb_(?:publishable|secret)_[A-Za-z0-9_-]+/g, "[redacted-key]")
+      .replace(/Bearer\s+\S+/gi, "Bearer [redacted]")
+    : "Unknown error";
+  return {
+    message,
+    code: typeof value.code === "string" ? value.code : undefined,
+    status: typeof value.status === "number" ? value.status : value.statusCode
+  };
+}
+
 function imageValidationMessage(file: File) {
   if (file.size > MAX_IMAGE_BYTES) return "La imagen supera el tamaño máximo permitido de 5 MB.";
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) return "Formato no compatible. Usa JPG, PNG o WebP.";
@@ -105,22 +120,33 @@ export function BusinessSubmissionController() {
         const logoPath = `${id}/logo.${fileExtension(logo)}`;
         const mainImagePath = `${id}/principal.${fileExtension(mainImage)}`;
 
+        console.info("[Business submission] Logo upload started");
         const { error: logoError } = await supabase.storage.from(BUCKET).upload(logoPath, logo, {
           cacheControl: "3600",
           contentType: logo.type,
           upsert: false
         });
-        if (logoError) throw logoError;
+        if (logoError) {
+          console.error("[Business submission] Logo upload failed", safeErrorDetails(logoError));
+          throw logoError;
+        }
+        console.info("[Business submission] Logo upload completed");
 
+        console.info("[Business submission] Main image upload started");
         const { error: mainImageError } = await supabase.storage.from(BUCKET).upload(mainImagePath, mainImage, {
           cacheControl: "3600",
           contentType: mainImage.type,
           upsert: false
         });
-        if (mainImageError) throw mainImageError;
+        if (mainImageError) {
+          console.error("[Business submission] Main image upload failed", safeErrorDetails(mainImageError));
+          throw mainImageError;
+        }
+        console.info("[Business submission] Main image upload completed");
 
         const businessName = String(formData.get("businessName") ?? "").trim();
         const hasPromotion = formData.get("hasPromotion") === "yes";
+        console.info("[Business submission] Database insert started");
         const { error: insertError } = await supabase.from("businesses").insert({
           id,
           business_name: businessName,
@@ -149,14 +175,18 @@ export function BusinessSubmissionController() {
           editorial_review_accepted: formData.get("acceptReview") === "on",
           source: "web"
         });
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error("[Business submission] Database insert failed", safeErrorDetails(insertError));
+          throw insertError;
+        }
+        console.info("[Business submission] Database insert completed");
 
         form.hidden = true;
         success.hidden = false;
         success.focus();
         success.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
-        if (process.env.NODE_ENV !== "production") console.error("Business submission failed", error);
+        console.error("[Business submission] Submission stopped", safeErrorDetails(error));
         setError(true);
       } finally {
         submitting = false;
