@@ -28,7 +28,7 @@ export function getLegacyBody(file: string) {
   return html;
 }
 
-export function LegacyPage({ file, moduleSrc, bodyClass }: { file: string; moduleSrc: string; bodyClass?: string }) {
+export function LegacyPage({ file, moduleSrc, bodyClass }: { file: string; moduleSrc?: string; bodyClass?: string }) {
   const html = getLegacyBody(file);
-  return <><div className={bodyClass} dangerouslySetInnerHTML={{ __html: html }} /><LegacyModule src={moduleSrc} /></>;
+  return <><div className={bodyClass} dangerouslySetInnerHTML={{ __html: html }} />{moduleSrc ? <LegacyModule src={moduleSrc} /> : null}</>;
 }

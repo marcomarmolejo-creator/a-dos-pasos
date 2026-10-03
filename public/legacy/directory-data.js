@@ -67,7 +67,7 @@ const micrositeDirectoryBusinesses = businesses.map((business) => ({
   maps: business.mapsUrl,
   badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, business.hasPromotion ? "Beneficio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
   micrositeUrl: business.micrositeUrl,
-  isDemo: false,
+  isDemo: true,
   openNow: business.id === "eleva-steam" ? false : business.isOpen,
   delivery: business.id === "eleva-steam",
   isNew: business.isNew,
@@ -90,4 +90,10 @@ const freeDemoBusinesses = [
   }
 ];
 
-export const directoryBusinesses = [...micrositeDirectoryBusinesses, ...freeDemoBusinesses];
+const publishedBusinesses = Array.isArray(window.__PUBLISHED_BUSINESSES__) ? window.__PUBLISHED_BUSINESSES__ : [];
+const publishedSlugs = new Set(publishedBusinesses.map((business) => business.id));
+export const directoryBusinesses = [
+  ...publishedBusinesses,
+  ...micrositeDirectoryBusinesses.filter((business) => !publishedSlugs.has(business.id)),
+  ...freeDemoBusinesses.filter((business) => !publishedSlugs.has(business.id))
+];
