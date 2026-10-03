@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const published = await getPublishedBusinessBySlug(slug);
   if (published?.listing_type === "micrositio") {
-    return { title: `${published.business_name} | A Dos Pasos`, description: published.short_description };
+    return { title: { absolute: `${published.business_name} | A Dos Pasos` }, description: published.short_description };
   }
   const business = getBusiness(slug);
   if (!business) return { title: "Negocio no disponible" };
