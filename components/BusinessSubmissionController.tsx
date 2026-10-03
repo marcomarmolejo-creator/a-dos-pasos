@@ -110,7 +110,6 @@ export function BusinessSubmissionController() {
           contact_email: optional(formData, "contactEmail"),
           promotion_title: hasPromotion ? optional(formData, "promotionTitle") : null,
           promotion_description: hasPromotion ? optional(formData, "promotionDescription") : null,
-          promotion_expiration: hasPromotion ? optional(formData, "promotionExpiration") : null,
           information_confirmed: formData.get("confirmAccuracy") === "on",
           publication_authorized: formData.get("authorizePublication") === "on",
           editorial_review_accepted: formData.get("acceptReview") === "on",

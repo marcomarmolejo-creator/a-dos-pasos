@@ -37,7 +37,7 @@ Esta fase conecta `/para-negocios/alta` con una tabla privada de solicitudes y u
 | `logo` | ruta privada en `logo_url` |
 | `mainImage` | ruta privada en `main_image_url` |
 
-La vigencia opcional se conserva en `promotion_expiration` para no perder un campo ya existente del formulario aprobado.
+La vigencia opcional permanece en la interfaz aprobada, pero no se persiste en esta fase porque no forma parte del esquema `businesses` solicitado.
 
 ## Flujo de envío
 

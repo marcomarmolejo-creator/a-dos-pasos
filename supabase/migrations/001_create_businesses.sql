@@ -32,7 +32,6 @@ create table if not exists public.businesses (
 
   promotion_title text,
   promotion_description text,
-  promotion_expiration text,
 
   information_confirmed boolean not null check (information_confirmed),
   publication_authorized boolean not null check (publication_authorized),
