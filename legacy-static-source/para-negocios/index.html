@@ -139,17 +139,20 @@
               </fieldset>
 
               <button class="submit-business" type="submit">Enviar mi negocio para revisión</button>
-              <p class="submission-disclaimer">Prototipo sin backend: el envío se simula en este dispositivo y no almacena información permanentemente.</p>
+              <div class="submission-error" data-submit-error role="alert" tabindex="-1" hidden>
+                <strong>No pudimos enviar tu información en este momento. Por favor intenta nuevamente.</strong>
+                <span>Si necesitas ayuda, escríbenos por WhatsApp al <a href="https://wa.me/524424223487" target="_blank" rel="noreferrer">442 422 34 87</a>.</span>
+              </div>
+              <p class="submission-disclaimer">Tu solicitud se enviará para revisión editorial antes de publicarse.</p>
             </form>
 
             <section class="submission-success" data-success hidden tabindex="-1">
-              <span>Solicitud preparada</span>
-              <h2>¡Gracias!</h2>
-              <p>Recibimos la información de tu negocio.</p>
-              <p>Revisaremos los datos e imágenes antes de publicar tu ficha en A Dos Pasos.</p>
-              <p>Si necesitamos algún ajuste, nos pondremos en contacto contigo.</p>
-              <small>Esta demostración no envió ni almacenó los datos permanentemente. El estado preparado es <b>pendiente de revisión</b>.</small>
-              <button type="button" data-edit-submission>Volver al formulario</button>
+              <span>Solicitud recibida</span>
+              <h2>¡Gracias! Recibimos la información de tu negocio.</h2>
+              <p>Revisaremos tu ficha antes de publicarla en A Dos Pasos. Si necesitamos algún dato adicional, nos pondremos en contacto contigo.</p>
+              <small>Tu solicitud quedó registrada con estado <b>pendiente</b>.</small>
+              <a class="submission-success-link" href="/">Volver a A Dos Pasos</a>
+              <p class="submission-success-support">¿Necesitas ayuda? <a href="https://wa.me/524424223487" target="_blank" rel="noreferrer">WhatsApp</a> · <a href="mailto:hola@adospasos.com.mx">hola@adospasos.com.mx</a></p>
             </section>
           </div>
 

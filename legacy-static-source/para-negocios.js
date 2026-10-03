@@ -2,7 +2,6 @@ const form = document.querySelector("#business-form");
 const description = form.elements.description;
 const promotionFields = document.querySelector("[data-promotion-fields]");
 const imageError = document.querySelector("[data-image-error]");
-const success = document.querySelector("[data-success]");
 const objectUrls = new Map();
 
 /*
@@ -75,34 +74,6 @@ function previewFile(input) {
   }
 }
 
-function buildSubmission() {
-  const data = new FormData(form);
-  return {
-    businessName: data.get("businessName"),
-    category: data.get("category"),
-    description: data.get("description"),
-    zone: data.get("zone"),
-    address: data.get("address"),
-    mapsUrl: data.get("mapsUrl"),
-    delivery: data.get("delivery") === "yes",
-    hours: data.get("hours"),
-    whatsapp: data.get("whatsapp"),
-    phone: data.get("phone"),
-    instagram: data.get("instagram"),
-    facebook: data.get("facebook"),
-    website: data.get("website"),
-    logo: data.get("logo"),
-    mainImage: data.get("mainImage"),
-    contactName: data.get("contactName"),
-    contactPhone: data.get("contactPhone"),
-    contactEmail: data.get("contactEmail"),
-    promotionTitle: data.get("promotionTitle"),
-    promotionDescription: data.get("promotionDescription"),
-    promotionExpiration: data.get("promotionExpiration"),
-    status: "pending_review"
-  };
-}
-
 form.addEventListener("input", (event) => {
   if (event.target.matches('input[type="file"]')) previewFile(event.target);
   updatePreview();
@@ -114,25 +85,6 @@ form.addEventListener("change", (event) => {
     promotionFields.querySelectorAll("input,textarea").forEach((field) => { field.required = show; });
   }
   updatePreview();
-});
-
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-  const submission = buildSubmission();
-  form.dataset.prototypeStatus = submission.status;
-  form.hidden = true;
-  success.hidden = false;
-  success.focus();
-});
-
-document.querySelector("[data-edit-submission]").addEventListener("click", () => {
-  success.hidden = true;
-  form.hidden = false;
-  form.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 const header = document.querySelector(".site-header");
