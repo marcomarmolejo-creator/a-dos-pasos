@@ -77,3 +77,5 @@ on storage.objects
 for select
 to anon, authenticated
 using (bucket_id = 'business-public');
+
+notify pgrst, 'reload schema';
