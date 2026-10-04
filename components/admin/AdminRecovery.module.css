@@ -1,0 +1,7 @@
+.textButton {
+  min-height: 44px !important;
+  background: transparent !important;
+  color: #075273 !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
