@@ -23,6 +23,12 @@ function safeErrorDetails(error: unknown) {
   };
 }
 
+function isDuplicateConflict(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const value = error as { code?: unknown; status?: unknown; statusCode?: unknown };
+  return value.code === "23505" || value.status === 409 || value.statusCode === 409;
+}
+
 function imageValidationMessage(file: File) {
   if (file.size > MAX_IMAGE_BYTES) return "La imagen supera el tamaño máximo permitido de 5 MB.";
   if (!ALLOWED_IMAGE_TYPES.has(file.type)) return "Formato no compatible. Usa JPG, PNG o WebP.";
@@ -56,15 +62,19 @@ export function BusinessSubmissionController() {
     const form = document.querySelector<HTMLFormElement>("#business-form");
     const success = document.querySelector<HTMLElement>("[data-success]");
     const errorBox = document.querySelector<HTMLElement>("[data-submit-error]");
+    const genericError = document.querySelector<HTMLElement>("[data-submit-error-generic]");
+    const duplicateError = document.querySelector<HTMLElement>("[data-submit-error-duplicate]");
     const imageError = document.querySelector<HTMLElement>("[data-image-error]");
     const submitButton = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
-    if (!form || !success || !errorBox || !imageError || !submitButton) return;
+    if (!form || !success || !errorBox || !genericError || !duplicateError || !imageError || !submitButton) return;
 
     let submitting = false;
 
-    const setError = (visible: boolean) => {
-      errorBox.hidden = !visible;
-      if (visible) errorBox.focus();
+    const setError = (type: "none" | "generic" | "duplicate") => {
+      errorBox.hidden = type === "none";
+      genericError.hidden = type !== "generic";
+      duplicateError.hidden = type !== "duplicate";
+      if (type !== "none") errorBox.focus();
     };
 
     const onSubmit = async (event: SubmitEvent) => {
@@ -110,7 +120,7 @@ export function BusinessSubmissionController() {
       imageError.hidden = true;
 
       submitting = true;
-      setError(false);
+      setError("none");
       submitButton.disabled = true;
       submitButton.textContent = "Enviando…";
 
@@ -119,6 +129,7 @@ export function BusinessSubmissionController() {
         const id = crypto.randomUUID();
         const logoPath = `${id}/logo.${fileExtension(logo)}`;
         const mainImagePath = `${id}/principal.${fileExtension(mainImage)}`;
+        const uploadedPaths: string[] = [];
 
         console.info("[Business submission] Logo upload started");
         const { error: logoError } = await supabase.storage.from(BUCKET).upload(logoPath, logo, {
@@ -130,6 +141,7 @@ export function BusinessSubmissionController() {
           console.error("[Business submission] Logo upload failed", safeErrorDetails(logoError));
           throw logoError;
         }
+        uploadedPaths.push(logoPath);
         console.info("[Business submission] Logo upload completed");
 
         console.info("[Business submission] Main image upload started");
@@ -142,6 +154,7 @@ export function BusinessSubmissionController() {
           console.error("[Business submission] Main image upload failed", safeErrorDetails(mainImageError));
           throw mainImageError;
         }
+        uploadedPaths.push(mainImagePath);
         console.info("[Business submission] Main image upload completed");
 
         const businessName = String(formData.get("businessName") ?? "").trim();
@@ -177,6 +190,17 @@ export function BusinessSubmissionController() {
         });
         if (insertError) {
           console.error("[Business submission] Database insert failed", safeErrorDetails(insertError));
+          console.info("[Business submission] Uploaded file cleanup started", { count: uploadedPaths.length });
+          const { error: cleanupError } = await supabase.storage.from(BUCKET).remove(uploadedPaths);
+          if (cleanupError) {
+            console.error("[Business submission] Uploaded file cleanup failed", safeErrorDetails(cleanupError));
+          } else {
+            console.info("[Business submission] Uploaded file cleanup completed", { count: uploadedPaths.length });
+          }
+          if (isDuplicateConflict(insertError)) {
+            setError("duplicate");
+            return;
+          }
           throw insertError;
         }
         console.info("[Business submission] Database insert completed");
@@ -187,7 +211,7 @@ export function BusinessSubmissionController() {
         success.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (error) {
         console.error("[Business submission] Submission stopped", safeErrorDetails(error));
-        setError(true);
+        setError("generic");
       } finally {
         submitting = false;
         submitButton.disabled = false;

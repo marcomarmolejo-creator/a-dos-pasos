@@ -5,6 +5,7 @@ import type { Session } from "@supabase/supabase-js";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import styles from "./AdminBusinesses.module.css";
 import recoveryStyles from "./AdminRecovery.module.css";
+import commercialStyles from "./CommercialTracking.module.css";
 
 type BusinessStatus = "pendiente" | "aprobado" | "publicado" | "rechazado";
 
@@ -40,11 +41,29 @@ type AdminBusiness = {
   source: string;
   listing_type: "ficha" | "micrositio";
   theme: string | null;
+  commercial_interest: string | null;
+  sales_status: string;
+  sales_notes: string | null;
 };
 
 const STATUSES: BusinessStatus[] = ["pendiente", "aprobado", "publicado", "rechazado"];
 const PRIVATE_BUCKET = "business-submissions";
 const PUBLIC_BUCKET = "business-public";
+const COMMERCIAL_INTERESTS = [
+  ["", "Sin producto definido"],
+  ["micrositio", "Micrositio"],
+  ["video-local", "Video Local"],
+  ["promocion-activa", "Promoción Activa"],
+  ["beneficio-local", "Beneficio Local"],
+  ["paquete-micrositio-video", "Micrositio + Video Local"]
+] as const;
+const SALES_STATUSES = [
+  ["sin-contacto", "Sin contacto"],
+  ["interesado", "Interesado"],
+  ["cotizacion-enviada", "Cotización enviada"],
+  ["contratado", "Contratado"],
+  ["no-interesado", "No interesado"]
+] as const;
 
 function errorMessage(error: unknown) {
   if (!error || typeof error !== "object" || !("message" in error)) return "No fue posible completar la operación.";
@@ -81,6 +100,9 @@ export function AdminBusinesses() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const [operationError, setOperationError] = useState("");
+  const [commercialInterest, setCommercialInterest] = useState("");
+  const [salesStatus, setSalesStatus] = useState("sin-contacto");
+  const [salesNotes, setSalesNotes] = useState("");
 
   const selected = businesses.find((business) => business.id === selectedId) ?? businesses[0] ?? null;
 
@@ -175,6 +197,12 @@ export function AdminBusinesses() {
     return () => { active = false; };
   }, [selected]);
 
+  useEffect(() => {
+    setCommercialInterest(selected?.commercial_interest ?? "");
+    setSalesStatus(selected?.sales_status ?? "sin-contacto");
+    setSalesNotes(selected?.sales_notes ?? "");
+  }, [selected?.id, selected?.commercial_interest, selected?.sales_status, selected?.sales_notes]);
+
   const signIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setBusy(true);
@@ -230,6 +258,27 @@ export function AdminBusinesses() {
     else {
       setNotice(nextStatus === "aprobado" ? "Solicitud aprobada." : "Solicitud rechazada.");
       await loadBusinesses();
+    }
+    setBusy(false);
+  };
+
+  const saveCommercialTracking = async () => {
+    if (!selected) return;
+    setBusy(true);
+    setNotice("");
+    setOperationError("");
+    const supabase = getSupabaseAdminClient();
+    const { data, error } = await supabase.rpc("admin_update_commercial_tracking", {
+      p_business_id: selected.id,
+      p_commercial_interest: commercialInterest || null,
+      p_sales_status: salesStatus,
+      p_sales_notes: salesNotes
+    });
+    if (error) setOperationError(errorMessage(error));
+    else {
+      const updated = data as AdminBusiness;
+      setBusinesses((current) => current.map((business) => business.id === updated.id ? updated : business));
+      setNotice("Seguimiento comercial actualizado.");
     }
     setBusy(false);
   };
@@ -361,6 +410,15 @@ export function AdminBusinesses() {
                 ["Revisión aceptada", selected.editorial_review_accepted ? "Sí" : "No"]
               ]} consent />
             </div>
+            <section className={commercialStyles.panel} aria-labelledby="commercial-tracking-title">
+              <div><span>Interno</span><h3 id="commercial-tracking-title">Seguimiento comercial</h3><p>Estos datos son privados y no aparecen en la ficha pública.</p></div>
+              <div className={commercialStyles.fields}>
+                <label>Producto de interés<select value={commercialInterest} onChange={(event) => setCommercialInterest(event.target.value)}>{COMMERCIAL_INTERESTS.map(([value,label])=><option value={value} key={value || "none"}>{label}</option>)}</select></label>
+                <label>Estado comercial<select value={salesStatus} onChange={(event) => setSalesStatus(event.target.value)}>{SALES_STATUSES.map(([value,label])=><option value={value} key={value}>{label}</option>)}</select></label>
+                <label className={commercialStyles.notes}>Notas<textarea value={salesNotes} onChange={(event) => setSalesNotes(event.target.value)} rows={4} maxLength={2000} placeholder="Acuerdos, seguimiento o siguiente paso" /></label>
+              </div>
+              <button className={commercialStyles.save} type="button" onClick={saveCommercialTracking} disabled={busy}>Guardar seguimiento</button>
+            </section>
             <section className={styles.preview} aria-label="Vista previa de ficha">
               {mainImageUrl ? <img src={mainImageUrl} alt="" /> : <div />}
               <div><small>Vista previa de ficha</small><h3>{selected.business_name}</h3><p>{selected.short_description}</p><strong>{selected.category} · {selected.zone}</strong></div>

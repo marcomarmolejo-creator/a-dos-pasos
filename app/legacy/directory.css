@@ -193,6 +193,7 @@
 .directory-experience { width: 100%; }
 .directory-depth { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.2rem; }
 .directory-depth span { padding: .35rem .5rem; border-radius: .4rem; color: #33516f; background: #edf4f9; font-size: .68rem; font-weight: 800; }
+.directory-owner-link { margin: .8rem 0 0; color: #748599; font-size: .68rem; line-height: 1.4; }.directory-owner-link a { color: #315f86; font-weight: 850; text-decoration: underline; text-underline-offset: 2px; }
 
 .directory-empty { max-width: 38rem; margin: 2rem auto; padding: 4rem 2rem; border: 1px solid #d7e2eb; border-radius: 1.25rem; text-align: center; background: #fff; }
 .directory-empty > span { color: #147bd1; font-size: 2.3rem; }

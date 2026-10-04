@@ -25,6 +25,11 @@
 .free-includes-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 .free-includes-notes p { margin: 0; padding: 1.2rem; border-left: 3px solid #ffb229; color: #52657a; background: #fff; font-size: .88rem; }
 
+.commercial-options { padding: clamp(4rem,8vw,7rem) max(1.25rem,calc((100vw - 74rem)/2)); color: #fff; background: #061b3d; }
+.commercial-options > header { max-width: 48rem; margin-bottom: 2.5rem; }.commercial-options > header .eyebrow { color: #ffb229; }.commercial-options > header h2 { margin: .55rem 0 .9rem; color: #fff; font-size: clamp(2.5rem,5vw,5rem); line-height: .95; letter-spacing: -.055em; }.commercial-options > header p { color: rgba(255,255,255,.72); font-size: 1.05rem; line-height: 1.6; }
+.commercial-options-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; }.commercial-options-grid article { display: flex; flex-direction: column; padding: 1.5rem; border: 1px solid rgba(255,255,255,.15); border-radius: 1.25rem; background: rgba(255,255,255,.07); }.commercial-options-grid article > span { color: #79d8ff; font-size: .72rem; font-weight: 950; letter-spacing: .11em; text-transform: uppercase; }.commercial-options-grid h3 { min-height: 7.5rem; margin: .8rem 0 1rem; color: #fff; font-size: 1.25rem; line-height: 1.35; }.commercial-options-grid ul { display: grid; gap: .55rem; margin: 0 0 1.5rem; padding: 0; list-style: none; color: rgba(255,255,255,.72); }.commercial-options-grid li::before { content: "✓"; margin-right: .5rem; color: #ffb229; }.commercial-options-grid a { min-height: 3rem; display: inline-flex; align-items: center; justify-content: center; margin-top: auto; padding: .75rem 1rem; border-radius: .75rem; color: #071e3e; background: #ffb229; font-size: .84rem; font-weight: 900; text-align: center; }
+.commercial-prices { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); margin-top: 1.25rem; border: 1px solid rgba(255,255,255,.15); border-radius: 1rem; overflow: hidden; }.commercial-prices div { display: flex; flex-direction: column; justify-content: space-between; gap: .75rem; min-height: 7rem; padding: 1rem; border-right: 1px solid rgba(255,255,255,.12); }.commercial-prices div:last-child { border-right: 0; }.commercial-prices span { color: rgba(255,255,255,.65); font-size: .75rem; line-height: 1.35; }.commercial-prices strong { color: #fff; font-size: 1rem; }
+
 .business-workspace { padding: clamp(4rem,7vw,6rem) max(1rem,calc((100vw - 74rem)/2)); background: #fff; }
 .workspace-heading { max-width: 48rem; margin-bottom: 2.5rem; }
 .workspace-heading h2 { margin: .55rem 0 .8rem; font-size: clamp(2.4rem,4.6vw,4.5rem); line-height: .96; letter-spacing: -.055em; }
@@ -70,14 +75,17 @@
 .commercial-rules { scroll-margin-top: 1rem; padding-top: .5rem; color: #6a7b8d; font-size: .75rem; }
 .submit-business { width: 100%; min-height: 3.4rem; border: 0; border-radius: .85rem; color: #071e3e; background: #ffb229; font-size: .92rem; font-weight: 950; cursor: pointer; }
 .submit-business:disabled { cursor: wait; opacity: .68; }
-.submission-error { display: grid; gap: .35rem; padding: 1rem; border: 1px solid #e9b7b7; border-radius: .8rem; color: #8b2020; background: #fff2f2; font-size: .82rem; }
+.submission-error { padding: 1rem; border: 1px solid #e9b7b7; border-radius: .8rem; color: #8b2020; background: #fff2f2; font-size: .82rem; }
 .submission-error[hidden] { display: none; }
+.submission-error > div { display: grid; gap: .35rem; }
+.submission-error > div[hidden] { display: none; }
 .submission-error a { color: inherit; font-weight: 900; text-decoration: underline; }
 .submission-disclaimer { margin: -.35rem 0 .5rem; color: #78899a; font-size: .72rem; text-align: center; }
 .submission-success { padding: clamp(2rem,5vw,4rem); border-radius: 1.25rem; color: #fff; background: linear-gradient(145deg,#082955,#03142f); }.submission-success[hidden] { display: none; }.submission-success > span { color: #ffb229; font-size: .72rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }.submission-success h2 { margin: .5rem 0 1.2rem; color: #fff; font-size: clamp(2.6rem,5vw,4.5rem); }.submission-success p { max-width: 38rem; color: rgba(255,255,255,.82); }.submission-success small { display: block; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.62); }.submission-success button { min-height: 2.75rem; margin-top: 1.5rem; padding: .7rem 1rem; border: 0; border-radius: .65rem; color: #071e3e; background: #fff; font-weight: 850; cursor: pointer; }
 .submission-success-link { display: inline-flex; min-height: 2.75rem; align-items: center; margin-top: 1.5rem; padding: .7rem 1rem; border-radius: .65rem; color: #071e3e; background: #fff; font-weight: 850; }
 .submission-success .submission-success-support { margin-top: 1rem; font-size: .78rem; }
 .submission-success-support a { color: #fff; font-weight: 850; text-decoration: underline; }
+.success-commercial { margin-top: 1.5rem; padding: 1.1rem; border: 1px solid rgba(255,255,255,.15); border-radius: .9rem; background: rgba(255,255,255,.07); }.success-commercial > span { color: #79d8ff; font-size: .65rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }.success-commercial h3 { margin: .45rem 0 1rem; color: #fff; font-size: 1.15rem; }.success-commercial div { display: flex; flex-wrap: wrap; gap: .55rem; }.success-commercial a { min-height: 2.75rem; display: inline-flex; align-items: center; padding: .65rem .8rem; border-radius: .65rem; color: #071e3e; background: #ffb229; font-size: .78rem; font-weight: 900; }
 
 .business-preview { position: sticky; top: 1.5rem; min-width: 0; }.preview-heading { margin-bottom: 1rem; }.preview-heading > span { color: #0874e8; font-size: .7rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }.preview-heading h2 { margin: .4rem 0 .6rem; font-size: 1.65rem; line-height: 1.05; }.preview-heading p { margin: 0; color: #64768a; font-size: .78rem; }.preview-business-card { min-height: 36rem; }.preview-main-media { height: 13rem; }.preview-image-placeholder { position: absolute; inset: 0; display: grid; place-items: center; color: #6b8096; background: linear-gradient(145deg,#dceaf3,#cbdde9); font-size: .78rem; font-weight: 800; }.preview-main-media img { position: relative; z-index: 1; }.preview-main-media > span { z-index: 2; }.preview-logo img { width: 100%; height: 100%; padding: .25rem; border-radius: .7rem; background: #fff; }.preview-logo span { color: #fff; }.preview-business-card button { pointer-events: none; }
 .business-footer { grid-template-columns: 2fr 1fr; }.business-footer .footer-bottom { grid-column: 1 / -1; }
@@ -88,6 +96,7 @@
 @media (max-width: 900px) {
   .business-hero { grid-template-columns: 1fr; }.business-hero aside { max-width: 32rem; }
   .free-includes-heading { grid-template-columns: 1fr; gap: 1rem; }.free-includes ul { grid-template-columns: repeat(3,1fr); }
+  .commercial-options-grid { grid-template-columns: 1fr; }.commercial-options-grid h3 { min-height: 0; }.commercial-prices { grid-template-columns: repeat(2,minmax(0,1fr)); }.commercial-prices div { border-bottom: 1px solid rgba(255,255,255,.12); }
   .business-layout { grid-template-columns: 1fr; }.business-preview { position: relative; top: auto; max-width: 28rem; margin: 1rem auto 0; }
 }
 @media (max-width: 768px) {
@@ -96,6 +105,7 @@
   .business-primary-link { width: 100%; }
   .free-includes { width: 100%; padding: 3.5rem 1.25rem; }.free-includes ul { grid-template-columns: repeat(2,1fr); gap: .5rem; }.free-includes li { min-height: 3.6rem; padding: .7rem; font-size: .78rem; }
   .free-includes-notes { grid-template-columns: 1fr; }
+  .commercial-options { padding: 3.5rem 1.25rem; }.commercial-prices { grid-template-columns: 1fr; }.commercial-prices div { min-height: auto; border-right: 0; }.success-commercial div { display: grid; }.success-commercial a { width: 100%; justify-content: center; }
   .business-workspace { padding: 3.5rem 1.1rem; }.workspace-heading { margin-bottom: 1.75rem; }
   .field-grid--two, .upload-grid { grid-template-columns: 1fr; }.form-section { padding: 1.15rem; }.upload-card { min-height: 11rem; }
   .inline-choice label, .rules-link, .submit-business, .submission-success button { min-height: 2.75rem; }

@@ -5,6 +5,16 @@ const imageError = document.querySelector("[data-image-error]");
 const objectUrls = new Map();
 const maxImageBytes = 5 * 1024 * 1024;
 const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+const commercialMessages = {
+  micrositio: "Hola, tengo mi negocio en A Dos Pasos y me interesa conocer la opción de Micrositio para mi negocio.",
+  "video-local": "Hola, tengo mi negocio en A Dos Pasos y me interesa crear un Video Local que también pueda usar en mis propias redes.",
+  "promocion-activa": "Hola, tengo mi negocio en A Dos Pasos y quiero conocer las opciones para promover una oferta o beneficio."
+};
+
+document.querySelectorAll("[data-commercial-product]").forEach((link) => {
+  const message = commercialMessages[link.dataset.commercialProduct];
+  if (message) link.href = `https://wa.me/524424223487?text=${encodeURIComponent(message)}`;
+});
 
 /*
   PRINCIPIO INTERNO DE PRODUCTO
