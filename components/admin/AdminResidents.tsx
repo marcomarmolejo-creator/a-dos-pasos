@@ -25,7 +25,7 @@ type AdminResident = {
   source: string;
 };
 
-const INTERESTS = ["Todo", "Comer", "Café", "Cuidarme", "Mi casa", "Mascotas", "Servicios", "Promociones", "Nuevos lugares", "Ideas para hoy"];
+const INTEREST_FILTERS = ["Comer", "Café", "Cuidarme", "Mi casa", "Mascotas", "Servicios", "Promociones", "Nuevos lugares", "Ideas para hoy"];
 
 function errorMessage(error: unknown) {
   if (!error || typeof error !== "object" || !("message" in error)) return "No fue posible completar la operación.";
@@ -127,7 +127,6 @@ export function AdminResidents() {
   }, [filtered]);
 
   const selected = filtered.find((resident) => resident.id === selectedId) ?? filtered[0] ?? null;
-  const zones = useMemo(() => [...new Set(residents.map((resident) => resident.zone))].sort(), [residents]);
   const metrics = useMemo(() => {
     const threshold = Date.now() - 30 * 24 * 60 * 60 * 1000;
     const counts = new Map<string, number>();
@@ -222,8 +221,8 @@ export function AdminResidents() {
           <div className={residentStyles.chips} aria-label="Filtrar por estado">
             {(["todos", "activo", "inactivo"] as const).map((status) => <button key={status} type="button" className={`${styles.filter} ${statusFilter === status ? styles.filterActive : ""}`} onClick={() => setStatusFilter(status)}>{status}</button>)}
           </div>
-          <label>Zona<select value={zoneFilter} onChange={(event) => setZoneFilter(event.target.value)}><option value="todas">Todas</option>{zones.map((zone) => <option key={zone}>{zone}</option>)}</select></label>
-          <label>Interés<select value={interestFilter} onChange={(event) => setInterestFilter(event.target.value)}><option value="todos">Todos</option>{INTERESTS.map((interest) => <option key={interest}>{interest}</option>)}</select></label>
+          <label>Zona<select value={zoneFilter} onChange={(event) => setZoneFilter(event.target.value)}><option value="todas">Todas</option><option value="El Refugio">El Refugio</option></select></label>
+          <label>Interés<select value={interestFilter} onChange={(event) => setInterestFilter(event.target.value)}><option value="todos">Todos</option>{INTEREST_FILTERS.map((interest) => <option key={interest}>{interest}</option>)}</select></label>
           <button className={`${styles.button} ${styles.secondary} ${residentStyles.refresh}`} type="button" onClick={loadResidents} disabled={loadingList}>Actualizar</button>
         </div>
         {notice ? <div className={styles.notice} role="status">{notice}</div> : null}
@@ -233,12 +232,18 @@ export function AdminResidents() {
             {loadingList ? <div className={styles.empty}>Cargando residentes…</div> : null}
             {!loadingList && !filtered.length ? <div className={styles.empty}>No hay residentes para estos filtros.</div> : null}
             {filtered.map((resident) => <button key={resident.id} type="button" className={`${styles.listItem} ${selected?.id === resident.id ? styles.listItemActive : ""}`} onClick={() => setSelectedId(resident.id)}>
-              <div><h2>{resident.name}</h2><p>{resident.zone}{resident.neighborhood ? ` · ${resident.neighborhood}` : ""}</p><time>{formatDate(resident.created_at)}</time></div>
+              <div>
+                <h2>{resident.name}</h2>
+                <p>{resident.whatsapp}{resident.email ? ` · ${resident.email}` : ""}</p>
+                <p>{resident.zone}{resident.neighborhood ? ` · ${resident.neighborhood}` : ""}</p>
+                <div className={residentStyles.listInterests}>{resident.interests.map((interest) => <span key={interest}>{interest}</span>)}</div>
+                <time>{formatDate(resident.created_at)}</time>
+              </div>
               <span className={styles.status}>{resident.status}</span>
             </button>)}
           </section>
           {selected ? <article className={styles.detail}>
-            <header className={styles.detailHeader}><h2>{selected.name}</h2><p>{selected.zone} · Alta {formatDate(selected.created_at)}</p></header>
+            <header className={styles.detailHeader}><span className={residentStyles.privateLabel}>Internos · Privados</span><h2>{selected.name}</h2><p>{selected.zone} · Alta {formatDate(selected.created_at)}</p></header>
             <div className={styles.sections}>
               <ResidentDetail title="Contacto privado" rows={[["WhatsApp", selected.whatsapp], ["Email", selected.email], ["Zona", selected.zone], ["Colonia / privada", selected.neighborhood]]} />
               <ResidentDetail title="Registro" rows={[["Estado", selected.status], ["Fecha de alta", formatDate(selected.created_at)], ["Consentimiento", selected.consent ? "Sí" : "No"], ["Fecha de consentimiento", formatDate(selected.consent_at)], ["Fuente", selected.source]]} />
