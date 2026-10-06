@@ -46,14 +46,14 @@
 
         <div class="resident-form-column">
           <form id="resident-form" class="resident-form">
-            <header class="resident-form-heading"><span>Alta gratuita</span><h2>Únete a A Dos Pasos</h2><p>WhatsApp será el canal principal para el piloto de El Refugio.</p><small>Puedes dejar tu email si también quieres recibir futuros resúmenes.</small></header>
+            <header class="resident-form-heading"><span>Alta gratuita</span><h2>Descubre más de lo que tienes cerca.</h2><p>Recibe lugares seleccionados, promociones, beneficios, aperturas, ideas y servicios útiles de tu zona.</p><small>Te enviaremos 1–2 mensajes por semana, solo cuando haya algo que valga la pena compartir.</small></header>
 
             <section class="resident-fields" aria-labelledby="resident-details-title">
               <h3 id="resident-details-title">Tus datos</h3>
-              <label>Nombre *<input name="name" type="text" required maxlength="80" autocomplete="name" placeholder="¿Cómo te llamas?" /></label>
+              <label>Nombre *<input name="name" type="text" required minlength="2" maxlength="80" autocomplete="name" placeholder="¿Cómo te llamas?" /></label>
               <label>WhatsApp *<input name="whatsapp" type="tel" required autocomplete="tel" placeholder="442 000 0000" /></label>
               <label>Email <span>Opcional</span><input name="email" type="email" autocomplete="email" placeholder="nombre@correo.com" /></label>
-              <label class="resident-zone-field">Zona *<span class="resident-fixed-zone" aria-label="Zona seleccionada: El Refugio">El Refugio</span><select class="resident-zone-select" name="zone" required><option>El Refugio</option><option>Zibatá</option><option>Zakia</option><option>La Pradera</option><option>Juriquilla</option><option>El Campanario</option></select></label>
+              <label class="resident-zone-field">Zona *<span class="resident-fixed-zone" aria-label="Zona seleccionada: El Refugio">El Refugio</span><select class="resident-zone-select" name="zone" required><option value="El Refugio">El Refugio</option><option disabled>Zibatá · Próximamente</option><option disabled>Zakia · Próximamente</option><option disabled>La Pradera · Próximamente</option><option disabled>Juriquilla · Próximamente</option><option disabled>El Campanario · Próximamente</option></select></label>
               <details class="resident-optional-details">
                 <summary>Quiero contarte algo más <span>Opcional</span></summary>
                 <div class="resident-optional-content">
@@ -81,22 +81,29 @@
               <p class="interest-error" data-interest-error role="alert" hidden>Selecciona al menos una opción.</p>
             </fieldset>
 
-            <section class="resident-frequency" aria-label="Frecuencia de mensajes"><span>Frecuencia estimada durante el piloto</span><strong>1–2 mensajes por semana</strong><p>Te escribiremos solo cuando tengamos algo que realmente valga la pena compartir.</p></section>
+            <section class="resident-frequency" aria-label="Frecuencia de mensajes"><span>Frecuencia</span><strong>1–2 mensajes por semana</strong><p>Solo cuando haya algo que valga la pena compartir.</p></section>
 
-            <section class="resident-privacy" id="aviso-privacidad" aria-labelledby="privacy-title"><span>Tu información es tuya</span><h3 id="privacy-title">Contacto cuidado por A Dos Pasos</h3><p>A Dos Pasos no vende ni comparte tu información de contacto con los negocios publicados en la plataforma.</p><p>El canal se administra directamente desde A Dos Pasos.</p><label><input name="consent" type="checkbox" required /><span>Acepto recibir comunicaciones de A Dos Pasos por los medios que proporcioné.</span></label><a href="#aviso-privacidad">Ver aviso de privacidad</a></section>
+            <section class="resident-privacy" id="aviso-privacidad" aria-labelledby="privacy-title"><span>Tu información es tuya</span><h3 id="privacy-title">Contacto cuidado por A Dos Pasos</h3><p>A Dos Pasos no vende ni comparte tu información de contacto con los negocios publicados en la plataforma. El canal se administra directamente desde A Dos Pasos.</p><label><input name="consent" type="checkbox" required /><span>He leído y acepto recibir información de A Dos Pasos y el tratamiento de mis datos conforme al aviso de privacidad.</span></label><a href="/aviso-de-privacidad/">Ver aviso de privacidad</a></section>
 
             <button class="resident-submit" type="submit">Unirme a A Dos Pasos</button>
             <p class="resident-optout">Puedes dejar de recibir mensajes cuando quieras.</p>
-            <p class="resident-prototype-note">Prototipo sin backend: el alta se simula y tus datos no se almacenan permanentemente.</p>
+            <div class="resident-submit-error" data-resident-error role="alert" tabindex="-1" hidden>
+              <p data-resident-duplicate hidden>Este número ya está registrado en A Dos Pasos.</p>
+              <p data-resident-generic hidden>No pudimos completar tu registro. Conservamos tus datos en el formulario para que puedas intentarlo nuevamente.</p>
+            </div>
           </form>
 
           <section class="resident-success" data-success hidden tabindex="-1">
-            <span>Alta preparada</span>
+            <span>Registro completado</span>
             <h2>¡Ya estás dentro!</h2>
             <p>Gracias por unirte a A Dos Pasos.</p>
-            <p>Muy pronto recibirás una selección de lugares, beneficios y novedades de El Refugio.</p>
-            <small>Esta demostración no envió ni almacenó tus datos permanentemente.</small>
-            <a href="/">Volver a explorar</a>
+            <p>Tu registro quedó guardado correctamente.</p>
+            <div class="resident-success-grid">
+              <article><strong>Qué recibirás</strong><ul><li>Nuevos lugares</li><li>Promociones y beneficios</li><li>Recomendaciones locales</li><li>Ideas para hoy</li></ul></article>
+              <article><strong>Frecuencia</strong><p>1–2 mensajes por semana.</p></article>
+              <article><strong>Privacidad</strong><p>Tu información no se comparte con los negocios publicados.</p></article>
+            </div>
+            <a href="/">Volver a A Dos Pasos</a>
           </section>
         </div>
       </section>
