@@ -13,11 +13,10 @@ export function HomePromotionsBootstrap() {
     const script = document.createElement("script");
     script.type = "module";
     script.src = `/legacy/app.js?promotions=${Date.now()}`;
-    document.body.appendChild(script);
     void getPublicPromotionCards().then((promotions) => {
       if (!active) return;
       window.__ACTIVE_BUSINESS_PROMOTIONS__ = promotions;
-      window.dispatchEvent(new CustomEvent("a-dos-pasos:promotions"));
+      document.body.appendChild(script);
     });
     return () => { active = false; script.remove(); };
   }, []);

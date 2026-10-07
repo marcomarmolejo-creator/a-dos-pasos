@@ -100,34 +100,36 @@ export function BusinessPresentation() {
           </article>
 
           <article className={styles.productCard}>
-            <div><span>Micrositio Fundador</span><strong>$1,290 <small>MXN</small></strong></div>
+            <div><span>Micrositio Fundador</span><strong>$1,290 <small>MXN + IVA</small></strong></div>
             <p>Pago único por 1 año.</p>
             <ul>{["Presentación visual ampliada", "Fotos", "Información del negocio", "Servicios", "WhatsApp y Maps", "Beneficios"].map((item) => <li key={item}>{item}</li>)}</ul>
             <a href={commercialWhatsAppUrl("micrositio")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_micrositio")}>Quiero un Micrositio</a>
           </article>
 
           <article className={`${styles.productCard} ${styles.videoCard}`}>
-            <div><span>Video Local Básico</span><strong>$1,490 <small>MXN</small></strong></div>
+            <div><span>Video Local Básico</span><strong>$1,490 <small>MXN + IVA</small></strong></div>
             <ul>{["Video vertical de 15–20 segundos", "Grabación en una ubicación", "Edición simple y música", "Logo, texto y CTA", "1 ronda de ajustes", "Archivo final para tus redes"].map((item) => <li key={item}>{item}</li>)}</ul>
             <p className={styles.highlight}>No pagas por una publicación efímera. Te llevas el video y puedes seguir usándolo en tus propias redes.</p>
             <a href={commercialWhatsAppUrl("video-local")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_video")}>Quiero un Video Local</a>
           </article>
 
           <article className={`${styles.productCard} ${styles.bundleCard}`}>
-            <div><span>Micrositio + Video Local</span><strong>$2,490 <small>MXN</small></strong></div>
+            <div><span>Micrositio + Video Local</span><strong>$2,490 <small>MXN + IVA</small></strong></div>
             <p>Presencia + contenido audiovisual.</p>
             <div className={styles.bundleVisual}><b>Tu espacio local</b><span>+</span><b>Tu video</b></div>
             <a href={packageWhatsAppUrl} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_paquete")}>Quiero este paquete</a>
           </article>
         </div>
+        <p className={styles.taxNote}>Precios en pesos mexicanos (MXN). IVA no incluido.</p>
       </section>
 
       <section className={`${styles.section} ${styles.promotion}`}>
         <header><p className={styles.eyebrow}>Promoción posterior</p><h2>Cuando quieras darle más visibilidad a tu negocio.</h2></header>
         <div className={styles.promotionProducts}>
-          <article><span>Beneficio Local</span><strong>Desde $299 MXN</strong></article>
-          <article><span>Promoción Activa</span><strong>Desde $590 MXN</strong></article>
+          <article><span>Beneficio Local</span><strong>Desde $299 MXN + IVA</strong></article>
+          <article><span>Promoción Activa</span><strong>Desde $590 MXN + IVA</strong></article>
         </div>
+        <p className={styles.taxNote}>Precios en pesos mexicanos (MXN). IVA no incluido.</p>
         <p>Puedes activar promociones, beneficios u ofertas sin perder la ficha ni el contenido que ya tienes.</p>
         <a href={commercialWhatsAppUrl("promocion-activa")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_promocion")}>Quiero promover una oferta</a>
       </section>

@@ -26,6 +26,7 @@ export type PublicPromotionCard = ActiveBusinessPromotion & {
   businessCategory: string;
   businessZone: string;
   businessImage: string;
+  businessLogo: string | null;
   businessWhatsapp: string | null;
   resolvedImage: string;
   resolvedCtaLabel: string;
@@ -41,16 +42,21 @@ export function publicPromotionImage(value: string | null | undefined) {
 
 function defaultMessage(type: PromotionType, businessName: string) {
   return type === "beneficio"
-    ? `Hola, vi este beneficio de ${businessName} en A Dos Pasos y me interesa conocer los detalles.`
+    ? `Hola, vi el beneficio de ${businessName} en A Dos Pasos y me interesa conocer los detalles.`
     : `Hola, vi esta promoción de ${businessName} en A Dos Pasos y me interesa aprovecharla.`;
 }
 
 function ctaUrl(promotion: ActiveBusinessPromotion, business: PublishedBusiness) {
-  if (promotion.cta_url) return promotion.cta_url;
+  if (publicPromotionImage(promotion.cta_url)) return promotion.cta_url!;
   const base = whatsappUrl(business.whatsapp);
-  if (!base) return `/negocio/${publishedBusinessSlug(business)}/`;
-  const separator = base.includes("?") ? "&" : "?";
-  return `${base}${separator}text=${encodeURIComponent(defaultMessage(promotion.type, business.business_name))}`;
+  if (base) {
+    const separator = base.includes("?") ? "&" : "?";
+    return `${base}${separator}text=${encodeURIComponent(defaultMessage(promotion.type, business.business_name))}`;
+  }
+  const slug = publishedBusinessSlug(business);
+  return business.listing_type === "micrositio" && slug
+    ? `/negocio/${slug}/`
+    : `/directorio/?buscar=${encodeURIComponent(business.business_name)}`;
 }
 
 export async function getActiveBusinessPromotions(): Promise<ActiveBusinessPromotion[]> {
@@ -88,6 +94,7 @@ export async function getPublicPromotionCards(): Promise<PublicPromotionCard[]> 
       businessCategory: business.category,
       businessZone: business.zone,
       businessImage: publicAssetUrl(business.main_image_url) ?? "/assets/mockup-ficha.png",
+      businessLogo: publicAssetUrl(business.logo_url),
       businessWhatsapp: whatsappUrl(business.whatsapp),
       resolvedImage: publicPromotionImage(promotion.image_url) || publicAssetUrl(business.main_image_url) || "/assets/mockup-ficha.png",
       resolvedCtaLabel: promotion.cta_label || (promotion.type === "beneficio" ? "Ver beneficio" : "Ver promoción"),

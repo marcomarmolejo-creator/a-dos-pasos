@@ -77,6 +77,7 @@
 .freeCard > a { color: #fff; background: var(--blue); }
 .videoCard { background: linear-gradient(145deg,rgba(8,116,232,.45),rgba(255,255,255,.07)); }
 .productCard .highlight { padding: 1rem; border-left: 3px solid var(--yellow); color: #fff; background: rgba(0,0,0,.16); font-weight: 750; }
+.taxNote { margin: 1rem 0 0; color: rgba(255,255,255,.66); font-size: .75rem; line-height: 1.45; }
 .bundleCard { background: linear-gradient(145deg,#0b80ee,#0754a8); }
 .bundleVisual { display: grid!important; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .65rem; margin: 2rem 0; text-align: center; }
 .bundleVisual b { display: grid; min-height: 7rem; place-items: center; padding: .8rem; border: 1px solid rgba(255,255,255,.25); border-radius: 1rem; background: rgba(255,255,255,.09); }

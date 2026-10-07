@@ -1,5 +1,5 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Business, BusinessTheme } from "@/data/businesses";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export type ListingType = "ficha" | "micrositio";
 
@@ -61,30 +61,7 @@ const PUBLIC_FIELDS = [
   "listing_type", "theme"
 ].join(",");
 
-let client: SupabaseClient | null = null;
 let publishedBusinessesPromise: Promise<PublishedBusiness[]> | null = null;
-
-function fetchWithoutPublishableBearer(publishableKey: string): typeof fetch {
-  return (input, init) => {
-    const headers = new Headers(init?.headers);
-    if (headers.get("Authorization") === `Bearer ${publishableKey}`) {
-      headers.delete("Authorization");
-    }
-    return fetch(input, { ...init, headers });
-  };
-}
-
-function getPublicClient() {
-  if (client) return client;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !publishableKey) return null;
-  client = createClient(url, publishableKey, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
-    global: { fetch: fetchWithoutPublishableBearer(publishableKey) }
-  });
-  return client;
-}
 
 function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
@@ -96,9 +73,8 @@ export function publishedBusinessSlug(business: PublishedBusiness) {
 }
 
 async function fetchPublishedBusinesses() {
-  const supabase = getPublicClient();
-  if (!supabase) return [];
   try {
+    const supabase = getSupabaseBrowserClient();
     const { data, error } = await supabase.from("published_businesses").select(PUBLIC_FIELDS).order("business_name");
     if (error) {
       if (process.env.NODE_ENV !== "production") console.error("Published businesses unavailable", error.message);
