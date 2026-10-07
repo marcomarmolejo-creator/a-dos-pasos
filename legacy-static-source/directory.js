@@ -12,6 +12,7 @@ const state = {
     delivery: false,
     isNew: false,
     hasBenefit: false,
+    hasPromotion: false,
     hasMicrosite: false
   }
 };
@@ -41,7 +42,7 @@ function DirectoryFooter() {
 
 function DirectoryShell() {
   const categoryButtons = Object.entries(directoryCategories).map(([key, config]) => `<button type="button" data-category="${key}">${config.label}</button>`).join("");
-  const filters = [["openNow","Abierto ahora"],["delivery","A domicilio"],["isNew","Nuevo"],["hasBenefit","Con beneficio"],["hasMicrosite","Con micrositio"]];
+  const filters = [["openNow","Abierto ahora"],["delivery","A domicilio"],["isNew","Nuevo"],["hasBenefit","Con beneficio"],["hasPromotion","Promociones"],["hasMicrosite","Con micrositio"]];
   return `<section class="directory-hero"><div class="directory-hero-copy"><span class="eyebrow">A Dos Pasos · El Refugio</span><h1>Encuentra algo cerca de ti.</h1><p>Negocios, lugares y servicios locales para descubrir sin perderte entre resultados repetidos.</p><form class="directory-search" role="search" data-directory-search><label class="sr-only" for="directory-search-input">Buscar negocio, categoría o servicio</label><span aria-hidden="true">⌕</span><input id="directory-search-input" type="search" placeholder="¿Qué estás buscando cerca?" value="${escapeHtml(state.query)}" autocomplete="off" /><button type="submit">Buscar</button></form></div><div class="directory-summary"><span>Resultados en El Refugio</span><strong data-directory-count></strong><small data-directory-active></small><button type="button" data-change-category>Ver categorías</button></div></section><section class="directory-controls" aria-label="Filtros del directorio"><div class="directory-filter-group"><span>Categorías</span><div class="directory-category-chips" id="category-chips">${categoryButtons}</div></div><div class="directory-filter-group directory-filter-group--options"><span>Filtros rápidos</span><div class="directory-option-chips">${filters.map(([key,label]) => `<button type="button" data-filter="${key}" aria-pressed="false">${label}</button>`).join("")}</div></div><div class="directory-active-filters" data-active-filters hidden><span data-active-filter-count></span><button type="button" data-clear-filters>Limpiar</button><button type="button" data-view-all>Ver todos</button></div></section><section class="directory-results" id="directory-results" aria-live="polite"><div class="directory-grid" data-directory-grid></div><div class="directory-empty" data-directory-empty hidden><span aria-hidden="true">⌕</span><h2>Todavía no encontramos algo aquí.</h2><p>Estamos preparando nuevas recomendaciones para esta categoría.</p><div class="directory-empty-actions"><button type="button" data-explore-category>Explorar otra categoría</button><button type="button" class="directory-empty-clear" data-empty-clear hidden>Limpiar filtros</button></div></div></section><aside class="directory-business-cta"><div><span>¿Tienes un negocio en la zona?</span><a href="/para-negocios/">Aparece gratis en A Dos Pasos →</a></div></aside>${DirectoryFooter()}`;
 }
 

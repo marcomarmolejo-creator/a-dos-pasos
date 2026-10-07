@@ -6,6 +6,7 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import styles from "./AdminBusinesses.module.css";
 import recoveryStyles from "./AdminRecovery.module.css";
 import commercialStyles from "./CommercialTracking.module.css";
+import residentStyles from "./AdminResidents.module.css";
 
 type BusinessStatus = "pendiente" | "aprobado" | "publicado" | "rechazado";
 
@@ -367,7 +368,7 @@ export function AdminBusinesses() {
   return <main className={styles.page}>
     <header className={styles.topbar}>
       <div className={styles.brand}><strong>A DOS PASOS</strong><span>Administración de negocios</span></div>
-      <div><span>{adminEmail}</span> <button type="button" onClick={signOut} disabled={busy}>Cerrar sesión</button></div>
+      <div className={residentStyles.adminNav}><span>{adminEmail}</span><a href="/admin/residentes/">Residentes</a><a href="/admin/promociones/">Promociones</a><button type="button" onClick={signOut} disabled={busy}>Cerrar sesión</button></div>
     </header>
     <div className={styles.main}>
       <div className={styles.workspace}>

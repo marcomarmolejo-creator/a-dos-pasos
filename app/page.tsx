@@ -1,5 +1,6 @@
 import { LegacyPage } from "@/components/LegacyPage";
+import { HomePromotionsBootstrap } from "@/components/HomePromotionsBootstrap";
 
 export default function HomePage() {
-  return <LegacyPage file="index.html" moduleSrc="/legacy/app.js" />;
+  return <><LegacyPage file="index.html" /><HomePromotionsBootstrap /></>;
 }

@@ -46,8 +46,8 @@ export const directoryUrlFor = (category, query = "") => {
 };
 
 const categoryOverrides = {
-  "forno-locale": ["comer", "promociones", "nuevos"],
-  "aura-spa": ["cuidarme", "promociones"],
+  "forno-locale": ["comer", "nuevos"],
+  "aura-spa": ["cuidarme"],
   "barberia-clasica": ["cuidarme", "servicios"],
   "eleva-steam": ["mi-casa", "servicios"]
 };
@@ -65,13 +65,14 @@ const micrositeDirectoryBusinesses = businesses.map((business) => ({
   hours: business.isOpen ? "Disponibilidad en su micrositio" : "Consulta disponibilidad",
   whatsapp: business.whatsappUrl,
   maps: business.mapsUrl,
-  badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, business.hasPromotion ? "Beneficio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
+  badges: [business.isNew ? "Nuevo" : null, business.status === "Abierto ahora" ? "Abierto ahora" : null, business.id === "eleva-steam" ? "A domicilio" : null, /^A \d+ min$/.test(business.distance) ? business.distance : null].filter(Boolean).slice(0, 2),
   micrositeUrl: business.micrositeUrl,
   isDemo: true,
   openNow: business.id === "eleva-steam" ? false : business.isOpen,
   delivery: business.id === "eleva-steam",
   isNew: business.isNew,
-  hasBenefit: ["forno-locale", "aura-spa", "barberia-clasica", "eleva-steam"].includes(business.id),
+  hasBenefit: false,
+  hasPromotion: false,
   hasMicrosite: true
 }));
 
@@ -80,13 +81,13 @@ const freeDemoBusinesses = [
     id: "cafe-patio-demo", name: "Café Patio", category: "Café", categories: ["cafe"], zone: "El Refugio",
     description: "Café de especialidad y desayunos para una pausa cerca de casa.", image: "/assets/cafe-patio-demo.svg", logo: null,
     listingType: "free", hours: "8:00–20:00", whatsapp: null, maps: null, badges: ["A 5 min"], micrositeUrl: null,
-    isDemo: true, openNow: true, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
+    isDemo: true, openNow: true, delivery: false, isNew: false, hasBenefit: false, hasPromotion: false, hasMicrosite: false
   },
   {
     id: "vet-cerca-demo", name: "Vet Cerca", category: "Mascotas", categories: ["mascotas", "servicios"], zone: "El Refugio",
     description: "Atención veterinaria y servicios básicos para mascotas de la zona.", image: "/assets/vet-cerca-demo.png", logo: null,
     listingType: "free", hours: "Horario por confirmar", whatsapp: null, maps: null, badges: [], micrositeUrl: null,
-    isDemo: true, openNow: false, delivery: false, isNew: false, hasBenefit: false, hasMicrosite: false
+    isDemo: true, openNow: false, delivery: false, isNew: false, hasBenefit: false, hasPromotion: false, hasMicrosite: false
   }
 ];
 

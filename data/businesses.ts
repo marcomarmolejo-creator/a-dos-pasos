@@ -1,6 +1,7 @@
 export type BusinessTheme = "warm-editorial" | "serene-light" | "dark-classic" | "clean-service";
 
 export type Business = {
+  businessId?: string;
   slug: string;
   name: string;
   zone: string;

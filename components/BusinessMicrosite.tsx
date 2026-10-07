@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Business } from "@/data/businesses";
 import ownerStyles from "./BusinessOwnerCTA.module.css";
+import { BusinessPromotionFeed } from "./BusinessPromotionFeed";
 
 export function BusinessHero({ business }: { business: Business }) {
   return <section className="business-hero"><img src={business.heroImage} alt={business.name} /><div className="business-hero__shade" /><div className="business-hero__nav"><Link href="/">A Dos Pasos</Link><Link href="/directorio/">Volver al directorio</Link></div><div className="business-hero__copy"><span>{business.eyebrow}</span><h1>{business.name}</h1><p>{business.description}</p><a href={business.whatsapp} target="_blank" rel="noreferrer">Contactar por WhatsApp</a></div></section>;
@@ -52,5 +53,5 @@ export function BusinessOwnerCTA() {
 const blocks = { about: BusinessAbout, services: BusinessServices, gallery: BusinessGallery, video: BusinessVideo, benefit: BusinessBenefit, promotion: BusinessPromotion, location: BusinessLocation };
 
 export function BusinessMicrosite({ business }: { business: Business }) {
-  return <main className={`business-site theme-${business.theme}`}><BusinessHero business={business} />{business.sectionOrder.map((section) => { const Block = blocks[section]; return <Block business={business} key={section} />; })}<BusinessCTA business={business} /><BusinessOwnerCTA /><BusinessFooter business={business} /></main>;
+  return <main className={`business-site theme-${business.theme}`}><BusinessHero business={business} />{business.sectionOrder.map((section) => { const Block = blocks[section]; return <Block business={business} key={section} />; })}<BusinessPromotionFeed businessId={business.businessId} /><BusinessCTA business={business} /><BusinessOwnerCTA /><BusinessFooter business={business} /></main>;
 }

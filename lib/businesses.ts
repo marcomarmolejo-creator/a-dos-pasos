@@ -49,6 +49,7 @@ export type DirectoryBusiness = {
   delivery: boolean;
   isNew: boolean;
   hasBenefit: boolean;
+  hasPromotion: boolean;
   hasMicrosite: boolean;
 };
 
@@ -134,7 +135,7 @@ export async function getPublishedBusinessesByZone(zone: string) {
   return (await getPublishedBusinesses()).filter((business) => slugify(business.zone) === normalized);
 }
 
-function publicAssetUrl(path: string | null) {
+export function publicAssetUrl(path: string | null) {
   if (!path) return null;
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!base) return null;
@@ -143,7 +144,7 @@ function publicAssetUrl(path: string | null) {
   return `${base}/storage/v1/object/public/business-public/${cleanPath.split("/").map(encodeURIComponent).join("/")}`;
 }
 
-function whatsappUrl(value: string | null) {
+export function whatsappUrl(value: string | null) {
   if (!value) return null;
   if (/^https?:\/\//.test(value)) return value;
   const digits = value.replace(/\D/g, "");
@@ -177,16 +178,21 @@ function isRecent(createdAt: string) {
   return Number.isFinite(created) && Date.now() - created <= 30 * 24 * 60 * 60 * 1000;
 }
 
-export function toDirectoryBusiness(business: PublishedBusiness): DirectoryBusiness {
+export function toDirectoryBusiness(
+  business: PublishedBusiness,
+  promotionFlags: { hasBenefit?: boolean; hasPromotion?: boolean } = {}
+): DirectoryBusiness {
   const slug = publishedBusinessSlug(business);
-  const hasBenefit = Boolean(business.promotion_title || business.promotion_description);
+  const hasBenefit = Boolean(promotionFlags.hasBenefit);
+  const hasPromotion = Boolean(promotionFlags.hasPromotion);
+  const hasOffer = hasBenefit || hasPromotion;
   const isNew = isRecent(business.created_at);
   const hasMicrosite = business.listing_type === "micrositio";
   return {
     id: slug,
     name: business.business_name,
     category: business.category,
-    categories: [...directoryCategories(business.category, business.home_service, hasBenefit), ...(isNew ? ["nuevos"] : [])],
+    categories: [...directoryCategories(business.category, business.home_service, hasOffer), ...(isNew ? ["nuevos"] : [])],
     zone: business.zone,
     description: business.short_description,
     image: publicAssetUrl(business.main_image_url) ?? "/assets/mockup-ficha.png",
@@ -195,13 +201,14 @@ export function toDirectoryBusiness(business: PublishedBusiness): DirectoryBusin
     hours: business.business_hours || "Consulta disponibilidad",
     whatsapp: whatsappUrl(business.whatsapp),
     maps: mapsUrl(business),
-    badges: [isNew ? "Nuevo" : null, business.home_service ? "A domicilio" : null, hasBenefit ? "Beneficio" : null].filter((value): value is string => Boolean(value)).slice(0, 2),
+    badges: [hasPromotion ? "Promoción" : null, hasBenefit ? "Beneficio" : null, isNew ? "Nuevo" : null, business.home_service ? "A domicilio" : null].filter((value): value is string => Boolean(value)).slice(0, 2),
     micrositeUrl: hasMicrosite ? `/negocio/${slug}/` : null,
     isDemo: false,
     openNow: false,
     delivery: business.home_service,
     isNew,
     hasBenefit,
+    hasPromotion,
     hasMicrosite
   };
 }
@@ -219,11 +226,8 @@ export function toMicrositeBusiness(business: PublishedBusiness): Business {
   const mainImage = publicAssetUrl(business.main_image_url) ?? "/assets/mockup-ficha.png";
   const logo = publicAssetUrl(business.logo_url);
   const contact = whatsappUrl(business.whatsapp) ?? "https://wa.me/524424223487";
-  const promotion = business.promotion_title || business.promotion_description ? {
-    title: business.promotion_title || "Beneficio disponible",
-    description: business.promotion_description || "Consulta los detalles directamente con el negocio."
-  } : undefined;
   return {
+    businessId: business.id,
     slug: publishedBusinessSlug(business),
     name: business.business_name,
     zone: business.zone,
@@ -240,7 +244,6 @@ export function toMicrositeBusiness(business: PublishedBusiness): Business {
       { name: business.home_service ? "Atención a domicilio" : "Atención local", detail: business.business_hours || "Consulta horarios y disponibilidad directamente." },
       { name: "Contacto directo", detail: "Confirma detalles, disponibilidad y condiciones con el negocio." }
     ],
-    promotion,
-    sectionOrder: promotion ? ["about", "services", "promotion", "gallery", "location"] : ["about", "services", "gallery", "location"]
+    sectionOrder: ["about", "services", "gallery", "location"]
   };
 }
