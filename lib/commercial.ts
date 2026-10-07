@@ -28,11 +28,11 @@ export const commercialProducts = [
 ];
 
 export const commercialPrices = [
-  ["Micrositio Fundador / 1 año", "$1,290 MXN + IVA"],
-  ["Video Local Básico", "$1,490 MXN + IVA"],
-  ["Micrositio + Video Local", "$2,490 MXN + IVA"],
-  ["Beneficio Local", "desde $299 MXN + IVA"],
-  ["Promoción Activa", "desde $590 MXN + IVA"]
+  ["Micrositio Fundador / 1 año", "$1,290 MXN", "+ IVA"],
+  ["Video Local Básico", "$1,490 MXN", "+ IVA"],
+  ["Micrositio + Video Local", "$2,490 MXN", "+ IVA"],
+  ["Beneficio Local", "desde $299 MXN", "+ IVA"],
+  ["Promoción Activa", "desde $590 MXN", "+ IVA"]
 ] as const;
 
 export function commercialWhatsAppUrl(productId: CommercialProductId) {
