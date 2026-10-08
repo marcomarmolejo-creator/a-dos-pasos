@@ -17,7 +17,6 @@ type PresentationEvent =
 const TRACKING_KEY = "adp:presentation-events";
 const WHATSAPP_BASE = "https://wa.me/524424223487";
 
-const packageWhatsAppUrl = `${WHATSAPP_BASE}?text=${encodeURIComponent("Hola, tengo mi negocio en A Dos Pasos y me interesa el paquete de Micrositio + Video Local para mi negocio.")}`;
 const generalWhatsAppUrl = `${WHATSAPP_BASE}?text=${encodeURIComponent("Hola, quiero conocer más sobre A Dos Pasos para mi negocio.")}`;
 
 const examples = [
@@ -103,21 +102,21 @@ export function BusinessPresentation() {
             <div><span>Micrositio Fundador</span><strong>$1,290 <small>MXN + IVA</small></strong></div>
             <p>Pago único por 1 año.</p>
             <ul>{["Presentación visual ampliada", "Fotos", "Información del negocio", "Servicios", "WhatsApp y Maps", "Beneficios"].map((item) => <li key={item}>{item}</li>)}</ul>
-            <a href={commercialWhatsAppUrl("micrositio")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_micrositio")}>Quiero un Micrositio</a>
+            <Link href="/contratar/#micrositio" onClick={trackClick("presentation_cta_micrositio")}>Quiero un Micrositio</Link>
           </article>
 
           <article className={`${styles.productCard} ${styles.videoCard}`}>
             <div><span>Video Local Básico</span><strong>$1,490 <small>MXN + IVA</small></strong></div>
             <ul>{["Video vertical de 15–20 segundos", "Grabación en una ubicación", "Edición simple y música", "Logo, texto y CTA", "1 ronda de ajustes", "Archivo final para tus redes"].map((item) => <li key={item}>{item}</li>)}</ul>
             <p className={styles.highlight}>No pagas por una publicación efímera. Te llevas el video y puedes seguir usándolo en tus propias redes.</p>
-            <a href={commercialWhatsAppUrl("video-local")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_video")}>Quiero un Video Local</a>
+            <Link href="/contratar/#video-local" onClick={trackClick("presentation_cta_video")}>Quiero un Video Local</Link>
           </article>
 
           <article className={`${styles.productCard} ${styles.bundleCard}`}>
             <div><span>Micrositio + Video Local</span><strong>$2,490 <small>MXN + IVA</small></strong></div>
             <p>Presencia + contenido audiovisual.</p>
             <div className={styles.bundleVisual}><b>Tu espacio local</b><span>+</span><b>Tu video</b></div>
-            <a href={packageWhatsAppUrl} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_paquete")}>Quiero este paquete</a>
+            <Link href="/contratar/#micrositio-video" onClick={trackClick("presentation_cta_paquete")}>Quiero este paquete</Link>
           </article>
         </div>
         <p className={styles.taxNote}>Precios en pesos mexicanos (MXN). IVA no incluido.</p>
@@ -148,8 +147,8 @@ export function BusinessPresentation() {
         <p>Empieza con tu ficha gratuita o dale más presencia con contenido, video y promoción local.</p>
         <div className={styles.closingActions}>
           <Link href="/para-negocios/alta/" onClick={trackClick("presentation_cta_ficha")}>Crear mi ficha gratis</Link>
-          <a href={commercialWhatsAppUrl("micrositio")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_micrositio")}>Quiero un Micrositio</a>
-          <a href={commercialWhatsAppUrl("video-local")} target="_blank" rel="noreferrer" onClick={trackClick("presentation_cta_video")}>Quiero un Video Local</a>
+          <Link href="/contratar/#micrositio" onClick={trackClick("presentation_cta_micrositio")}>Quiero un Micrositio</Link>
+          <Link href="/contratar/#video-local" onClick={trackClick("presentation_cta_video")}>Quiero un Video Local</Link>
           <a href={generalWhatsAppUrl} target="_blank" rel="noreferrer" onClick={trackClick("presentation_whatsapp")}>Hablar por WhatsApp</a>
         </div>
         <a className={styles.phone} href={generalWhatsAppUrl} target="_blank" rel="noreferrer" onClick={trackClick("presentation_whatsapp")}>WhatsApp 442 422 34 87</a>
