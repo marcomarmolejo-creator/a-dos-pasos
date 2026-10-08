@@ -126,8 +126,8 @@ export function BusinessPresentation() {
       <section className={`${styles.section} ${styles.promotion}`}>
         <header><p className={styles.eyebrow}>Promoción posterior</p><h2>Cuando quieras darle más visibilidad a tu negocio.</h2></header>
         <div className={styles.promotionProducts}>
-          <article><span>Beneficio Local</span><strong>Desde $299 MXN + IVA</strong></article>
-          <article><span>Promoción Activa</span><strong>Desde $590 MXN + IVA</strong></article>
+          <article><span>Beneficio Local</span><small>7 días de publicación</small><strong>Desde $299 MXN + IVA</strong><p>Ideal para promociones, beneficios especiales, lanzamientos o activaciones de corta duración dirigidas a vecinos de la zona.</p></article>
+          <article><span>Promoción Activa</span><small>30 días de promoción</small><strong>Desde $590 MXN + IVA</strong><p>Pensada para negocios que buscan mantener una promoción visible durante todo el mes y generar mayor permanencia frente a la audiencia local.</p></article>
         </div>
         <p className={styles.taxNote}>Precios en pesos mexicanos (MXN). IVA no incluido.</p>
         <p>Puedes activar promociones, beneficios u ofertas sin perder la ficha ni el contenido que ya tienes.</p>

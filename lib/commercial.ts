@@ -21,18 +21,18 @@ export const commercialProducts = [
     id: "promocion-activa" as const,
     name: "Promoción Activa",
     description: "Quiero promover una oferta, beneficio o campaña de mi negocio dentro de A Dos Pasos.",
-    features: ["Promoción temporal", "Beneficio claro", "Mayor visibilidad local"],
+    features: ["30 días de visibilidad", "Beneficio claro", "Mayor visibilidad local"],
     cta: "Quiero promover mi negocio",
     message: "Hola, tengo mi negocio en A Dos Pasos y quiero conocer las opciones para promover una oferta o beneficio."
   }
 ];
 
 export const commercialPrices = [
-  ["Micrositio Fundador / 1 año", "$1,290 MXN", "+ IVA"],
-  ["Video Local Básico", "$1,490 MXN", "+ IVA"],
-  ["Micrositio + Video Local", "$2,490 MXN", "+ IVA"],
-  ["Beneficio Local", "desde $299 MXN", "+ IVA"],
-  ["Promoción Activa", "desde $590 MXN", "+ IVA"]
+  ["Micrositio Fundador / 1 año", null, "$1,290 MXN", "+ IVA"],
+  ["Video Local Básico", null, "$1,490 MXN", "+ IVA"],
+  ["Micrositio + Video Local", null, "$2,490 MXN", "+ IVA"],
+  ["Beneficio Local", "7 días", "desde $299 MXN", "+ IVA"],
+  ["Promoción Activa", "30 días", "desde $590 MXN", "+ IVA"]
 ] as const;
 
 export function commercialWhatsAppUrl(productId: CommercialProductId) {

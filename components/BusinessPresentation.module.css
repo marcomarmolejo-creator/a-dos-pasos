@@ -87,7 +87,9 @@
 .promotionProducts { display: grid; gap: .75rem; }
 .promotionProducts article { display: grid; gap: .45rem; padding: 1.25rem; border-radius: 1rem; color: var(--navy); background: #fff; }
 .promotionProducts span { color: var(--blue); font-size: .72rem; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
+.promotionProducts small { color: var(--blue); font-size: .78rem; font-weight: 900; }
 .promotionProducts strong { font-size: 1.55rem; }
+.promotionProducts p { margin: .25rem 0 0; color: #587087; font-size: .85rem; line-height: 1.5; }
 .promotion > p { max-width: 42rem; margin: 1.5rem 0 0; color: rgba(255,255,255,.82); line-height: 1.65; }
 
 .examples header p:last-child { color: #62758a; line-height: 1.6; }
