@@ -139,7 +139,7 @@ function directoryCategories(category: string, homeService: boolean, hasPromotio
   const categories = new Set<string>();
   if (/pizza|restaurante|comer|comida/.test(value)) categories.add("comer");
   if (/cafe|cafeteria/.test(value)) categories.add("cafe");
-  if (/spa|bienestar|masaje|belleza|barber/.test(value)) categories.add("cuidarme");
+  if (/cuidarme|spa|bienestar|masaje|belleza|barber/.test(value)) categories.add("cuidarme");
   if (/limpieza|lavado|hogar|casa/.test(value) || homeService) categories.add("mi-casa");
   if (/servicio|barber|limpieza|lavado/.test(value) || homeService) categories.add("servicios");
   if (/mascota|veterin/.test(value)) categories.add("mascotas");
