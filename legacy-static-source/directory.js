@@ -26,10 +26,18 @@ function BusinessBrand(business) {
   return `<div class="directory-card-brand"><div class="directory-logo">${logo}</div><div><p>${escapeHtml(business.category)} · ${escapeHtml(business.zone)}</p><h2>${escapeHtml(business.name)}</h2></div></div>`;
 }
 
+function BusinessPromotion(business) {
+  const titleValue = String(business.promotionTitle || "").trim();
+  const descriptionValue = String(business.promotionDescription || "").trim();
+  const title = titleValue ? `<h3>${escapeHtml(titleValue)}</h3>` : "";
+  const description = descriptionValue ? `<p>${escapeHtml(descriptionValue)}</p>` : "";
+  return title || description ? `<aside class="directory-business-promotion"><span>Beneficio especial</span>${title}${description}</aside>` : "";
+}
+
 function FreeBusinessCard(business) {
   const contact = business.whatsapp ? `<a class="dir-button dir-button--primary" href="${business.whatsapp}" target="_blank" rel="noreferrer">Contactar</a>` : `<button type="button" class="dir-button dir-button--primary" data-demo-action="contactar" data-business="${escapeHtml(business.name)}">Contactar</button>`;
   const directions = business.maps ? `<a class="dir-button dir-button--secondary" href="${business.maps}" target="_blank" rel="noreferrer">Cómo llegar</a>` : `<button type="button" class="dir-button dir-button--secondary" data-demo-action="maps" data-business="${escapeHtml(business.name)}">Cómo llegar</button>`;
-  return `<article class="free-business-card directory-card" data-listing-type="free" data-demo="${business.isDemo}"><div class="directory-card-media"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><div class="directory-card-badges">${badgeMarkup(business)}</div></div><div class="directory-card-body">${BusinessBrand(business)}<p class="directory-description">${escapeHtml(business.description)}</p><dl class="directory-details"><div><dt>Zona</dt><dd>${escapeHtml(business.zone)}</dd></div><div><dt>Horario</dt><dd>${escapeHtml(business.hours)}</dd></div></dl><div class="directory-card-actions">${contact}${directions}</div></div></article>`;
+  return `<article class="free-business-card directory-card" data-listing-type="free" data-demo="${business.isDemo}"><div class="directory-card-media"><img src="${business.image}" alt="${escapeHtml(business.name)}" loading="lazy" /><div class="directory-card-badges">${badgeMarkup(business)}</div></div><div class="directory-card-body">${BusinessBrand(business)}<p class="directory-description">${escapeHtml(business.description)}</p><dl class="directory-details"><div><dt>Zona</dt><dd>${escapeHtml(business.zone)}</dd></div><div><dt>Horario</dt><dd>${escapeHtml(business.hours)}</dd></div></dl>${BusinessPromotion(business)}<div class="directory-card-actions">${contact}${directions}</div></div></article>`;
 }
 
 function MicrositeBusinessCard(business) {

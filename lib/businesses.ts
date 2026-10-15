@@ -51,6 +51,8 @@ export type DirectoryBusiness = {
   hasBenefit: boolean;
   hasPromotion: boolean;
   hasMicrosite: boolean;
+  promotionTitle: string | null;
+  promotionDescription: string | null;
 };
 
 const PUBLIC_FIELDS = [
@@ -159,7 +161,8 @@ export function toDirectoryBusiness(
   promotionFlags: { hasBenefit?: boolean; hasPromotion?: boolean } = {}
 ): DirectoryBusiness {
   const slug = publishedBusinessSlug(business);
-  const hasBenefit = Boolean(promotionFlags.hasBenefit);
+  const hasLegacyBenefit = Boolean(business.promotion_title?.trim() || business.promotion_description?.trim());
+  const hasBenefit = Boolean(promotionFlags.hasBenefit || hasLegacyBenefit);
   const hasPromotion = Boolean(promotionFlags.hasPromotion);
   const hasOffer = hasBenefit || hasPromotion;
   const isNew = isRecent(business.created_at);
@@ -185,7 +188,9 @@ export function toDirectoryBusiness(
     isNew,
     hasBenefit,
     hasPromotion,
-    hasMicrosite
+    hasMicrosite,
+    promotionTitle: business.promotion_title,
+    promotionDescription: business.promotion_description
   };
 }
 

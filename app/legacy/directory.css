@@ -173,6 +173,10 @@
 .directory-details div { display: grid; grid-template-columns: 4.2rem minmax(0,1fr); gap: .65rem; }
 .directory-details dt { color: #78869a; font-size: .72rem; font-weight: 800; text-transform: uppercase; }
 .directory-details dd { min-width: 0; margin: 0; color: #263c58; font-size: .83rem; }
+.directory-business-promotion { margin: 0 0 1.2rem; padding: .85rem .9rem; border: 1px solid #efd98d; border-left: 3px solid #e4b62f; border-radius: .8rem; background: #fff9df; }
+.directory-business-promotion span { display: block; margin-bottom: .35rem; color: #946600; font-size: .65rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.directory-business-promotion h3 { margin: 0; color: #071b3b; font-size: 1rem; line-height: 1.25; letter-spacing: -.01em; }
+.directory-business-promotion p { margin: .35rem 0 0; color: #516176; font-size: .78rem; line-height: 1.45; }
 .directory-card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: auto; }
 .dir-button {
   display: inline-flex;

@@ -47,9 +47,43 @@ type AdminBusiness = {
   sales_notes: string | null;
 };
 
+type BusinessEditForm = {
+  business_name: string;
+  category: string;
+  short_description: string;
+  zone: string;
+  address: string;
+  maps_url: string;
+  business_hours: string;
+  home_service: boolean;
+  whatsapp: string;
+  phone: string;
+  instagram: string;
+  facebook: string;
+  website: string;
+  promotion_title: string;
+  promotion_description: string;
+};
+
+type BusinessEditResult = Pick<AdminBusiness,
+  "id" | "updated_at" | "status" | "business_name" | "slug" | "category" |
+  "short_description" | "zone" | "address" | "maps_url" | "business_hours" |
+  "home_service" | "whatsapp" | "phone" | "instagram" | "facebook" | "website" |
+  "logo_url" | "main_image_url" | "promotion_title" | "promotion_description" |
+  "listing_type" | "theme"
+>;
+
 const STATUSES: BusinessStatus[] = ["pendiente", "aprobado", "publicado", "rechazado"];
 const PRIVATE_BUCKET = "business-submissions";
 const PUBLIC_BUCKET = "business-public";
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp"
+};
+const CATEGORIES = ["Comer", "Café", "Cuidarme", "Mi casa", "Servicios", "Mascotas", "Salud", "Comprar", "Aprender", "Otros"];
+const ZONES = ["El Refugio", "Zibatá", "Zakia", "La Pradera", "Juriquilla", "El Campanario"];
 const COMMERCIAL_INTERESTS = [
   ["", "Sin producto definido"],
   ["micrositio", "Micrositio"],
@@ -74,6 +108,43 @@ function errorMessage(error: unknown) {
 function fileExtension(path: string) {
   const extension = path.split(".").pop()?.toLowerCase();
   return extension && ["jpg", "jpeg", "png", "webp"].includes(extension) ? extension : "jpg";
+}
+
+function uploadExtension(file: File) {
+  return IMAGE_EXTENSIONS[file.type] ?? "jpg";
+}
+
+function imageValidationMessage(file: File) {
+  if (file.size > MAX_IMAGE_BYTES) return "La imagen supera el tamaño máximo permitido de 5 MB.";
+  if (!IMAGE_EXTENSIONS[file.type]) return "Formato no compatible. Usa JPG, PNG o WebP.";
+  return "";
+}
+
+function isValidPublicWhatsapp(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 80) return false;
+  if (/^https:\/\/wa\.me\/[0-9]{10,15}(?:\?.*)?$/.test(trimmed)) return true;
+  return /^[+0-9() .-]+$/.test(trimmed) && /^\d{10,15}$/.test(trimmed.replace(/\D/g, ""));
+}
+
+function editFormFromBusiness(business: AdminBusiness): BusinessEditForm {
+  return {
+    business_name: business.business_name,
+    category: business.category,
+    short_description: business.short_description,
+    zone: business.zone,
+    address: business.address ?? "",
+    maps_url: business.maps_url ?? "",
+    business_hours: business.business_hours ?? "",
+    home_service: business.home_service,
+    whatsapp: business.whatsapp,
+    phone: business.phone ?? "",
+    instagram: business.instagram ?? "",
+    facebook: business.facebook ?? "",
+    website: business.website ?? "",
+    promotion_title: business.promotion_title ?? "",
+    promotion_description: business.promotion_description ?? ""
+  };
 }
 
 function safeLink(value: string | null) {
@@ -104,6 +175,10 @@ export function AdminBusinesses() {
   const [commercialInterest, setCommercialInterest] = useState("");
   const [salesStatus, setSalesStatus] = useState("sin-contacto");
   const [salesNotes, setSalesNotes] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [editForm, setEditForm] = useState<BusinessEditForm | null>(null);
+  const [editLogo, setEditLogo] = useState<File | null>(null);
+  const [editMainImage, setEditMainImage] = useState<File | null>(null);
 
   const selected = businesses.find((business) => business.id === selectedId) ?? businesses[0] ?? null;
 
@@ -204,6 +279,13 @@ export function AdminBusinesses() {
     setSalesNotes(selected?.sales_notes ?? "");
   }, [selected?.id, selected?.commercial_interest, selected?.sales_status, selected?.sales_notes]);
 
+  useEffect(() => {
+    setEditing(false);
+    setEditForm(null);
+    setEditLogo(null);
+    setEditMainImage(null);
+  }, [selected?.id]);
+
   const signIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setBusy(true);
@@ -282,6 +364,137 @@ export function AdminBusinesses() {
       setNotice("Seguimiento comercial actualizado.");
     }
     setBusy(false);
+  };
+
+  const startEditing = () => {
+    if (!selected) return;
+    setNotice("");
+    setOperationError("");
+    setEditForm(editFormFromBusiness(selected));
+    setEditLogo(null);
+    setEditMainImage(null);
+    setEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setEditing(false);
+    setEditForm(null);
+    setEditLogo(null);
+    setEditMainImage(null);
+  };
+
+  const editField = <K extends keyof BusinessEditForm>(key: K, value: BusinessEditForm[K]) => {
+    setEditForm((current) => current ? { ...current, [key]: value } : current);
+  };
+
+  const selectEditImage = (kind: "logo" | "principal", file: File | null) => {
+    setOperationError("");
+    if (!file) {
+      if (kind === "logo") setEditLogo(null);
+      else setEditMainImage(null);
+      return;
+    }
+    const validationError = imageValidationMessage(file);
+    if (validationError) {
+      if (kind === "logo") setEditLogo(null);
+      else setEditMainImage(null);
+      setOperationError(validationError);
+      return;
+    }
+    if (kind === "logo") setEditLogo(file);
+    else setEditMainImage(file);
+  };
+
+  const saveBusinessEdit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!selected || !editForm) return;
+
+    const files = [editLogo, editMainImage].filter((file): file is File => Boolean(file));
+    const fileError = files.map(imageValidationMessage).find(Boolean);
+    if (fileError) {
+      setOperationError(fileError);
+      return;
+    }
+    if (!isValidPublicWhatsapp(editForm.whatsapp)) {
+      setOperationError("Ingresa un WhatsApp público con 10 a 15 dígitos o una URL directa de wa.me.");
+      return;
+    }
+
+    setBusy(true);
+    setNotice("");
+    setOperationError("");
+    let uploadedCount = 0;
+    try {
+      const supabase = getSupabaseAdminClient();
+      const bucket = selected.status === "publicado" ? PUBLIC_BUCKET : PRIVATE_BUCKET;
+      let nextLogoPath = selected.logo_url;
+      let nextMainImagePath = selected.main_image_url;
+
+      const uploadImage = async (file: File, kind: "logo" | "principal") => {
+        const uploadId = crypto.randomUUID();
+        const extension = uploadExtension(file);
+        const objectPath = selected.status === "publicado"
+          ? `businesses/${selected.id}/admin-edits/${uploadId}-${kind}.${extension}`
+          : `${selected.id}/admin-edits/${uploadId}/${kind}.${extension}`;
+        const { error } = await supabase.storage.from(bucket).upload(objectPath, file, {
+          cacheControl: "3600",
+          contentType: file.type,
+          upsert: false
+        });
+        if (error) throw error;
+        uploadedCount += 1;
+        return objectPath;
+      };
+
+      if (editLogo) nextLogoPath = await uploadImage(editLogo, "logo");
+      if (editMainImage) nextMainImagePath = await uploadImage(editMainImage, "principal");
+
+      const { data, error } = await supabase.rpc("admin_update_business", {
+        p_business_id: selected.id,
+        p_business_name: editForm.business_name.trim(),
+        p_category: editForm.category,
+        p_short_description: editForm.short_description.trim(),
+        p_zone: editForm.zone,
+        p_address: editForm.address.trim(),
+        p_maps_url: editForm.maps_url.trim(),
+        p_business_hours: editForm.business_hours.trim(),
+        p_home_service: editForm.home_service,
+        p_whatsapp: editForm.whatsapp.trim(),
+        p_phone: editForm.phone,
+        p_instagram: editForm.instagram,
+        p_facebook: editForm.facebook,
+        p_website: editForm.website,
+        p_logo_path: nextLogoPath,
+        p_main_image_path: nextMainImagePath,
+        p_promotion_title: editForm.promotion_title,
+        p_promotion_description: editForm.promotion_description
+      });
+      if (error) throw error;
+
+      if (!data || typeof data !== "object") {
+        throw new Error("Supabase no devolvió la confirmación del negocio actualizado.");
+      }
+      const publicUpdate = data as BusinessEditResult;
+      if (publicUpdate.id !== selected.id || publicUpdate.slug !== selected.slug || publicUpdate.status !== selected.status) {
+        throw new Error("La respuesta no conservó la identidad y el estado del negocio.");
+      }
+      const updated: AdminBusiness = { ...selected, ...publicUpdate };
+
+      setBusinesses((current) => current.map((business) => business.id === updated.id ? updated : business));
+      setEditing(false);
+      setEditForm(null);
+      setEditLogo(null);
+      setEditMainImage(null);
+      setNotice(updated.status === "publicado"
+        ? "Cambios guardados. El negocio continúa publicado en el directorio."
+        : "Cambios del negocio guardados.");
+    } catch (error) {
+      setOperationError(uploadedCount
+        ? `Se cargaron ${uploadedCount === 1 ? "una imagen" : "dos imágenes"}, pero no fue posible guardar el negocio. Los archivos pueden requerir limpieza administrativa. ${errorMessage(error)}`
+        : errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
   };
 
   const publish = async () => {
@@ -388,11 +601,39 @@ export function AdminBusinesses() {
             </button>)}
           </section>
           {selected ? <article className={styles.detail}>
-            <header className={styles.detailHeader}><h2>{selected.business_name}</h2><p>{selected.category} · {selected.zone} · Recibido {formatDate(selected.created_at)}</p></header>
+            <header className={styles.detailHeader}><div><h2>{selected.business_name}</h2><p>{selected.category} · {selected.zone} · Recibido {formatDate(selected.created_at)}</p></div><button className={`${styles.button} ${styles.secondary}`} type="button" onClick={editing ? cancelEditing : startEditing} disabled={busy}>{editing ? "Cancelar edición" : "Editar negocio"}</button></header>
             <div className={styles.media}>
               <div className={styles.imageBox}>{logoUrl ? <img src={logoUrl} alt={`Logo de ${selected.business_name}`} /> : "Logo no disponible"}</div>
               <div className={styles.imageBox}>{mainImageUrl ? <img src={mainImageUrl} alt={`Imagen principal de ${selected.business_name}`} /> : "Imagen no disponible"}</div>
             </div>
+            {editing && editForm ? <form className={styles.editPanel} onSubmit={saveBusinessEdit}>
+              <header className={styles.editHeading}><div><span>Edición administrativa</span><h3>Datos públicos del negocio</h3><p>El identificador, slug, estado, consentimientos y contacto responsable no se modificarán.</p></div><strong>{selected.status}</strong></header>
+              <div className={styles.editFields}>
+                <label>Nombre comercial<input value={editForm.business_name} onChange={(event) => editField("business_name", event.target.value)} minLength={2} maxLength={80} required /></label>
+                <label>Categoría<select value={editForm.category} onChange={(event) => editField("category", event.target.value)} required>{CATEGORIES.map((category) => <option key={category}>{category}</option>)}</select></label>
+                <label className={styles.editWide}>Descripción breve<textarea value={editForm.short_description} onChange={(event) => editField("short_description", event.target.value)} minLength={2} maxLength={180} rows={3} required /><small>{editForm.short_description.length} / 180</small></label>
+                <label>Zona<select value={editForm.zone} onChange={(event) => editField("zone", event.target.value)} required>{ZONES.map((zone) => <option key={zone}>{zone}</option>)}</select></label>
+                <label>Horario<input value={editForm.business_hours} onChange={(event) => editField("business_hours", event.target.value)} minLength={2} maxLength={120} required /></label>
+                <label className={styles.editWide}>Dirección<input value={editForm.address} onChange={(event) => editField("address", event.target.value)} minLength={2} maxLength={180} required /></label>
+                <label className={styles.editWide}>Google Maps URL<input type="url" value={editForm.maps_url} onChange={(event) => editField("maps_url", event.target.value)} maxLength={1000} required /></label>
+                <label>WhatsApp público<input type="tel" value={editForm.whatsapp} onChange={(event) => editField("whatsapp", event.target.value)} minLength={7} maxLength={40} required /></label>
+                <label>Teléfono<input type="tel" value={editForm.phone} onChange={(event) => editField("phone", event.target.value)} maxLength={40} /></label>
+                <label>Instagram<input type="url" value={editForm.instagram} onChange={(event) => editField("instagram", event.target.value)} maxLength={1000} placeholder="https://…" /></label>
+                <label>Facebook<input type="url" value={editForm.facebook} onChange={(event) => editField("facebook", event.target.value)} maxLength={1000} placeholder="https://…" /></label>
+                <label className={styles.editWide}>Sitio web<input type="url" value={editForm.website} onChange={(event) => editField("website", event.target.value)} maxLength={1000} placeholder="https://…" /></label>
+                <label className={styles.editCheckbox}><input type="checkbox" checked={editForm.home_service} onChange={(event) => editField("home_service", event.target.checked)} /> Atiende a domicilio</label>
+                <label className={styles.editWide}>Título de promoción<input value={editForm.promotion_title} onChange={(event) => editField("promotion_title", event.target.value)} maxLength={120} /></label>
+                <label className={styles.editWide}>Descripción de promoción<textarea value={editForm.promotion_description} onChange={(event) => editField("promotion_description", event.target.value)} maxLength={500} rows={3} /></label>
+              </div>
+              <fieldset className={styles.editImages}>
+                <legend>Imágenes públicas</legend>
+                <label>Reemplazar logo<input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={(event) => selectEditImage("logo", event.target.files?.[0] ?? null)} /><small>{editLogo ? editLogo.name : "Se conservará el logo actual."}</small></label>
+                <label>Reemplazar imagen principal<input type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onChange={(event) => selectEditImage("principal", event.target.files?.[0] ?? null)} /><small>{editMainImage ? editMainImage.name : "Se conservará la imagen actual."}</small></label>
+                <p>JPG, PNG o WebP · máximo 5 MB por archivo. Las imágenes de negocios no publicados permanecen privadas.</p>
+              </fieldset>
+              <div className={styles.editPrivateNote}><strong>Contacto responsable · Interno y privado</strong><span>Permanece separado y no forma parte de esta edición.</span></div>
+              <footer className={styles.editActions}><button className={`${styles.button} ${styles.approve}`} type="submit" disabled={busy}>{busy ? "Guardando…" : "Guardar cambios"}</button><button className={`${styles.button} ${styles.secondary}`} type="button" onClick={cancelEditing} disabled={busy}>Cancelar</button></footer>
+            </form> : null}
             <div className={styles.sections}>
               <DetailSection title="Datos comerciales" rows={[
                 ["Descripción", selected.short_description], ["Dirección", selected.address], ["Horario", selected.business_hours],
