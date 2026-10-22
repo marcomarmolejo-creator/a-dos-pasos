@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { AuraSpaMicrosite } from "@/components/aura-spa/AuraSpaMicrosite";
 import { BusinessMicrosite } from "@/components/BusinessMicrosite";
 import { ElevaSteamMicrosite } from "@/components/eleva-steam/ElevaSteamMicrosite";
+import { FornoLocaleMicrosite } from "@/components/forno-locale/FornoLocaleMicrosite";
 import { auraSpa } from "@/data/auraSpa";
 import { businesses, getBusiness } from "@/data/businesses";
 import { elevaSteam } from "@/data/elevaSteam";
+import { fornoLocale } from "@/data/fornoLocale";
 import { getPublishedBusinessBySlug, getPublishedBusinesses, publishedBusinessSlug, toMicrositeBusiness } from "@/lib/businesses";
 
 export const dynamicParams = false;
@@ -27,6 +29,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (slug === elevaSteam.slug) {
     return { title: { absolute: `${elevaSteam.name} | A Dos Pasos` }, description: `${elevaSteam.category} en ${elevaSteam.zone}. ${elevaSteam.shortDescription}` };
   }
+  if (slug === fornoLocale.slug) {
+    return { title: { absolute: `${fornoLocale.name} | A Dos Pasos` }, description: `${fornoLocale.category} en ${fornoLocale.zone}. ${fornoLocale.shortDescription}` };
+  }
   const published = await getPublishedBusinessBySlug(slug);
   if (published?.listing_type === "micrositio") {
     return { title: { absolute: `${published.business_name} | A Dos Pasos` }, description: published.short_description };
@@ -40,6 +45,7 @@ export default async function BusinessPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   if (slug === auraSpa.slug) return <AuraSpaMicrosite />;
   if (slug === elevaSteam.slug) return <ElevaSteamMicrosite />;
+  if (slug === fornoLocale.slug) return <FornoLocaleMicrosite />;
   const published = await getPublishedBusinessBySlug(slug);
   const business = published?.listing_type === "micrositio" ? toMicrositeBusiness(published) : getBusiness(slug);
   if (!business) notFound();
