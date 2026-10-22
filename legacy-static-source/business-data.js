@@ -17,7 +17,7 @@ export const businesses = [
   {
     id: "eleva-steam", name: "Eleva Steam", slug: "eleva-steam", category: "Lavado profesional a domicilio", categories: ["mi-casa", "servicios", "promociones", "nuevos"], zone: "Querétaro", image: "./assets/eleva-steam.jpg", logo: null,
     description: "Lavado profundo para salas, colchones y tapetes.", distance: "Va a tu casa", isOpen: true, isNew: false, isFeatured: true, hasPromotion: false,
-    micrositeUrl: "https://eleva-steam-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524422742734", mapsUrl: "https://maps.google.com/?q=Queretaro", tag: "Mi casa", status: "A domicilio"
+    micrositeUrl: "https://eleva-steam-a-dos-pasos.booker74.chatgpt.site", whatsappUrl: "https://wa.me/524421316100", mapsUrl: "https://maps.google.com/?q=Queretaro", tag: "Mi casa", status: "A domicilio"
   }
 ];
 

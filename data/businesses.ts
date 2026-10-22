@@ -53,7 +53,7 @@ export const businesses: Business[] = [
     slug: "eleva-steam", name: "Eleva Steam", zone: "Querétaro", category: "Lavado profesional a domicilio", theme: "clean-service",
     heroImage: "/assets/eleva-steam.jpg", gallery: ["/assets/eleva-steam.jpg", "/assets/eleva-resultado.jpg"],
     eyebrow: "Servicio profesional a domicilio", description: "Lavado profundo para salas, colchones y tapetes con atención en tu hogar.",
-    whatsapp: "https://wa.me/524422742734", maps: "https://maps.google.com/?q=Queretaro",
+    whatsapp: "https://wa.me/524421316100", maps: "https://maps.google.com/?q=Queretaro",
     services: [{ name: "Salas", detail: "Lavado profesional según piezas y características." }, { name: "Colchones", detail: "Lavado, aspirado y sanitizado con vapor." }, { name: "Tapetes y alfombras", detail: "Cotización según medidas y condición." }],
     benefit: { title: "Evaluación por WhatsApp", description: "Envía una fotografía y recibe una evaluación inicial." },
     sectionOrder: ["about", "gallery", "services", "benefit", "location"]
