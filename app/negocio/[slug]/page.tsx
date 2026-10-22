@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { AuraSpaMicrosite } from "@/components/aura-spa/AuraSpaMicrosite";
 import { BusinessMicrosite } from "@/components/BusinessMicrosite";
 import { ElevaSteamMicrosite } from "@/components/eleva-steam/ElevaSteamMicrosite";
+import { auraSpa } from "@/data/auraSpa";
 import { businesses, getBusiness } from "@/data/businesses";
 import { elevaSteam } from "@/data/elevaSteam";
 import { getPublishedBusinessBySlug, getPublishedBusinesses, publishedBusinessSlug, toMicrositeBusiness } from "@/lib/businesses";
@@ -19,6 +21,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  if (slug === auraSpa.slug) {
+    return { title: { absolute: `${auraSpa.name} | A Dos Pasos` }, description: `${auraSpa.category} en ${auraSpa.zone}. ${auraSpa.shortDescription}` };
+  }
   if (slug === elevaSteam.slug) {
     return { title: { absolute: `${elevaSteam.name} | A Dos Pasos` }, description: `${elevaSteam.category} en ${elevaSteam.zone}. ${elevaSteam.shortDescription}` };
   }
@@ -33,6 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BusinessPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === auraSpa.slug) return <AuraSpaMicrosite />;
   if (slug === elevaSteam.slug) return <ElevaSteamMicrosite />;
   const published = await getPublishedBusinessBySlug(slug);
   const business = published?.listing_type === "micrositio" ? toMicrositeBusiness(published) : getBusiness(slug);
