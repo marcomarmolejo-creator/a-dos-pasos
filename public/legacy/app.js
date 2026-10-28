@@ -4,6 +4,7 @@ import { resolveDirectoryCategory, directoryUrlFor } from "./directory-data.js";
 const byId = (id) => businesses.find((business) => business.id === id);
 const whatsappShare = "https://wa.me/?text=" + encodeURIComponent("Hola, quiero conocer cómo puede aparecer mi negocio en A Dos Pasos · El Refugio.");
 let activePromotionCards = Array.isArray(window.__ACTIVE_BUSINESS_PROMOTIONS__) ? window.__ACTIVE_BUSINESS_PROMOTIONS__ : [];
+const newPublishedBusinesses = Array.isArray(window.__NEW_PUBLISHED_BUSINESSES__) ? window.__NEW_PUBLISHED_BUSINESSES__ : [];
 const escapeHtml = (value = "") => String(value).replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
 const promotionValidity = (item) => item.ends_at ? `Vigente hasta ${new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(item.ends_at))}` : "Consulta vigencia";
 
@@ -63,7 +64,14 @@ function PromotionsSection() {
 }
 
 function NewInZone() {
-  return `<section class="section new-zone preview-section" id="nuevo"><header class="section-heading section-heading--split reveal"><div><span class="eyebrow">Nuevo en la zona</span><h2>Descubre lo que acaba de llegar</h2></div><p>Nuevas aperturas, servicios y formas de disfrutar mejor tu zona.</p></header>${CarouselControls("new-carousel","Controles de novedades")}<div class="magazine-grid new-carousel" id="new-carousel"><a class="magazine-main reveal" href="${byId("forno-locale").micrositeUrl}" target="_blank" rel="noreferrer"><img src="/assets/forno-locale.png" alt="Forno Locale" loading="lazy" /><span>Nueva apertura · Comer</span><h3>Forno Locale enciende el horno en El Refugio</h3><p>Conoce el espacio, la carta y cómo llegar antes de tu primera visita.</p></a><a class="magazine-side magazine-side--top reveal" href="${byId("aura-spa").micrositeUrl}" target="_blank" rel="noreferrer"><img src="/assets/aura-ritual.jpg" alt="Ritual de bienestar en Aura Spa" loading="lazy" /><div><span>Nuevo servicio</span><h3>Un nuevo ritual en Aura Spa</h3></div></a><a class="magazine-side magazine-side--bottom reveal" href="${byId("eleva-steam").micrositeUrl}" target="_blank" rel="noreferrer"><img src="/assets/eleva-steam.jpg" alt="Servicio de Eleva Steam" loading="lazy" /><div><span>Nueva cobertura</span><h3>Eleva Steam va hasta tu casa</h3></div></a></div><button class="section-more" type="button" data-expand-section aria-expanded="false">Ver todo lo nuevo <span>→</span></button></section>`;
+  if (!newPublishedBusinesses.length) return "";
+  const cards = newPublishedBusinesses.map((business,index)=>{
+    const href = business.micrositeUrl || business.whatsapp || business.maps || directoryUrlFor("",business.name);
+    const logo = business.logo ? `<div style="position:relative;z-index:2;width:3.2rem;height:3.2rem;display:grid;place-items:center;margin-bottom:.7rem;padding:.35rem;background:#fff;border-radius:.75rem"><img src="${escapeHtml(business.logo)}" alt="Logo de ${escapeHtml(business.name)}" loading="lazy" style="position:static;inset:auto;width:100%;height:100%;object-fit:contain;transition:none;transform:none" /></div>` : "";
+    const content = `${logo}<span>Nuevo · ${escapeHtml(business.category)}</span><h3>${escapeHtml(business.name)}</h3><p style="margin:.45rem 0 0;color:rgba(255,255,255,.76)">${escapeHtml(business.description)}</p>`;
+    return `<a class="${index===0?"magazine-main":"magazine-side"} reveal" href="${escapeHtml(href)}" target="_blank" rel="noreferrer"><img src="${escapeHtml(business.image)}" alt="${escapeHtml(business.name)}" loading="lazy" />${index===0?content:`<div>${content}</div>`}</a>`;
+  }).join("");
+  return `<section class="section new-zone preview-section" id="nuevo"><header class="section-heading section-heading--split reveal"><div><span class="eyebrow">Nuevo en la zona</span><h2>Descubre lo que acaba de llegar</h2></div><p>Nuevas aperturas, servicios y formas de disfrutar mejor tu zona.</p></header>${CarouselControls("new-carousel","Controles de novedades")}<div class="magazine-grid new-carousel" id="new-carousel">${cards}</div><a class="section-more" href="/directorio/?categoria=nuevos">Ver todo lo nuevo <span>→</span></a></section>`;
 }
 
 function EditorialStories() {
@@ -112,7 +120,7 @@ function Footer() {
   return `<footer class="footer"><div class="footer-brand"><img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" /><h2>Descubre lo que tienes cerca de casa.</h2><p>Una guía visual para una comunidad más conectada.</p></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Zonas <span>+</span></button><small>Zonas</small><div class="footer-group-content">${zones.map(zone=>`<span>${zone}</span>`).join("")}</div></div><div class="footer-group"><button type="button" class="footer-toggle" aria-expanded="false">Explora <span>+</span></button><small>Explora</small><div class="footer-group-content"><a href="#que-hacer">Descubrir</a><a href="/directorio/">Directorio</a><a href="/ideas/">Ideas para hoy</a><a href="/para-negocios/">Para negocios</a><a href="/privacidad/">Privacidad</a></div></div>${GeneralContact()}<div class="footer-bottom"><span>A Dos Pasos · El Refugio</span><span>Powered by Eleva Studio Lab</span></div></footer>`;
 }
 
-document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),CategoryResults(),IntentionGrid(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),NewInZone(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),ResidentAccess(),BusinessAccess(),Footer()].join("");
+document.querySelector("#contenido").innerHTML = [HeroDiscovery(),ZoneSelector(),CategoryResults(),IntentionGrid(),NewInZone(),FeaturedBusinesses(),BenefitsSection(),PromotionsSection(),EditorialStories(),NearbyNow(),ResidentHowItWorks(),ResidentAccess(),BusinessAccess(),Footer()].join("");
 
 const header=document.querySelector(".site-header"); const menuButton=document.querySelector(".menu-button");
 const closeMenu=()=>{header.classList.remove("menu-open");document.body.classList.remove("menu-is-open");menuButton.setAttribute("aria-expanded","false")};

@@ -69,10 +69,6 @@ export function filterBusinesses() {
     const queryMatch = !normalizedQuery || (directMatches.length ? directMatches.includes(business) : aliasCategory ? business.categories.includes(aliasCategory) : false);
     return categoryMatch && queryMatch && matchesFilters(business);
   });
-  if (state.activeCategory === "servicios") {
-    const order = ["eleva-steam", "barberia-clasica", "vet-cerca-demo"];
-    matches.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-  }
   return matches;
 }
 

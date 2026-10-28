@@ -194,6 +194,15 @@ export function toDirectoryBusiness(
   };
 }
 
+export function toNewDirectoryBusinesses(businesses: PublishedBusiness[], limit?: number) {
+  const recent = businesses
+    .slice()
+    .sort((left, right) => new Date(right.created_at).getTime() - new Date(left.created_at).getTime())
+    .map((business) => toDirectoryBusiness(business))
+    .filter((business) => business.isDemo === false && business.isNew);
+  return typeof limit === "number" ? recent.slice(0, limit) : recent;
+}
+
 export function themeForBusiness(business: PublishedBusiness): BusinessTheme {
   if (business.theme && ["warm-editorial", "serene-light", "dark-classic", "clean-service"].includes(business.theme)) return business.theme;
   const category = slugify(business.category);

@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { getPublishedBusinesses, toDirectoryBusiness, type PublishedBusiness } from "@/lib/businesses";
+import { getPublishedBusinesses, toDirectoryBusiness } from "@/lib/businesses";
 import { getActiveBusinessPromotions, promotionFlagsByBusiness, publicPromotionImage } from "@/lib/promotions";
 
 declare global {
   interface Window { __PUBLISHED_BUSINESSES__?: ReturnType<typeof toDirectoryBusiness>[]; }
 }
 
-export function DirectoryBootstrap({ initialBusinesses }: { initialBusinesses: PublishedBusiness[] }) {
+export function DirectoryBootstrap() {
   useEffect(() => {
     let active = true;
     let script: HTMLScriptElement | null = null;
@@ -16,14 +16,13 @@ export function DirectoryBootstrap({ initialBusinesses }: { initialBusinesses: P
     const load = async () => {
       const [liveBusinesses, promotions] = await Promise.all([getPublishedBusinesses(), getActiveBusinessPromotions()]);
       if (!active) return;
-      const businesses = liveBusinesses.length ? liveBusinesses : initialBusinesses;
       const flags = promotionFlagsByBusiness(promotions);
       const promotionImages = new Map<string, string>();
       promotions.forEach((promotion) => {
         const image = publicPromotionImage(promotion.image_url);
         if (image && !promotionImages.has(promotion.business_id)) promotionImages.set(promotion.business_id, image);
       });
-      window.__PUBLISHED_BUSINESSES__ = businesses.map((business) => {
+      window.__PUBLISHED_BUSINESSES__ = liveBusinesses.map((business) => {
         const directoryBusiness = toDirectoryBusiness(business, flags.get(business.id));
         return { ...directoryBusiness, image: promotionImages.get(business.id) ?? directoryBusiness.image };
       });
@@ -35,7 +34,7 @@ export function DirectoryBootstrap({ initialBusinesses }: { initialBusinesses: P
 
     load();
     return () => { active = false; script?.remove(); };
-  }, [initialBusinesses]);
+  }, []);
 
   return null;
 }
