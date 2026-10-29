@@ -1,4 +1,4 @@
-import { businesses, intentions, benefits, promotions, zones } from "./business-data.js";
+import { businesses, intentions, benefits, zones } from "./business-data.js";
 import { resolveDirectoryCategory, directoryUrlFor } from "./directory-data.js";
 
 const byId = (id) => businesses.find((business) => business.id === id);
@@ -15,7 +15,12 @@ function HeroDiscovery() {
   return `<section class="hero" id="descubrir">
     <div class="hero-orbit hero-orbit--one"></div><div class="hero-orbit hero-orbit--two"></div>
     <div class="hero-copy reveal"><p class="kicker">A Dos Pasos · El Refugio</p><h1>Descubre lo que tienes <em>cerca de casa.</em></h1><p class="hero-sub">Negocios, lugares, servicios, promociones y nuevas aperturas de El Refugio.</p>${DiscoverySearch("hero-search")}<nav class="mobile-section-nav" aria-label="Explora las secciones de A Dos Pasos"><strong>Explora A Dos Pasos</strong><div>${sectionLinks.map(([label,href])=>`<a href="${href}">${label}</a>`).join("")}</div></nav><div class="hero-quick" id="que-hacer" aria-label="Categorías"><div class="hero-quick-heading"><strong>¿Qué quieres hacer?</strong><span>Elige una categoría</span></div><div class="hero-category-track">${categoryLinks.map(([icon,item])=>`<button type="button" data-quick-search="${item}"><i>${icon}</i>${item}</button>`).join("")}</div></div></div>
-    <div class="hero-editorial reveal" aria-label="Servicio local destacado"><a class="hero-tile hero-tile--eleva" href="${eleva.micrositeUrl}" target="_blank" rel="noreferrer"><img src="${eleva.image}" alt="Eleva Steam" /><span>A domicilio</span><strong>Eleva Steam</strong><small>Servicio profesional en Querétaro</small></a></div>
+    <div class="hero-editorial reveal" aria-label="Ejemplos de micrositio y negocio real">
+      <a class="hero-tile hero-tile--forno hero-tile--demo" href="/negocio/forno-locale/"><img src="./assets/forno-locale.png" alt="Forno Locale" /><span>Ejemplo de micrositio</span><strong>Forno Locale</strong><small>Demostración visual</small></a>
+      <a class="hero-tile hero-tile--aura hero-tile--demo" href="/negocio/aura-spa/"><img src="./assets/aura-spa.jpg" alt="Aura Spa" /><span>Ejemplo de micrositio</span><strong>Aura Spa</strong><small>Demostración visual</small></a>
+      <a class="hero-tile hero-tile--barber hero-tile--demo" href="/negocio/barberia-clasica/"><img src="./assets/barberia-clasica.png" alt="Barbería Clásica" /><span>Ejemplo de micrositio</span><strong>Barbería Clásica</strong><small>Demostración visual</small></a>
+      <a class="hero-tile hero-tile--eleva hero-tile--real" href="${eleva.micrositeUrl}"><img src="${eleva.image}" alt="Eleva Steam" /><span>Negocio real</span><strong>Eleva Steam</strong><small>Servicio profesional a domicilio</small></a>
+    </div>
   </section>`;
 }
 

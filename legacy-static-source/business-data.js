@@ -7,14 +7,14 @@ export const businesses = [
 ];
 
 export const intentions = [
-  { icon: "◒", title: "Comer", subtitle: "Desayunos, comida y cena", image: "./assets/mockup-ficha.png" },
-  { icon: "◡", title: "Tomar café", subtitle: "Tu próxima pausa favorita", image: "./assets/mockup-home.png" },
-  { icon: "✦", title: "Cuidarme", subtitle: "Spa, belleza y bienestar", image: "./assets/mockup-categorias.png" },
+  { icon: "◒", title: "Comer", subtitle: "Desayunos, comida y cena", image: "./assets/forno-locale/menu-margarita.jpg" },
+  { icon: "◡", title: "Tomar café", subtitle: "Tu próxima pausa favorita", image: "./assets/forno-table.png" },
+  { icon: "✦", title: "Cuidarme", subtitle: "Spa, belleza y bienestar", image: "./assets/aura-ritual.jpg" },
   { icon: "⌂", title: "Mi casa", subtitle: "Servicios para tu hogar", image: "./assets/eleva-resultado.jpg" },
-  { icon: "⌁", title: "Encontrar un servicio", subtitle: "Expertos de tu zona", image: "./assets/mockup-ficha.png" },
-  { icon: "%", title: "Promociones", subtitle: "Beneficios locales", image: "./assets/mockup-publicacion.png" },
-  { icon: "+", title: "Descubrir algo nuevo", subtitle: "Lugares que no conocías", image: "./assets/mockup-categorias.png" },
-  { icon: "↗", title: "Salir este fin", subtitle: "Planes a pocos minutos", image: "./assets/mockup-home.png" }
+  { icon: "⌁", title: "Encontrar un servicio", subtitle: "Expertos de tu zona", image: "./assets/eleva-steam.jpg" },
+  { icon: "%", title: "Promociones", subtitle: "Beneficios locales", image: "./assets/platform-overview.png" },
+  { icon: "+", title: "Descubrir algo nuevo", subtitle: "Lugares que no conocías", image: "./assets/barberia-interior.png" },
+  { icon: "↗", title: "Salir este fin", subtitle: "Planes a pocos minutos", image: "./assets/forno-locale/forno-interior.jpg" }
 ];
 
 export const benefits = [

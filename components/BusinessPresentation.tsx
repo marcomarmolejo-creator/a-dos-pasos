@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type MouseEvent } from "react";
+import { useEffect, type CSSProperties, type MouseEvent } from "react";
 import Link from "next/link";
 import { commercialWhatsAppUrl } from "@/lib/commercial";
 import styles from "./BusinessPresentation.module.css";
@@ -38,23 +38,18 @@ function track(event: PresentationEvent) {
 }
 
 export function BusinessPresentation() {
-  const [presentationMode, setPresentationMode] = useState(false);
-
   useEffect(() => {
     track("presentation_view");
   }, []);
 
   const trackClick = (eventName: PresentationEvent) => (_event: MouseEvent<HTMLElement>) => track(eventName);
 
-  return <div className={`${styles.page} ${presentationMode ? styles.presentationMode : ""}`}>
+  return <div className={`${styles.page} ${styles.presentationMode}`}>
     <header className={styles.topbar}>
       <Link className={styles.brand} href="/" aria-label="A Dos Pasos, volver al inicio">
         <img src="/assets/logo-a-dos-pasos-blanco.png" alt="A Dos Pasos" />
       </Link>
-      <Link className={styles.backLink} href="/para-negocios/">Para negocios</Link>
-      <button type="button" className={styles.modeButton} aria-pressed={presentationMode} onClick={() => setPresentationMode((current) => !current)}>
-        {presentationMode ? "Salir de presentación" : "Modo presentación"}
-      </button>
+      <Link className={styles.modeButton} href="/para-negocios/">Salir de presentación</Link>
     </header>
 
     <main>

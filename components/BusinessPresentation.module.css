@@ -29,7 +29,7 @@
 
 .brand img { display: block; width: 9.5rem; height: auto; }
 .backLink { color: rgba(255,255,255,.7); font-size: .75rem; font-weight: 850; }
-.modeButton { min-height: 44px; padding: .6rem .85rem; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff; background: transparent; font: inherit; font-size: .72rem; font-weight: 850; cursor: pointer; }
+.modeButton { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; padding: .6rem .85rem; border: 1px solid rgba(255,255,255,.25); border-radius: 999px; color: #fff; background: transparent; font: inherit; font-size: .72rem; font-weight: 850; cursor: pointer; }
 
 .section { width: min(100%, 90rem); margin: 0 auto; padding: 4.5rem 1.25rem; }
 .eyebrow { margin: 0 0 .75rem; color: var(--blue); font-size: .7rem; font-weight: 950; letter-spacing: .13em; text-transform: uppercase; }
@@ -112,9 +112,8 @@
 .phone { margin-top: 1.5rem; color: var(--cyan); font-size: 1.05rem; font-weight: 900; }
 .footer { display: flex; flex-direction: column; gap: .4rem; padding: 1.5rem 1.25rem; color: rgba(255,255,255,.62); background: #031229; font-size: .72rem; }
 
-.presentationMode .backLink { display: none; }
 .presentationMode .topbar { position: sticky; top: 0; grid-template-columns: 1fr auto; }
-.presentationMode .section { min-height: calc(100svh - 4.5rem); display: flex; flex-direction: column; justify-content: center; padding-block: 6rem; }
+.presentationMode .section { width: 100%; max-width: none; min-height: calc(100svh - 4.5rem); display: flex; flex-direction: column; justify-content: center; padding: 6rem max(1.25rem,calc((100vw - 82rem)/2)); }
 .presentationMode .hero { display: grid; }
 .presentationMode .section h2 { font-size: clamp(3rem, 12vw, 6.5rem); }
 
