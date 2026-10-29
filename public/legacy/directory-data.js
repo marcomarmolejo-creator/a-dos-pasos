@@ -44,4 +44,33 @@ export const directoryUrlFor = (category, query = "") => {
 };
 
 const publishedBusinesses = Array.isArray(window.__PUBLISHED_BUSINESSES__) ? window.__PUBLISHED_BUSINESSES__ : [];
-export const directoryBusinesses = publishedBusinesses.filter((business) => business.isDemo === false);
+const publishedSlugs = new Set(publishedBusinesses.map((business) => business.id));
+const elevaSteam = businesses.find((business) => business.id === "eleva-steam");
+const localRealBusinesses = elevaSteam && !publishedSlugs.has(elevaSteam.id) ? [{
+  id: elevaSteam.id,
+  name: elevaSteam.name,
+  category: elevaSteam.category,
+  categories: ["mi-casa", "servicios"],
+  zone: elevaSteam.zone,
+  description: elevaSteam.description,
+  image: elevaSteam.image.replace("./", "/"),
+  logo: null,
+  listingType: "microsite",
+  hours: "Consulta disponibilidad",
+  whatsapp: elevaSteam.whatsappUrl,
+  maps: elevaSteam.mapsUrl,
+  badges: ["A domicilio"],
+  micrositeUrl: elevaSteam.micrositeUrl,
+  isDemo: false,
+  openNow: false,
+  delivery: true,
+  isNew: false,
+  hasBenefit: true,
+  hasPromotion: false,
+  hasMicrosite: true,
+  promotionTitle: null,
+  promotionDescription: null
+}] : [];
+export const directoryBusinesses = [...publishedBusinesses.filter((business) => business.isDemo === false), ...localRealBusinesses];
+import { businesses } from "./business-data.js";
+

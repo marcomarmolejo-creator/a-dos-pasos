@@ -64,6 +64,7 @@ const PUBLIC_FIELDS = [
 ].join(",");
 
 let publishedBusinessesPromise: Promise<PublishedBusiness[]> | null = null;
+const COMMERCIAL_DEMO_SLUGS = new Set(["forno-locale", "aura-spa", "barberia-clasica"]);
 
 function slugify(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim()
@@ -97,6 +98,10 @@ async function fetchPublishedBusinesses() {
 export function getPublishedBusinesses() {
   publishedBusinessesPromise ??= fetchPublishedBusinesses();
   return publishedBusinessesPromise;
+}
+
+export async function getPublishedDiscoveryBusinesses() {
+  return (await getPublishedBusinesses()).filter((business) => !COMMERCIAL_DEMO_SLUGS.has(publishedBusinessSlug(business)));
 }
 
 export async function getPublishedBusinessBySlug(slug: string) {

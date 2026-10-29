@@ -1,5 +1,5 @@
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { getPublishedBusinesses, publicAssetUrl, publishedBusinessSlug, whatsappUrl, type PublishedBusiness } from "@/lib/businesses";
+import { getPublishedDiscoveryBusinesses, publicAssetUrl, publishedBusinessSlug, whatsappUrl, type PublishedBusiness } from "@/lib/businesses";
 
 export type PromotionType = "beneficio" | "promocion";
 export type PromotionStatus = "borrador" | "activo" | "pausado" | "finalizado";
@@ -80,7 +80,7 @@ export async function getActiveBusinessPromotions(): Promise<ActiveBusinessPromo
 export async function getPublicPromotionCards(): Promise<PublicPromotionCard[]> {
   const [promotions, businesses] = await Promise.all([
     getActiveBusinessPromotions(),
-    getPublishedBusinesses()
+    getPublishedDiscoveryBusinesses()
   ]);
   const byId = new Map(businesses.map((business) => [business.id, business]));
   return promotions.flatMap((promotion) => {

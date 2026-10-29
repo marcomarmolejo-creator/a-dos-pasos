@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { getPublishedBusinesses, toDirectoryBusiness, toNewDirectoryBusinesses } from "@/lib/businesses";
+import { getPublishedDiscoveryBusinesses, toDirectoryBusiness, toNewDirectoryBusinesses } from "@/lib/businesses";
 import { getPublicPromotionCards, type PublicPromotionCard } from "@/lib/promotions";
 
 declare global {
@@ -17,7 +17,7 @@ export function HomePromotionsBootstrap() {
     const script = document.createElement("script");
     script.type = "module";
     script.src = `/legacy/app.js?home=${Date.now()}`;
-    void Promise.all([getPublicPromotionCards(), getPublishedBusinesses()]).then(([promotions, liveBusinesses]) => {
+    void Promise.all([getPublicPromotionCards(), getPublishedDiscoveryBusinesses()]).then(([promotions, liveBusinesses]) => {
       if (!active) return;
       window.__ACTIVE_BUSINESS_PROMOTIONS__ = promotions;
       window.__NEW_PUBLISHED_BUSINESSES__ = toNewDirectoryBusinesses(liveBusinesses, 4);

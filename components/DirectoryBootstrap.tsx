@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { getPublishedBusinesses, toDirectoryBusiness } from "@/lib/businesses";
+import { getPublishedDiscoveryBusinesses, toDirectoryBusiness } from "@/lib/businesses";
 import { getActiveBusinessPromotions, promotionFlagsByBusiness, publicPromotionImage } from "@/lib/promotions";
 
 declare global {
@@ -14,7 +14,7 @@ export function DirectoryBootstrap() {
     let script: HTMLScriptElement | null = null;
 
     const load = async () => {
-      const [liveBusinesses, promotions] = await Promise.all([getPublishedBusinesses(), getActiveBusinessPromotions()]);
+      const [liveBusinesses, promotions] = await Promise.all([getPublishedDiscoveryBusinesses(), getActiveBusinessPromotions()]);
       if (!active) return;
       const flags = promotionFlagsByBusiness(promotions);
       const promotionImages = new Map<string, string>();

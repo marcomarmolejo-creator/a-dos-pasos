@@ -20,10 +20,10 @@ const WHATSAPP_BASE = "https://wa.me/524424223487";
 const generalWhatsAppUrl = `${WHATSAPP_BASE}?text=${encodeURIComponent("Hola, quiero conocer más sobre A Dos Pasos para mi negocio.")}`;
 
 const examples = [
-  { name: "Forno Locale", category: "Pizzería artesanal", image: "/assets/forno-locale.png", href: "/negocio/forno-locale/" },
-  { name: "Aura Spa", category: "Bienestar", image: "/assets/aura-spa.jpg", href: "/negocio/aura-spa/" },
-  { name: "Barbería Clásica", category: "Cuidado personal", image: "/assets/barberia-clasica.png", href: "/negocio/barberia-clasica/" },
-  { name: "Eleva Steam", category: "Servicios para tu casa", image: "/assets/eleva-steam.jpg", href: "/negocio/eleva-steam/" }
+  { name: "Forno Locale", label: "Ejemplo de micrositio", image: "/assets/forno-locale.png", href: "/negocio/forno-locale/" },
+  { name: "Aura Spa", label: "Ejemplo de micrositio", image: "/assets/aura-spa.jpg", href: "/negocio/aura-spa/" },
+  { name: "Barbería Clásica", label: "Ejemplo de micrositio", image: "/assets/barberia-clasica.png", href: "/negocio/barberia-clasica/" },
+  { name: "Eleva Steam", label: "Negocio real", image: "/assets/eleva-steam.jpg", href: "/negocio/eleva-steam/" }
 ] as const;
 
 function track(event: PresentationEvent) {
@@ -70,7 +70,7 @@ export function BusinessPresentation() {
         <div className={styles.heroVisual} aria-label="Contenido local dentro de A Dos Pasos">
           {examples.slice(0, 3).map((example, index) => <article key={example.name} style={{ "--card-index": index } as CSSProperties}>
             <img src={example.image} alt="" />
-            <div><small>{example.category}</small><strong>{example.name}</strong></div>
+            <div><small>{example.label}</small><strong>{example.name}</strong></div>
           </article>)}
         </div>
       </section>
@@ -134,10 +134,10 @@ export function BusinessPresentation() {
       </section>
 
       <section className={`${styles.section} ${styles.examples}`}>
-        <header><p className={styles.eyebrow}>Ejemplos reales</p><h2>Así se ve A Dos Pasos.</h2><p>Contenido visual de negocios que ya forman parte del proyecto.</p></header>
+        <header><p className={styles.eyebrow}>Ejemplos de micrositio</p><h2>Así se ve A Dos Pasos.</h2><p>Demostraciones comerciales y un caso real para mostrar cómo puede verse cada negocio.</p></header>
         <div className={styles.exampleGrid}>{examples.map((example) => <Link href={example.href} key={example.name}>
           <img src={example.image} alt={example.name} />
-          <div><small>{example.category}</small><h3>{example.name}</h3><span>Conocer →</span></div>
+          <div><small>{example.label}</small><h3>{example.name}</h3><span>Conocer →</span></div>
         </Link>)}</div>
       </section>
 

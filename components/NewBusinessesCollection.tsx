@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { CollectionPage, type CollectionItem } from "@/components/CollectionPage";
-import { getPublishedBusinesses, toNewDirectoryBusinesses } from "@/lib/businesses";
+import { getPublishedDiscoveryBusinesses, toNewDirectoryBusinesses } from "@/lib/businesses";
 
 export function NewBusinessesCollection() {
   const [items, setItems] = useState<CollectionItem[] | null>(null);
 
   useEffect(() => {
     let active = true;
-    void getPublishedBusinesses().then((businesses) => {
+    void getPublishedDiscoveryBusinesses().then((businesses) => {
       if (!active) return;
       setItems(toNewDirectoryBusinesses(businesses).map((business) => ({
         label: `Nuevo · ${business.category}`,
